@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chat</title>
+    <link rel="stylesheet" href="../chat/chatscreen.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <button id="back-button">&lt; 戻る</button>
+            <div class="group-info">
+                <span id="group-name">サンプルグループ</span>
+                <span id="group-members">(5)</span>
+            </div>
+        </div>
+        <div class="chat-area"></div>
+        <div class="message-area">
+            <div class="message-area-text">
+                <textarea id="text"></textarea>
+            </div>
+            <div class="message-area-button">
+                <button id="send" class="disabled-button">▻</button>
+            </div>
+        </div>
+    </div>
+    <script src="../chat/chatscreen.js"></script>
+</body>
+
+</html>
