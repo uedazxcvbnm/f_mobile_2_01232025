@@ -5,5 +5,11 @@ class dailyData extends dbdata{
         $sql = "insert into input_daily_record(date, account_drunk, money, sBP, dBP) values(NOW(), ?, ?, ?, ?)";
         $result = $this->exec($sql, [$account_drunk, $alcohol_money, $sBP, $dBP]);
     }
+
+    public function get_date(){
+        $sql = "select date from input_daily_record";
+        $result = $this->exec($sql, []);
+        return $result;
+    }
 }
 ?>

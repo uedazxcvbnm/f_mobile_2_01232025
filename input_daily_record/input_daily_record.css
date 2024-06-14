@@ -1,0 +1,13 @@
+.input_daily_screen{
+    background-color: #f5f5f5;
+}
+
+.daily_registration_form{
+    /* text-align: center; */
+    margin:0 20% 0 30%;
+    padding-left: 1.5%;
+    /* 枠　枠線が白　 */
+    border: 0px solid #ccc;
+    /* 色を仮で付ける */
+    background-color: #fff;
+}
