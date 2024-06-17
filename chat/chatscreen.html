@@ -47,8 +47,8 @@
             const chatArea = document.querySelector(".chat-area");
 
             // テストデータの表示（相手からのメッセージ）
-            displayMessageFromOther("神戸太郎", "よろしくお願いします！");
-            displayMessageFromOther("神戸太郎", "最近は禁酒に励んでいます！！");
+            displayMessageFromOther("森田", "よろしくお願いします！");
+            displayMessageFromOther("森田", "最近は禁酒に励んでいます！！");
 
             // 送信ボタンのクリックイベントリスナー
             sendButton.addEventListener("click", function () {
@@ -67,7 +67,7 @@
             function sendMessage() {
                 const message = textInput.value.trim(); // テキストボックスの値を取得（前後の空白をトリム）
 
-                // 空白のメッセージ枠を大きく
+                // 空白のメッセージ
                 if (message === "") {
                     displayEmptyMessage();
                 } else {
@@ -93,7 +93,7 @@
                 messageContainer.appendChild(messageElement);
                 chatArea.appendChild(messageContainer);
 
-                // チャットエリアを一番下までスクロールする
+                // チャットエリアを一番下までスクロール
                 scrollToBottom();
             }
 
@@ -109,7 +109,7 @@
                 messageContainer.appendChild(messageElement);
                 chatArea.appendChild(messageContainer);
 
-                // チャットエリアを一番下までスクロールする
+                // チャットエリアを一番下までスクロール
                 scrollToBottom();
             }
 
