@@ -8,8 +8,9 @@ class dailyData extends dbdata{
 
     public function get_date(){
         $sql = "select date from input_daily_record";
-        $result = $this->exec($sql, []);
-        return $result;
+        $stmt = $this->query($sql, []);
+        $items = $stmt->fetch();
+        return $items;
     }
 }
 ?>

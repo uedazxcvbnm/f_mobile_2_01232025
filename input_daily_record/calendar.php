@@ -9,6 +9,13 @@
 </head>
 
 <body>
+    <?php
+        require_once __DIR__.'/daily_record_classes/daily_record_method.php';
+        $dailydata = new dailyData();
+        $datearray = $dailydata->get_date();
+        // echo var_dump($datearray);
+        $datearray_json = json_encode($datearray);
+    ?>
     <div class="container">
         <div class="sidebar">
             <h2>禁酒アプリ</h2>
@@ -34,7 +41,9 @@
         let currentYear = date.getFullYear();
         let currentMonth = date.getMonth();
 
-        
+        const datearray = JSON.parse('<?php echo $datearray_json; ?>');
+        // console.log(datearray['date']);
+
 
         function createCalendar(year, month) {
             const monthDays = ["日", "月", "火", "水", "木", "金", "土"];
@@ -53,6 +62,7 @@
             calendarHTML += '</tr></thead><tbody>';
 
             const daysInMonth = new Date(year, month + 1, 0).getDate();
+            console.log(daysInMonth);
             const firstDay = new Date(year, month, 1).getDay();
             const daysInPrevMonth = new Date(year, month, 0).getDate();
 
@@ -74,8 +84,11 @@
                         const today = new Date();
                         const isToday = dayCount === today.getDate() && month === today.getMonth() && year === today.getFullYear();
                         
-                        // 毎日の記録が入力されていたらスタンプが表示される
-                        calendarHTML += `<td class="${isToday ? 'today' : ''}">${dayCount}</td>`;
+                        console.log(dayCount);
+                        calendarHTML += `<td class="${isToday ? 'today' : ''}">${dayCount}<br>
+                        ${datearray['date']?'<img src="azarashi.png" width=30 height=20>':''}</td>`;
+
+
                         // 一時的にコメントアウト
                         // calendarHTML += `<td class="${isToday ? 'today' : ''}" onclick="handleDayClick(${dayCount})">${dayCount}</td>`;
                         dayCount++;
@@ -92,7 +105,15 @@
             calendarHTML += '</tbody></table>';
 
             return calendarHTML;
-        }     
+        }
+
+        // console.log(typeof datearray);
+
+        
+        // console.log(Object.values(datearray));
+        
+        
+        
 
         function handleDayClick(day) {
             alert('日付: ' + day);
@@ -129,11 +150,7 @@
 
         renderCalendar();
     </script>
-    <?php
-        require_once __DIR__.'/daily_record_classes/daily_record_method.php';
-        $dailydata = new dailyData();
-        $datearray = $dailydata->get_date();
-    ?>
+    
 </body>
 
 </html>
