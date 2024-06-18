@@ -18,10 +18,9 @@
         <div id="popup" class="popup-container">
             <div class="popup-box">
                 <span class="close-button" onclick="closePopup()">×</span>
-                <?php
-                    echo "<h2>グループ詳細</h2>";
-                    echo "<p>ポップアップの内容をここに入れます。</p>";
-                ?>
+                <h2>グループ詳細</h2>
+                <p>ポップアップの内容をここに入れます。</p>
+                <a href="chat.php"><input type="button" name="join" value="参加"></a>
             </div>
         </div>
 
