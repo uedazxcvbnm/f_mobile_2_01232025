@@ -10,11 +10,12 @@
 </head>
 <body>
     <div class="container">
+        
         <div class="sidebar">
             <h2>禁酒アプリ</h2>
             <ul>
-                <li><a href="calendar.php">カレンダー</a></li>
-                <li><a href="graphs.php">グラフ</a></li>
+                <li><a href="./../calendar/calendar.php">カレンダー</a></li>
+                <li><a href="#">？？</a></li>
                 <li><a href="#">？？</a></li>
                 <li><a href="#">？？</a></li>
             </ul>

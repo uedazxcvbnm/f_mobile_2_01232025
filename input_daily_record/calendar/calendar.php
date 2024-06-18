@@ -10,7 +10,7 @@
 
 <body>
     <?php
-        require_once __DIR__.'/daily_record_classes/daily_record_method.php';
+        require_once __DIR__.'/../classes/daily_record_method.php';
         $dailydata = new dailyData();
         $datearray = $dailydata->get_date();
         // echo var_dump($datearray);
@@ -24,7 +24,7 @@
             <h2>禁酒アプリ</h2>
             <ul>
                 <li><a href="#">ホーム</a></li>
-                <li><a href="#">カレンダー</a></li>
+                <li><a href="./../graph/graph.php">グラフ</a></li>
                 <li><a href="#">？？</a></li>
                 <li><a href="#">？？</a></li>
             </ul>
