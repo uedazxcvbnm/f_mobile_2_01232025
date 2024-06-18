@@ -13,7 +13,7 @@
         <div class="header">
             <button id="back-button">&lt; 戻る</button>
             <div class="group-info">
-                <span id="group-name">サンプルグループ</span>
+                <span id="group-name">社会人禁酒グループ</span>
                 <span id="group-members">(5)</span>
             </div>
         </div>
@@ -35,7 +35,7 @@
             });
 
             // 仮のデータ
-            const groupName = "サンプルグループ";
+            const groupName = "社会人禁酒グループ";
             const groupMembers = 5;
 
             // HTML要素にデータをセット
@@ -47,8 +47,8 @@
             const chatArea = document.querySelector(".chat-area");
 
             // テストデータの表示（相手からのメッセージ）
-            displayMessageFromOther("森田", "よろしくお願いします！");
-            displayMessageFromOther("森田", "最近は禁酒に励んでいます！！");
+            displayMessageFromOther("山崎", "よろしくお願いします！");
+            displayMessageFromOther("山崎", "最近は3週間禁酒続いてます！！");
 
             // 送信ボタンのクリックイベントリスナー
             sendButton.addEventListener("click", function () {
