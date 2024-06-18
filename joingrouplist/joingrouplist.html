@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>参加グループ一覧</title>
+    <link rel="stylesheet" href="../joingrouplist/joingrouplist.css">
+</head>
+
+<body>
+    <header>
+        <button id="back-button">&lt; 戻る</button>
+        <h1>参加しているグループ</h1>
+    </header>
+
+    <div class="group-list-container">
+        <!-- グループがない場合に表示するメッセージ -->
+        <p id="no-groups-message" style="display: none;">参加しているグループはありません</p>
+    </div>
+
+    <!-- ポップアップ -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close">&times;</span>
+            <h2 id="popup-group-name"></h2>
+            <div id="popup-member-names" class="popup-member-names"></div>
+            <div class="popup-buttons">
+                <button id="popup-chat-button" class="chat-button">チャット画面に推移</button>
+                <button id="popup-leave-button" class="leave-button">退会</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const groupListContainer = document.querySelector(".group-list-container");
+            const noGroupsMessage = document.getElementById("no-groups-message");
+            const backButton = document.getElementById("back-button");
+            const popup = document.getElementById("popup");
+            const popupContent = document.querySelector(".popup-content");
+            const closePopup = document.querySelector(".close");
+            const popupGroupName = document.getElementById("popup-group-name");
+            const popupMemberNames = document.getElementById("popup-member-names");
+            const popupChatButton = document.getElementById("popup-chat-button");
+            const popupLeaveButton = document.getElementById("popup-leave-button");
+
+            // 戻るボタンのクリックイベント
+            backButton.addEventListener("click", function () {
+                window.location.href = "aaa.html";
+            });
+
+            // 仮のグループデータ
+            const groups = [
+                { name: "社会人禁酒グループ", members: 5, memberNames: ["森田", "小池", "小林", "田村", "山崎"] },
+                { name: "誰でもグループ", members: 20, memberNames: ["森田", "もとき", "芽衣", "はしもと", "yoshiya", "圭介", "陽菜", "神田", "昭英", "オオサキ", "しんじ", "yusei", "tomomi", "佐々木", "よしふみ", "りこ", "ゆうま", "めぐみ", "まる"] },
+            ];
+
+            // グループがない場合のメッセージ表示
+            if (groups.length === 0) {
+                noGroupsMessage.style.display = "block";
+            } else {
+                noGroupsMessage.style.display = "none";
+            }
+
+            // グループ情報
+            groups.forEach((group, index) => {
+                // グループアイテムの要素を作成
+                const groupItem = document.createElement("div");
+                groupItem.classList.add("group-item");
+
+                const groupName = document.createElement("div");
+                groupName.classList.add("group-name");
+                groupName.textContent = group.name;
+
+                const groupMembers = document.createElement("div");
+                groupMembers.classList.add("group-members");
+                groupMembers.textContent = `メンバー数: ${group.members}`;
+
+                // グループアイテムにグループ名とメンバー数を追加
+                groupItem.appendChild(groupName);
+                groupItem.appendChild(groupMembers);
+                groupListContainer.appendChild(groupItem);
+
+                // グループアイテムのクリックイベント
+                groupItem.addEventListener("click", function () {
+                    // ポップアップにグループ情報を表示
+                    popupGroupName.textContent = group.name;
+                    popupMemberNames.innerHTML = "";
+                    group.memberNames.forEach(memberName => {
+                        // メンバー情報
+                        const memberItem = document.createElement("div");
+                        memberItem.classList.add("member-item");
+
+                        const memberIcon = document.createElement("div");
+                        memberIcon.classList.add("member-icon");
+
+                        const memberText = document.createElement("span");
+                        memberText.textContent = memberName;
+
+                        // メンバーアイテム　アイコンと名前
+                        memberItem.appendChild(memberIcon);
+                        memberItem.appendChild(memberText);
+                        popupMemberNames.appendChild(memberItem);
+                    });
+
+                    // ポップアップを表示
+                    popup.style.display = "block";
+
+                    // チャットボタンのクリックイベント
+                    popupChatButton.onclick = function () {
+                        window.location.href = "../chat/chatscreen.html";
+                    };
+
+                    // 退会ボタンのクリックイベント
+                    popupLeaveButton.onclick = function () {
+                        const confirmLeave = confirm("本当に退会しますか？");
+                        if (confirmLeave) {
+                            // グループアイテムを削除
+                            groupListContainer.removeChild(groupItem);
+                            popup.style.display = "none";
+                            // グループがなくなった場合のメッセージ表示
+                            if (groupListContainer.children.length === 1) {
+                                noGroupsMessage.style.display = "block";
+                            }
+                        }
+                    };
+                });
+            });
+
+            // ポップアップを閉じるイベント
+            closePopup.addEventListener("click", function () {
+                popup.style.display = "none";
+            });
+
+            // ポップアップ外をクリックして閉じるイベント
+            window.addEventListener("click", function (event) {
+                if (event.target == popup) {
+                    popup.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
