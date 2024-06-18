@@ -11,7 +11,7 @@ use pbl2;
 # テーブル input_daily_record の作成
 # sBP：最高血圧　dBP：最低血圧
 create table input_daily_record(ident int auto_increment primary key,
- date datetime,
+ date date,
  account_drunk INT,
  money INT,
  sBP INT,

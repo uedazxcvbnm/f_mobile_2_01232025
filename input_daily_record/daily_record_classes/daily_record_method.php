@@ -9,7 +9,7 @@ class dailyData extends dbdata{
     public function get_date(){
         $sql = "select date from input_daily_record";
         $stmt = $this->query($sql, []);
-        $items = $stmt->fetch();
+        $items = $stmt->fetchAll(PDO::FETCH_COLUMN);
         return $items;
     }
 }

@@ -14,6 +14,9 @@
         $dailydata = new dailyData();
         $datearray = $dailydata->get_date();
         // echo var_dump($datearray);
+        // foreach ($datearray as $item) {
+        //     echo $datearray['date'];
+        // }
         $datearray_json = json_encode($datearray);
     ?>
     <div class="container">
@@ -62,7 +65,7 @@
             calendarHTML += '</tr></thead><tbody>';
 
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-            console.log(daysInMonth);
+            // console.log(daysInMonth);
             const firstDay = new Date(year, month, 1).getDay();
             const daysInPrevMonth = new Date(year, month, 0).getDate();
 
@@ -84,10 +87,31 @@
                         const today = new Date();
                         const isToday = dayCount === today.getDate() && month === today.getMonth() && year === today.getFullYear();
                         
-                        console.log(dayCount);
-                        calendarHTML += `<td class="${isToday ? 'today' : ''}">${dayCount}<br>
-                        ${datearray['date']?'<img src="azarashi.png" width=30 height=20>':''}</td>`;
+                        // console.log(currentMonth);
+                        let currentMonth_comparsion = currentMonth + 1;
 
+                        if(currentMonth_comparsion<10){
+                            currentMonth_comparsion = '0'+currentMonth_comparsion;
+                        }
+
+                        if (dayCount>=1 && dayCount<10){
+                            daycount_comparsion = '0'+dayCount;
+                        }
+                        else{
+                            daycount_comparsion = dayCount;
+                        }
+                        today_comparsion = currentYear+'-'+currentMonth_comparsion+'-'+daycount_comparsion;
+                        console.log(today_comparsion);
+                        
+                        console.log(datearray);
+                        calendarHTML += `<td class="${isToday ? 'today' : ''}">${dayCount}<br>
+                        ${datearray.includes(today_comparsion)?'<img src="azarashi.png" width=30 height=20>':''}</td>`;
+                        
+                        // i=0;
+                        // i = i+1;
+                        // while(i<2){
+                            
+                        // }
 
                         // 一時的にコメントアウト
                         // calendarHTML += `<td class="${isToday ? 'today' : ''}" onclick="handleDayClick(${dayCount})">${dayCount}</td>`;
