@@ -6,13 +6,33 @@
     </head>
     <body>
         <h1>グループ検索一覧</h1>
+
         <div class="bt">
-            <button>グループA<br><div class="fsize">参加人数5人</div></button>
-            <button>グループB<br><div class="fsize">参加人数10人</div></button>
-            <button>グループC<br><div class="fsize">参加人数8人</div></button>
-            <button>グループD<br><div class="fsize">参加人数3人</div></button>
-            <button>グループE<br><div class="fsize">参加人数5人</div></button>
-            <button>グループF<br><div class="fsize">参加人数13人</div></button>
+            <?php
+                for($i = 1; $i <= 6; $i++){
+                    echo "<button onclick="."openPopup()".">グループ$i<br><div class="."fsize".">参加人数".rand(3,15)."人</div></button>";
+                }
+            ?>
         </div>
+
+        <div id="popup" class="popup-container">
+            <div class="popup-box">
+                <span class="close-button" onclick="closePopup()">×</span>
+                <?php
+                    echo "<h2>グループ詳細</h2>";
+                    echo "<p>ポップアップの内容をここに入れます。</p>";
+                ?>
+            </div>
+        </div>
+
+        <script>
+            function openPopup() {
+                document.getElementById('popup').style.display = 'flex';
+            }
+
+            function closePopup() {
+                document.getElementById('popup').style.display = 'none';
+            }
+        </script>
     </body>
 </html>
