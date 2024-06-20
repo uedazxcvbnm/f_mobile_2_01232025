@@ -1,0 +1,138 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    margin: 30px auto;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    /* メッセージが画面外にはみ出さないように */
+}
+
+.header {
+    background-color: #1578c9;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+}
+
+/* 戻るボタン */
+#back-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* グループ情報 */
+.group-info {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.group-info span {
+    margin: 0 5px;
+}
+
+/* チャットエリア */
+.chat-area {
+    height: 73vh;
+    background: #e1e9f3;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 10px;
+}
+
+/* メッセージ入力エリア */
+.message-area {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: #f1f1f1;
+}
+
+/* テキストエリア */
+.message-area-text {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+/* フォントなど */
+.message-area-text textarea {
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border: 2px solid #333;
+    border-radius: 15px;
+    padding: 10px;
+    box-sizing: border-box;
+    font-family: 'メイリオ', 'Meiryo', 'ＭＳ ゴシック', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', sans-serif;
+}
+
+/* 送信ボタン */
+.message-area-button button {
+    width: 50px;
+    height: 50px;
+    background: #1578c9;
+    color: white;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.message-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+.message-container.received {
+    justify-content: flex-start;
+}
+
+/* 送信されたメッセージ */
+.sent {
+    align-self: flex-end;
+}
+
+/* 受信したメッセージ */
+.received {
+    align-self: flex-start;
+}
+
+/* メッセージ */
+.message {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+/* 空白メッセージ */
+.message.empty {
+    height: 30px;
+    background-color: #f1f1f1;
+    border-radius: 15px;
+    padding: 10px;
+}
+
+/* メッセージの名前表示 */
+.message-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* アイコン */
+.icon {
+    width: 40px;
+    height: 40px;
+    background-color: #79afd0;
+    /* 仮のアイコンの背景色 */
+    border-radius: 50%;
+    margin-right: 10px;
+}

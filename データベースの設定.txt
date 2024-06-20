@@ -1,0 +1,17 @@
+set names utf8;
+drop database if exists pbl2;
+create database pbl2 character set utf8 collate utf8_general_ci;
+# ユーザー「kobe」にパスワード「denshi」を設定し、データベース「pbl2」に対する全ての権限を付与
+grant all privileges on pbl2.* to kobe@localhost identified by 'denshi';
+# データベースpbl2 を使用
+use pbl2;
+
+# テーブル daily_record の作成
+# sBP：最高血圧　dBP：最低血圧
+create table daily_record(ident int auto_increment primary key,
+ date date,
+ account_drunk INT,
+ money INT,
+ sBP INT,
+ dBP INT
+);
