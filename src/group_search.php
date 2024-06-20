@@ -19,8 +19,8 @@
             <div class="popup-box">
                 <span class="close-button" onclick="closePopup()">×</span>
                 <h2>グループ詳細</h2>
-                <p>ポップアップの内容をここに入れます。</p>
-                <a href="chat.php"><input type="button" name="join" value="参加"></a>
+                <p>毎日お酒を飲む習慣を直したい。まずは一日休肝日を作ることが目標です</p>
+                <a href="./../chat/chatscreen.html"><input type="button" name="join" value="参加"></a>
             </div>
         </div>
 
