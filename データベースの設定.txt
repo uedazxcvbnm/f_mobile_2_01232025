@@ -18,7 +18,7 @@ create table daily_record(ident int auto_increment primary key,
 
 #テーブル group の作成
 create table team_group(ident int auto_increment primary key,
-    group_name character,
-    group_detail character,
+    group_name character(20),
+    group_detail character(200),
     group_size int
 );
