@@ -6,9 +6,21 @@ grant all privileges on pbl2.* to kobe@localhost identified by 'denshi';
 # データベースpbl2 を使用
 use pbl2;
 
+create table drink(drink_id int auto_increment primary key,
+ drink_name varchar(50)
+);
+
+create table glass(glass_id int auto_increment primary key,
+  glass_name varchar(50)
+);
+
 # テーブル daily_record の作成
 # sBP：最高血圧　dBP：最低血圧
 create table daily_record(ident int auto_increment primary key,
+ drink_id INT,
+ glass_id INT,                         
+ FOREIGN KEY (drink_id) REFERENCES drink(drink_id),
+ FOREIGN KEY (glass_id) REFERENCES glass(glass_id),
  date date,
  account_drunk INT,
  money INT,

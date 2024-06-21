@@ -1,0 +1,8 @@
+
+create table daily_record(drink_id int auto_increment primary key,
+ drink_name varchar(50),
+);
+
+create table daily_record(glass_id int auto_increment primary key,
+  glass_name varchar(50),
+);
