@@ -32,6 +32,8 @@
                     <button class="glass_button" data-action="8">２勺半45ml</button>
             </div>
             <form method="POST" action="./add_record.php">
+                    <input type="hidden" id="drink_button_info" name="drink_button_info">
+                    <input type="hidden" id="glass_button_info" name="glass_button_info">
                     <p><input type="text" name="account_drunk">杯</p>
                     <p>お酒に使った金額：<input type="text" name="alcohol_money">円</p>
                     <p>最高血圧：<input type="text" name="sBP"> ／ 最低血圧：<input type="text" name="dBP"></p>
@@ -41,8 +43,10 @@
     </div>
 </body>
 <script>
+    var flag_buttonclick = false;
     document.addEventListener('DOMContentLoaded', () => {
         var buttons_drink = document.querySelectorAll('.drink_button');
+        var drink_button_info = document.getElementById('drink_button_info');
         buttons_drink.forEach((button) => {
             button.addEventListener('click', function(){
                 // 中身
@@ -60,32 +64,23 @@
 
                 var buttons_glass = document.querySelectorAll('.glass_button');
 
-                handleButtonClick_drink(action, buttons_glass);                
+                // 反転
+                flag_buttonclick = !flag_buttonclick;
+                if (flag_buttonclick){
+                    handleButtonClick_drink(action, buttons_glass);
+                }
+                else{
+                    // すべて表示
+                    buttons_glass.forEach((btn_glass) => {
+                        btn_glass.style.visibility = 'visible';
+                    });
+                }                
             });
         });
 
         
 
         
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-        var buttons_glass = document.querySelectorAll('.glass_button');
-        buttons_glass.forEach((button) => {
-            button.addEventListener('click', function(){
-                // 中身
-                // 選択状態を解除
-                // btn.classList.remove('selected');
-                buttons_glass.forEach(btn => btn.classList.remove('selected'));
-                // 選択状態を追加
-                this.classList.add('selected');
-                // ボタンごとに別々の処理を実行
-                const action = button.getAttribute('data-action');
-                console.log(buttons_glass)
-                handleButtonClick_drink(action, buttons_glass);
-            });
-
-        });
     });
 
     function handleButtonClick_drink(action, buttons_glass) {
@@ -125,54 +120,68 @@
                 console.log('Unknown action');
                 break;
         }
+        drink_button_info.value = action;
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        var buttons_glass = document.querySelectorAll('.glass_button');
+        var glass_button_info = document.getElementById('glass_button_info');
+        buttons_glass.forEach((button) => {
+            button.addEventListener('click', function(){
+                // 中身
+                // 選択状態を解除
+                // btn.classList.remove('selected');
+                buttons_glass.forEach(btn => btn.classList.remove('selected'));
+                // 選択状態を追加
+                this.classList.add('selected');
+                // ボタンごとに別々の処理を実行
+                const action = button.getAttribute('data-action');
+                console.log(buttons_glass)
+                handleButtonClick_glass(action, buttons_glass);
+            });
+
+        });
+    });
 
     function handleButtonClick_glass(action) {
         switch(action) {
             case '1':
                 console.log('Button 1 clicked');
-                return 1;
                 // ここにButton 1の処理を記述
                 break;
             case '2':
                 console.log('Button 2 clicked');
-                return 2;
                 // ここにButton 2の処理を記述
                 break;
             case '3':
                 console.log('Button 3 clicked');
-                return 3;
                 // ここにButton 3の処理を記述
                 break;
             case '4':
                 console.log('Button 4 clicked');
-                return 4;
                 // ここにButton 3の処理を記述
                 break;
             case '5':
                 console.log('Button 5 clicked');
-                return 5;
                 // ここにButton 3の処理を記述
                 break;
             case '6':
                 console.log('Button 6 clicked');
-                return 6;
                 // ここにButton 3の処理を記述
                 break;
             case '7':
                 console.log('Button 7 clicked');
-                return 7;
                 // ここにButton 3の処理を記述
                 break;
             case '8':
                 console.log('Button 8 clicked');
-                return 8;
                 // ここにButton 3の処理を記述
                 break;
             default:
                 console.log('Unknown action');
                 break;
         }
+        glass_button_info.value = action;
     }
 
     
