@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../input_daily_record/classes/team.php';
+require_once __DIR__ . '/team.php';
 $team = new Team();
 $teams = $team->getTeams();
 
