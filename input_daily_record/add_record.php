@@ -22,7 +22,7 @@ $action_drink_volume = $dailyData->get_alc($action_drink);
 // グラスを取得　id指定
 $action_glass_volume = $dailyData->get_glass_v($action_glass);
 
-// echo $action_drink_volume;
+// echo $action_glass_volume;
 
 
 
