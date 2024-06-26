@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="input_daily_record.css">
     <meta charset="UTF-8">
 </head>
+
 <body>
     <div class="input_daily_screen">
         <div class="daily_registration_form">
