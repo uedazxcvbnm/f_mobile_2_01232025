@@ -6,13 +6,33 @@ grant all privileges on pbl2.* to kobe@localhost identified by 'denshi';
 # データベースpbl2 を使用
 use pbl2;
 
-create table drink(drink_id int auto_increment primary key,
- drink_name varchar(50)
+
+CREATE TABLE drink (
+  drink_id int(11) auto_increment primary key,
+  drink_name varchar(50),
+  alc int(11) NOT NULL
 );
 
-create table glass(glass_id int auto_increment primary key,
-  glass_name varchar(50)
+INSERT INTO drink (drink_id, drink_name, alc) VALUES
+(1, 'ビール', 5),
+(2, '日本酒', 15),
+(3, 'ワイン', 12);
+
+CREATE TABLE glass (
+  glass_id int(11) auto_increment primary key,
+  glass_name varchar(50),
+  glass_v int(11) NOT NULL
 );
+
+INSERT INTO glass (glass_id, glass_name, glass_v) VALUES
+(1, '缶300ml', 300),
+(2, '缶500ml', 500),
+(3, 'コップ200ml', 200),
+(4, 'グラス100ml', 100),
+(5, 'シングル30ml', 30),
+(6, 'ダブル60ml', 60),
+(7, '２勺36ml', 36),
+(8, '２勺半45ml', 45);
 
 # テーブル daily_record の作成
 # sBP：最高血圧　dBP：最低血圧
@@ -25,5 +45,6 @@ create table daily_record(ident int auto_increment primary key,
  account_drunk INT,
  money INT,
  sBP INT,
- dBP INT
+ dBP INT,
+ alchol_volume int(11) NOT NULL
 );
