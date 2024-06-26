@@ -47,4 +47,12 @@ create table daily_record(ident int auto_increment primary key,
  sBP INT,
  dBP INT,
  alchol_volume int(11) NOT NULL
+ dBP INT
+);
+
+#テーブル teams の作成
+create table teams(ident int auto_increment primary key,
+    name character(20),
+    detail character(200),
+    size int
 );
