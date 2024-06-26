@@ -1,0 +1,20 @@
+body{
+    margin-top: 50px;
+    background-color: #c4e4f5;
+}
+h1{
+    text-align: center;
+}
+p{
+    text-align: center;
+    margin-top: 50px;
+}
+button{
+    width: 200px;
+    height: 50px;
+    border-radius: 30px;
+    margin-top: 50px;
+}
+.bc{
+    text-align: center;
+}
