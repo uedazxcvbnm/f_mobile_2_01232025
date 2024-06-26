@@ -18,4 +18,10 @@ class Team extends dbdata
         $team = $stmt->fetch();
         return $team;
     }
+
+    public function addTeam($name, $detail)
+    {
+        $sql = "insert into teams (name, detail, size) values(?, ?, 1)";
+        $result = $this->exec($sql, [$name, $detail]);
+    }
 }

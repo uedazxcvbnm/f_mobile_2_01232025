@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__ . '/team.php';
+require_once __DIR__ . '/team_class.php';
 $team = new Team();
 $teams = $team->getTeams();
-
+$ident = 1;
 if($_SERVER["REQUEST_METHOD"] == 'POST'){
     $ident = $_POST['group'];
 }
@@ -17,7 +17,7 @@ $group = $product->getTeam($ident);
     </head>
     <body>
         <h1>グループ検索一覧</h1>
-
+        <a href="../src/team_create.php"><input type="button" name="new" value="グループ作成"></a>
         <div class="bt">
             <form method="POST" action="">
                 <?php
@@ -35,7 +35,7 @@ $group = $product->getTeam($ident);
                 <?php
                 echo $group['detail'];
                 ?>
-                <br><a href="./../chat/chatscreen.html"><input type="button" name="join" value="参加"></a>
+                <br><div class="mt"><a href="./../chat/chatscreen.html"><input type="button" name="join" value="参加"></a></div>
             </div>
         </div>
 
