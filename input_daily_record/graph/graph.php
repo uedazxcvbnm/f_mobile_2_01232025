@@ -94,7 +94,7 @@
         const updateCharts = (data) => {
             console.log("Data for Charts:", data);
             const labels = data.map(row => row.date);
-            const amountData = data.map(row => row.account_drunk);
+            const amountData = data.map(row => row.alchol_volume);
             const costData = data.map(row => row.money);
             const systolicData = data.map(row => row.sBP);
             const diastolicData = data.map(row => row.dBP);
