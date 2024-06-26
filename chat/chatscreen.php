@@ -95,10 +95,14 @@
                 sendMessage();
             });
 
-            function displayMessage(message, type, date) {
+            function displayMessage(message, type, date, id = null) {
                 const messageContainer = document.createElement("div");
                 messageContainer.classList.add("message-container");
-                messageContainer.dataset.messageId = ++lastMessageId;
+                if (id) {
+                    messageContainer.dataset.messageId = id;
+                } else {
+                    messageContainer.dataset.messageId = ++lastMessageId;
+                }
 
                 const messageElement = document.createElement("div");
                 messageElement.classList.add("message", type);
@@ -158,7 +162,7 @@
                     const messages = await response.json();
 
                     messages.forEach(message => {
-                        displayMessage(message.content, "received", new Date(message.date));
+                        displayMessage(message.content, "received", new Date(message.date), message.id);
                         lastMessageId = message.id;
                     });
 
@@ -174,7 +178,7 @@
                     const messages = await response.json();
 
                     messages.forEach(message => {
-                        displayMessage(message.content, message.type === 'sent' ? "sent" : "received", new Date(message.date));
+                        displayMessage(message.content, message.type === 'sent' ? "sent" : "received", new Date(message.date), message.id);
                         lastMessageId = Math.max(lastMessageId, message.id);
                     });
 
@@ -205,26 +209,28 @@
 
             document.getElementById("delete-button").addEventListener("click", function() {
                 if (currentMessageContainer) {
-                    deleteMessage(currentMessageContainer);
+                    const confirmDelete = confirm("本当に削除しますか？");
+                    if (confirmDelete) {
+                        deleteMessage(currentMessageContainer);
+                    }
                     contextMenu.style.display = "none";
                 }
             });
-            //hennsyuu
+
             function editMessage(messageContainer) {
                 const messageElement = messageContainer.querySelector(".message");
-                const originalMessage = messageElement.textContent.trim(); // HTMLタグを除去してテキストのみ取得
+                const originalMessage = messageElement.textContent.replace(/\d{4}年\d{1,2}月\d{1,2}日 \d{2}:\d{2}/, '').trim(); // メッセージ内容を取得して日付を除去
 
-                // メッセージの内容とIDを取得
                 const messageId = messageContainer.dataset.messageId;
                 const newMessage = prompt("メッセージを編集:", originalMessage);
 
                 if (newMessage !== null) {
-                    // サーバーに更新リクエストを送信
+                    messageElement.innerHTML = newMessage.replace(/\n/g, "<br>") + messageElement.querySelector('.message-time').outerHTML;
+
                     updateMessageOnServer(messageId, newMessage);
                 }
             }
 
-            // サーバーにメッセージの更新リクエストを送信する関数
             async function updateMessageOnServer(messageId, newMessage) {
                 try {
                     const response = await fetch('update_message.php', {
@@ -240,7 +246,6 @@
 
                     const data = await response.json();
                     if (data.status === 'success') {
-                        // 更新成功時の処理
                         console.log('メッセージが更新されました。');
                     } else {
                         console.error('更新に失敗しました:', data.message);
@@ -250,11 +255,12 @@
                 }
             }
 
+            async function deleteMessage(messageContainer) {
+                const messageId = messageContainer.dataset.messageId;
+                messageContainer.remove();
 
-            // サーバーからメッセージを削除する関数
-            async function deleteMessageFromServer(messageId) {
                 try {
-                    const response = await fetch('../chat/delete_message.php', {
+                    const response = await fetch('delete_message.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -264,11 +270,14 @@
                         })
                     });
 
-                    if (!response.ok) {
-                        throw new Error('メッセージの削除に失敗しました');
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        console.log('メッセージが削除されました。');
+                    } else {
+                        console.error('削除に失敗しました:', data.message);
                     }
                 } catch (error) {
-                    console.error(error);
+                    console.error('削除リクエスト時にエラーが発生しました:', error.message);
                 }
             }
         });
