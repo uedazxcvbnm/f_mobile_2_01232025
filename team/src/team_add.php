@@ -10,10 +10,10 @@ $team->addTeam($name, $detail);
 <html lang="ja">
     <head>
         <title>禁酒アプリ</title>
-        <link rel="stylesheet" href="../css/team_search.css">
+        <link rel="stylesheet" href="../css/team_create.css">
     </head>
     <body>
         <h1>グループが作成されました。</h1>
-        <a href="../src/team_search.php"><input type="button" name="back" value="戻る"></a>
+        <a href="../src/team_search.php"><div class="bc"><button>戻る</button></div></a>
     </body>
 </html>

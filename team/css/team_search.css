@@ -21,6 +21,10 @@ input{
     height: 50px;
     border-radius: 30px;
 }
+.br{
+    text-align: right;
+    margin-right: 150px;
+}
 .mt{
     margin-top: 50%;
 }

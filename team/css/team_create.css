@@ -7,11 +7,13 @@ h1{
 }
 p{
     text-align: center;
+    margin-top: 50px;
 }
 button{
     width: 200px;
     height: 50px;
     border-radius: 30px;
+    margin-top: 50px;
 }
 .bc{
     text-align: center;
