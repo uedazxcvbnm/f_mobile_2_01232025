@@ -102,7 +102,7 @@
                 buttons_glass.forEach((btn_glass) => {
                         var btn_glass_item = btn_glass.getAttribute('data-action');
                         // console.log(btn_glass_item);
-                        if (btn_glass_item=='1'|| btn_glass_item=='2' || btn_glass_item=='3'|| btn_glass_item=='4'|| btn_glass_item=='5'){
+                        if (btn_glass_item=='1'|| btn_glass_item=='2' || btn_glass_item=='3'|| btn_glass_item=='4'|| btn_glass_item=='5' || btn_glass_item=='6'){
                             btn_glass.style.visibility = 'hidden';
                         }
                     });
