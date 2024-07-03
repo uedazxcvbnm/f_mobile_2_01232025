@@ -39,7 +39,7 @@
     
     var buttons_drink = document.querySelectorAll('.drink_button');
     var drink_button_info = document.getElementById('drink_button_info');
-
+    // 飲み物の種類を選択するボタン
     document.addEventListener('DOMContentLoaded', () => {
         buttons_drink.forEach((button) => {
             button.addEventListener('click', function(){
@@ -73,9 +73,9 @@
         });
     });
     
-    
+    // 飲み物の種類を選択するボタン
     function handleButtonClick_drink(action, buttons_glass) {
-        console.log(buttons_glass);
+        // console.log(buttons_glass);
         
         switch(action) {
             case '1':
@@ -114,42 +114,75 @@
         drink_button_info.value = action;
     }
 
-    // 容器のボタンを空っぽの状態で表示する
-    document.getElementById('drink_button').addEventListener('click', () => {
-        const numberInput = 3;
-        const glassButton_square= document.getElementById('glass_button');
-
-        glassButton_square.innerHTML = '';
-
-        for(let i=1; i<numberInput+1; i++){
-            const square_button = document.createElement('button');
-            // ここでクラスを指定
-            square_button.classList.add('glass_button_square');
-            // data-actionを指定　setAttribute
-            square_button.setAttribute('data-action', i.toString());
-            // ボタンのテキストを指定
-            square_button.textContent = `${i}`;
-
-            // ボタンのクリックイベントリスナーを追加
-            square_button.addEventListener('click', () => {
-                handleAction(square_button.getAttribute('data-action'), square_button);
-            });
-
-            glassButton_square.appendChild(square_button);
-        }
-    });
+    // 数を指定
+    // square_button.textContentをリストから抽出
 
     document.addEventListener('DOMContentLoaded', () => {
-        const glasses_square = document.querySelectorAll('.glass_button_square');
+        buttons_drink.forEach(button => {
+            button.addEventListener('click', () => {
+                var action = button.getAttribute('data-action');
+                // console.log(action);
+                if(action==1){
+                    var numberInput = 3;
+                }else if(action==2 || action==3){
+                    var numberInput = 2;
+                }
+                
+                // 
+                buttons_drink.forEach(d_button => {
+                    // document.getElementById('drink_button').addEventListener('click', () => {
+                        d_button.addEventListener('click', () => {  
+                            const glassButton_square= document.getElementById('glass_button');
+                            console.log(numberInput);
+                            glassButton_square.innerHTML = '';
 
-        glasses_square.forEach(g_button => {
-            g_button.addEventListener('click', () => {
-                const action = button.getAttribute('data-action');
-                handleAction(action, g_button);
+                            for(let i=1; i<numberInput+1; i++){
+                                const square_button = document.createElement('button');
+                                // ここでクラスを指定
+                                square_button.classList.add('glass_button_square');
+                                // data-actionを指定　setAttribute
+                                square_button.setAttribute('data-action', i.toString());
+                                // ボタンのテキストを指定
+                                square_button.textContent = `${i}`;
+
+                                // ボタンのクリックイベントリスナーを追加
+                                square_button.addEventListener('click', () => {
+                                    handleAction(square_button.getAttribute('data-action'), square_button);
+                                });
+
+                                glassButton_square.appendChild(square_button);
+                            }
+                    });
+                });
             });
-        });
+        })
     });
 
+    if(action=1){
+        const numberInput = 3;
+    }
+    // 条件
+    // 1:缶２　こっぷ
+    // 2:コップ　グラス
+    // 3:ちょこ２
+
+    // 容器のボタンを空っぽの状態で表示する
+    
+
+    // １
+    // 多分これいらない
+    // document.addEventListener('DOMContentLoaded', () => {
+    //     const glasses_square = document.querySelectorAll('.glass_button_square');
+
+    //     glasses_square.forEach(g_button => {
+    //         g_button.addEventListener('click', () => {
+    //             const action = button.getAttribute('data-action');
+    //             handleAction(action, g_button);
+    //         });
+    //     });
+    // });
+
+    // ２
     // ボタンのvalue属性を使って、ボタンの中身を書く
     // これは効果的なのか
 
