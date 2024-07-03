@@ -10,8 +10,7 @@
 }
 
 .button,
-.drink_button,
-.glass_button {
+.drink_button{
     background-color: #4CAF50;
     border: none;
     color: white;
@@ -23,16 +22,38 @@
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 8px;
+    height:58px;
+    width:116px;
+}
+
+.glass_button_square{
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    height:58px;
+    width:116px;
+}
+
+.glass_kinds{
+    display:flex;
 }
 
 .button.clicked,
 .drink_button.clicked,
-.glass_button.clicked {
+.glass_button_square.clicked {
     background-color: #008CBA;
 }
 
 .drink_button.selected,
-.glass_button.selected {
+.glass_button_square.selected {
     border: 2px solid #FFD700;
     background-color: #008CBA;
 }

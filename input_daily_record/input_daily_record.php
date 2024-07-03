@@ -12,32 +12,22 @@
         <div class="daily_registration_form">
             <!-- 飲み物を選択するボタン -->
             <div class="drink_kinds">飲み物を選択：
-                <!-- <select id="drink_kinds_id"> -->
-                <!-- <option value='1'> -->
-                <button class="drink_button" data-action="1">ビール</button>
-                <button class="drink_button" data-action="2">日本酒</button>
-                <button class="drink_button" data-action="3">ワイン</button>
+                <button id="drink_button" class="drink_button" data-action="1">ビール</button>
+                <button id="drink_button" class="drink_button" data-action="2">日本酒</button>
+                <button id="drink_button" class="drink_button" data-action="3">ワイン</button>
                 <!-- </select> -->
             </div>
             <!-- 容器を選択するボタン-->
-            <div class="glass_kinds">飲酒量：
-                <!-- <select id="glass_kinds_id"> -->
-                    <!-- <option value='1'> -->
-                    <button class="glass_button" data-action="1">缶300ml</button>
-                    <button class="glass_button" data-action="2">缶500ml</button>
-                    <button class="glass_button" data-action="3">コップ200ml</button>
-                    <button class="glass_button" data-action="4">グラス100ml</button>
-                    <button class="glass_button" data-action="5">シングル30ml</button>
-                    <button class="glass_button" data-action="6">ダブル60ml</button>
-                    <button class="glass_button" data-action="7">２勺36ml</button>
-                    <button class="glass_button" data-action="8">２勺半45ml</button>
+            <div class="glass_kinds">コップの選択：
+                <div id="glass_button" class="glass_button"></div>
             </div>
             <form method="POST" action="./add_record.php">
                     <input type="hidden" id="drink_button_info" name="drink_button_info">
                     <input type="hidden" id="glass_button_info" name="glass_button_info">
                     <p><input type="text" name="account_drunk">杯</p>
                     <p>お酒に使った金額：<input type="text" name="alcohol_money">円</p>
-                    <p>最高血圧：<input type="text" name="sBP"> ／ 最低血圧：<input type="text" name="dBP"></p>
+                    <!-- 血圧いったんコメントアウトしよう -->
+                    <!-- <p>最高血圧：<input type="text" name="sBP"> ／ 最低血圧：<input type="text" name="dBP"></p> -->
                     <p><input type="submit" value="送信"></p>
             </form>
         </div>
@@ -45,9 +35,12 @@
 </body>
 <script>
     var flag_buttonclick = false;
+
+    
+    var buttons_drink = document.querySelectorAll('.drink_button');
+    var drink_button_info = document.getElementById('drink_button_info');
+
     document.addEventListener('DOMContentLoaded', () => {
-        var buttons_drink = document.querySelectorAll('.drink_button');
-        var drink_button_info = document.getElementById('drink_button_info');
         buttons_drink.forEach((button) => {
             button.addEventListener('click', function(){
                 // 中身
@@ -78,12 +71,9 @@
                 }                
             });
         });
-
-        
-
-        
     });
-
+    
+    
     function handleButtonClick_drink(action, buttons_glass) {
         console.log(buttons_glass);
         
@@ -124,6 +114,46 @@
         drink_button_info.value = action;
     }
 
+    // 容器のボタンを空っぽの状態で表示する
+    document.getElementById('drink_button').addEventListener('click', () => {
+        const numberInput = 3;
+        const glassButton_square= document.getElementById('glass_button');
+
+        glassButton_square.innerHTML = '';
+
+        for(let i=1; i<numberInput+1; i++){
+            const square_button = document.createElement('button');
+            // ここでクラスを指定
+            square_button.classList.add('glass_button_square');
+            // data-actionを指定　setAttribute
+            square_button.setAttribute('data-action', i.toString());
+            // ボタンのテキストを指定
+            square_button.textContent = `${i}`;
+
+            // ボタンのクリックイベントリスナーを追加
+            square_button.addEventListener('click', () => {
+                handleAction(square_button.getAttribute('data-action'), square_button);
+            });
+
+            glassButton_square.appendChild(square_button);
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const glasses_square = document.querySelectorAll('.glass_button_square');
+
+        glasses_square.forEach(g_button => {
+            g_button.addEventListener('click', () => {
+                const action = button.getAttribute('data-action');
+                handleAction(action, g_button);
+            });
+        });
+    });
+
+    // ボタンのvalue属性を使って、ボタンの中身を書く
+    // これは効果的なのか
+
+    // 
     document.addEventListener('DOMContentLoaded', () => {
         var buttons_glass = document.querySelectorAll('.glass_button');
         var glass_button_info = document.getElementById('glass_button_info');
@@ -140,42 +170,41 @@
                 console.log(buttons_glass)
                 handleButtonClick_glass(action, buttons_glass);
             });
-
         });
     });
 
     function handleButtonClick_glass(action) {
         switch(action) {
             case '1':
-                console.log('Button 1 clicked');
+                button.textContent = '缶300ml';
                 // ここにButton 1の処理を記述
                 break;
             case '2':
-                console.log('Button 2 clicked');
+                button.textContent = '缶500ml';
                 // ここにButton 2の処理を記述
                 break;
             case '3':
-                console.log('Button 3 clicked');
+                button.textContent = 'コップ200ml';
                 // ここにButton 3の処理を記述
                 break;
             case '4':
-                console.log('Button 4 clicked');
+                button.textContent = 'グラス100ml';
                 // ここにButton 3の処理を記述
                 break;
             case '5':
-                console.log('Button 5 clicked');
+                button.textContent = 'シングル30ml';
                 // ここにButton 3の処理を記述
                 break;
             case '6':
-                console.log('Button 6 clicked');
+                button.textContent = 'ダブル60ml';
                 // ここにButton 3の処理を記述
                 break;
             case '7':
-                console.log('Button 7 clicked');
+                button.textContent = '２勺36ml';
                 // ここにButton 3の処理を記述
                 break;
             case '8':
-                console.log('Button 8 clicked');
+                button.textContent = '２勺半45ml';
                 // ここにButton 3の処理を記述
                 break;
             default:
@@ -184,7 +213,15 @@
         }
         glass_button_info.value = action;
     }
-
+    
+    // <button class="glass_button" data-action="1">缶300ml
+    // <button class="glass_button" data-action="2">缶500ml</button>
+    // <button class="glass_button" data-action="3">コップ200ml</button>
+    // <button class="glass_button" data-action="4">グラス100ml</button>
+    // <button class="glass_button" data-action="5">シングル30ml</button>
+    // <button class="glass_button" data-action="6">ダブル60ml</button>
+    // <button class="glass_button" data-action="7">２勺36ml</button>
+    // <button class="glass_button" data-action="8">２勺半45ml</button>
     
 
 
