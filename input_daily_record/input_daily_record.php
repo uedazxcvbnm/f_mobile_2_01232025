@@ -127,6 +127,19 @@
                 }else if(action==2 || action==3){
                     var numberInput = 2;
                 }
+                // 
+                var beer_glass =  ['', '缶300ml','缶500ml','コップ200ml'];
+                var sake_glass = ['', 'おちょこ36ml','おちょこ45ml'];
+                var wine_glass = ['', 'コップ200ml','グラス100ml'];
+
+
+                if (action==1){
+                    var glass_list = beer_glass;
+                } else if (action==2){
+                    var glass_list = sake_glass;
+                } else if (action==3){
+                    var glass_list = wine_glass;
+                }
                 
                 // 
                 buttons_drink.forEach(d_button => {
@@ -142,8 +155,12 @@
                                 square_button.classList.add('glass_button_square');
                                 // data-actionを指定　setAttribute
                                 square_button.setAttribute('data-action', i.toString());
+                                
+                                
+
+
                                 // ボタンのテキストを指定
-                                square_button.textContent = `${i}`;
+                                square_button.textContent = glass_list[i];
 
                                 // ボタンのクリックイベントリスナーを追加
                                 square_button.addEventListener('click', () => {
