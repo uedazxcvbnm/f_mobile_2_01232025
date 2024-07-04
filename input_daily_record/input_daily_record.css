@@ -46,14 +46,14 @@
     display:flex;
 }
 
-.button.clicked,
+/* .button.clicked,
 .drink_button.clicked,
 .glass_button_square.clicked {
     background-color: #008CBA;
-}
+} */
 
 .drink_button.selected,
-.glass_button_square.selected {
+.glass_button_square.selected{
     border: 2px solid #FFD700;
     background-color: #008CBA;
 }

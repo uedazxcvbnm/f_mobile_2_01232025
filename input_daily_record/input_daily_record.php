@@ -127,64 +127,188 @@
                 }else if(action==2 || action==3){
                     var numberInput = 2;
                 }
-                // 
+
+                // 容器を選択するボタンで使用するリスト 
                 var beer_glass =  ['', '缶300ml','缶500ml','コップ200ml'];
                 var sake_glass = ['', 'おちょこ36ml','おちょこ45ml'];
                 var wine_glass = ['', 'コップ200ml','グラス100ml'];
 
+                var beer_glass_action =  ['', 1, 2, 3];
+                var sake_glass_action = ['', 7, 8];
+                var wine_glass_action = ['', 3, 4];
+
 
                 if (action==1){
                     var glass_list = beer_glass;
+                    var action_list = beer_glass_action;
                 } else if (action==2){
                     var glass_list = sake_glass;
+                    var action_list = sake_glass_action;
                 } else if (action==3){
                     var glass_list = wine_glass;
+                    var action_list = wine_glass_action;
                 }
                 
                 // 
                 buttons_drink.forEach(d_button => {
                     // document.getElementById('drink_button').addEventListener('click', () => {
-                        d_button.addEventListener('click', () => {  
-                            const glassButton_square= document.getElementById('glass_button');
-                            console.log(numberInput);
-                            glassButton_square.innerHTML = '';
+                    d_button.addEventListener('click', () => {  
+                        const glassButton_square= document.getElementById('glass_button');
+                        // console.log(numberInput);
+                        glassButton_square.innerHTML = '';
 
-                            for(let i=1; i<numberInput+1; i++){
-                                const square_button = document.createElement('button');
-                                // ここでクラスを指定
-                                square_button.classList.add('glass_button_square');
-                                // data-actionを指定　setAttribute
-                                square_button.setAttribute('data-action', i.toString());
-                                
-                                
+                        square_button_object = {};
 
+                        for(let i=1; i<numberInput+1; i++){
+                            const square_button = document.createElement('button');
+                            // ここでクラスを指定
+                            square_button.classList.add('glass_button_square');
+                            // data-actionを指定　setAttribute
+                            square_button.setAttribute('data-action', action_list[i].toString()); 
 
-                                // ボタンのテキストを指定
-                                square_button.textContent = glass_list[i];
+                            // ボタンのテキストを反映させる
+                            square_button.textContent = glass_list[i];
 
-                                // ボタンのクリックイベントリスナーを追加
-                                square_button.addEventListener('click', () => {
-                                    handleAction(square_button.getAttribute('data-action'), square_button);
+                            square_button_object[`button${i}`] = square_button;
+
+                            glassButton_square.appendChild(square_button);
+                        }
+                        console.log(glassButton_square);
+
+                        // object型ではforeachが使えない
+                        for (let glass_key in square_button_object) {
+                            if (square_button_object.hasOwnProperty(glass_key)) {
+                                console.log(glass_key)
+                                console.log(typeof square_button_object[glass_key]);
+                                square_button_object[glass_key].addEventListener('click', () => {
+                                    handleButtonClick_glass(glass_key);
                                 });
-
-                                glassButton_square.appendChild(square_button);
                             }
+                        }
+                        function handleButtonClick_glass(glass_key) {
+                            // ボタンを取得状態
+                            // 選択状態
+                            // console.log('1');
+                            var g_button = square_button_object[glass_key];
+                            // g_button.classList.toggle('selected');
+                            // console.log(typeof g_button.classList);
+
+                            var g_button_action = g_button.getAttribute('data-action');
+                            console.log(g_button_action);
+
+                            // 他のボタンをすべて選択解除
+                            for (let key in square_button_object) {
+                                if (square_button_object.hasOwnProperty(key) && key !== glass_key) {
+                                    square_button_object[key].classList.remove('selected');
+                                    // square_button_object[key].textContent = `Button ${square_button_object[key].getAttribute('data-action')}`;
+                                }
+                            }
+
+                            let selectedButton = null;
+
+                            console.log(g_button.className);
+
+                            // 現在のボタンの選択状態を切り替え
+                            if (selectedButton === g_button) {
+                                g_button_action.className -= ' selected';
+                                // button.textContent = `Button ${button.getAttribute('data-action')}`;
+                                selectedButton = null;
+                            } else if(g_button.className.includes(' selected')==false) {
+                                // console.log(typeof g_button)
+                                // console.log(g_button.className)
+                                g_button.className += ' selected';
+                                // g_button_action.textContent = `Button ${g_button_action.getAttribute('data-action')} (Selected)`;
+                                selectedButton = g_button_action;
+                                console.log(g_button.className);
+                                
+                            }
+                            
+                            // actionがうまくいってない
+                            switch(g_button_action){
+                                case '1':
+                                    // button.textContent = '缶300ml';
+                                    // ここにButton 1の処理を記述
+                                    break;
+                                case '2':
+                                    // button.textContent = '缶500ml';
+                                    // ここにButton 2の処理を記述
+                                    break;
+                                case '3':
+                                    // button.textContent = 'コップ200ml';
+                                    // ここにButton 3の処理を記述
+                                    break;
+                                case '4':
+                                    // button.textContent = 'グラス100ml';
+                                    // ここにButton 3の処理を記述
+                                    break;
+                                case '5':
+                                    // button.textContent = 'シングル30ml';
+                                    // ここにButton 3の処理を記述
+                                    break;
+                                case '6':
+                                    // button.textContent = 'ダブル60ml';
+                                    // ここにButton 3の処理を記述
+                                    break;
+                                case '7':
+                                    // button.textContent = '２勺36ml';
+                                    // ここにButton 3の処理を記述
+                                    break;
+                                case '8':
+                                    // button.textContent = '２勺半45ml';
+                                    // ここにButton 3の処理を記述
+                                    break;
+                                default:
+                                    console.log('Unknown action');
+                                    break;
+                            }
+                            glass_button_info.value = action;
+                            console.log(action);
+                        }
                     });
                 });
+                
             });
         })
     });
 
-    if(action=1){
-        const numberInput = 3;
-    }
+    
+
+    // 選択状態を解除
+    // square_button_object.forEach(btn => btn.classList.remove('selected'));
+    // 選択状態を追加
+    // this.classList.add('selected');
+    // ボタンごとに別々の処理を実行
+    // const action = square_button_object[glass_key].getAttribute('data-action');
+
+
     // 条件
     // 1:缶２　こっぷ
     // 2:コップ　グラス
-    // 3:ちょこ２
+    // 3:ちょこ２  
 
-    // 容器のボタンを空っぽの状態で表示する
+    // 
+    // document.addEventListener('DOMContentLoaded', () => {
+    //     var buttons_glass = document.querySelectorAll('.glass_button_square');
+    //     var glass_button_info = document.getElementById('glass_button_info');
+
+    //     buttons_glass.forEach((g_button) => {
+    //         console.log('a');
+    //         g_button.addEventListener('click', function(){
+    //             // 中身
+    //             // 選択状態を解除
+    //             buttons_glass.forEach(btn => btn.classList.remove('selected'));
+    //             // 選択状態を追加
+    //             this.classList.add('selected');
+    //             // ボタンごとに別々の処理を実行
+    //             const action = g_button.getAttribute('data-action');
+    //             // console.log(buttons_glass)
+    //             handleButtonClick_glass(action, buttons_glass);
+    //         });
+    //     });
+    // });
+
     
+
 
     // １
     // 多分これいらない
@@ -202,67 +326,6 @@
     // ２
     // ボタンのvalue属性を使って、ボタンの中身を書く
     // これは効果的なのか
-
-    // 
-    document.addEventListener('DOMContentLoaded', () => {
-        var buttons_glass = document.querySelectorAll('.glass_button');
-        var glass_button_info = document.getElementById('glass_button_info');
-        buttons_glass.forEach((button) => {
-            button.addEventListener('click', function(){
-                // 中身
-                // 選択状態を解除
-                // btn.classList.remove('selected');
-                buttons_glass.forEach(btn => btn.classList.remove('selected'));
-                // 選択状態を追加
-                this.classList.add('selected');
-                // ボタンごとに別々の処理を実行
-                const action = button.getAttribute('data-action');
-                console.log(buttons_glass)
-                handleButtonClick_glass(action, buttons_glass);
-            });
-        });
-    });
-
-    function handleButtonClick_glass(action) {
-        switch(action) {
-            case '1':
-                button.textContent = '缶300ml';
-                // ここにButton 1の処理を記述
-                break;
-            case '2':
-                button.textContent = '缶500ml';
-                // ここにButton 2の処理を記述
-                break;
-            case '3':
-                button.textContent = 'コップ200ml';
-                // ここにButton 3の処理を記述
-                break;
-            case '4':
-                button.textContent = 'グラス100ml';
-                // ここにButton 3の処理を記述
-                break;
-            case '5':
-                button.textContent = 'シングル30ml';
-                // ここにButton 3の処理を記述
-                break;
-            case '6':
-                button.textContent = 'ダブル60ml';
-                // ここにButton 3の処理を記述
-                break;
-            case '7':
-                button.textContent = '２勺36ml';
-                // ここにButton 3の処理を記述
-                break;
-            case '8':
-                button.textContent = '２勺半45ml';
-                // ここにButton 3の処理を記述
-                break;
-            default:
-                console.log('Unknown action');
-                break;
-        }
-        glass_button_info.value = action;
-    }
     
     // <button class="glass_button" data-action="1">缶300ml
     // <button class="glass_button" data-action="2">缶500ml</button>

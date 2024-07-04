@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__.'/dbdata.php';
 class dailyData extends dbdata{
-    public function insert_dailyData($drink, $glass, $account_drunk, $alcohol_money, $sBP, $dBP, $alchol_volume){
-        $sql = "insert into daily_record(drink_id, glass_id, date, account_drunk, money, sBP, dBP, alchol_volume) values(?, ?, NOW(), ?, ?, ?, ?, ?)";
-        $result = $this->exec($sql, [$drink, $glass, $account_drunk, $alcohol_money, $sBP, $dBP, $alchol_volume]);
+    public function insert_dailyData($drink, $glass, $account_drunk, $alcohol_money, $alchol_volume){
+        $sql = "insert into daily_record(drink_id, glass_id, date, account_drunk, money, alchol_volume) values(?, ?, NOW(), ?, ?, ?)";
+        $result = $this->exec($sql, [$drink, $glass, $account_drunk, $alcohol_money, $alchol_volume]);
     }
 
     public function get_date(){

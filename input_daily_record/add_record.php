@@ -9,8 +9,8 @@ $account_drunk = $_POST['account_drunk'];
 // 金額
 $alcohol_money = $_POST['alcohol_money'];
 // 血圧
-$sBP = $_POST['sBP'];
-$dBP = $_POST['dBP'];
+// $sBP = $_POST['sBP'];
+// $dBP = $_POST['dBP'];
 
 // インスタンスを作成
 require_once __DIR__.'/classes/daily_record_method.php';
@@ -31,7 +31,7 @@ $alchol_volume = $action_glass_volume * $action_drink_volume/100 * 0.8;
 echo $alchol_volume;
 
 // データを登録
-$dailyData->insert_dailyData($action_drink, $action_glass, $account_drunk, $alcohol_money, $sBP, $dBP, $alchol_volume);
+$dailyData->insert_dailyData($action_drink, $action_glass, $account_drunk, $alcohol_money, $alchol_volume);
 
 // comment_home画面に移動
 header("Location: ./graph/graph.php");
