@@ -2,7 +2,7 @@
 require_once __DIR__ . '/team_class.php';
 $team = new Team();
 $teams = $team->getTeams();
-$ident = 1;
+$ident = 0;
 if($_SERVER["REQUEST_METHOD"] == 'POST'){
     $ident = $_POST['group'];
 }
@@ -13,7 +13,7 @@ $group = $product->getTeam($ident);
 <html lang="ja">
     <head>
         <title>禁酒アプリ</title>
-        <link rel="stylesheet" href="../css/team_search.css">
+        <link rel="stylesheet" href="../css/test.css">
     </head>
     <body>
         <h1>グループ検索一覧</h1>
@@ -28,6 +28,14 @@ $group = $product->getTeam($ident);
             </form>
         </div>
 
+        <?php
+            if($ident == 0){
+                $flag = 0;
+            }else{
+                $flag = 1;
+            }
+        ?>
+
         <div id="popup" class="popup-container">
             <div class="popup-box">
                 <span class="close-button" onclick="closePopup()">×</span>
@@ -40,6 +48,11 @@ $group = $product->getTeam($ident);
         </div>
 
         <script>
+            <?php
+                if($flag == 1){
+                    echo "document.getElementById('popup').style.display = 'flex';";
+                }
+            ?>
             function openPopup() {
                 document.getElementById('popup').style.display = 'flex';
             }
