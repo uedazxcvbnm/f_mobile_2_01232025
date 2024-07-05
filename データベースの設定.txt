@@ -44,10 +44,18 @@ create table daily_record(ident int auto_increment primary key,
  date date,
  account_drunk INT,
  money INT,
- sBP INT,
- dBP INT,
  alchol_volume int(11) NOT NULL
- dBP INT
+);
+
+create table record_oneday(ident int auto_increment primary key,
+ drink_id INT,
+ glass_id INT,                         
+ FOREIGN KEY (drink_id) REFERENCES drink(drink_id),
+ FOREIGN KEY (glass_id) REFERENCES glass(glass_id),
+ date date,
+ account_drunk INT,
+ money INT,
+ alchol_volume int(11) NOT NULL
 );
 
 #テーブル teams の作成
@@ -55,4 +63,18 @@ create table teams(ident int auto_increment primary key,
     name character(20),
     detail character(200),
     size int
+);
+
+INSERT INTO teams (name, detail, size) VALUES ('グループ1', 'みんなで禁酒しよう', 5), 
+('グループ2', '毎月2割アルコール量を減らそう', 13), 
+('グループ3', '絶対にお酒を飲まない', 8), 
+('グループ4', 'ノンアルを楽しんでアルコール摂取量を減らそう', 10), 
+('グループ5', '絶対にアルコールは入れない', 6), 
+('グループ6', 'ゆっくり禁酒していきましょう', 3);
+
+# チャットテーブルの作成
+CREATE TABLE chat (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message TEXT NOT NULL,
+    date DATETIME NOT NULL
 );

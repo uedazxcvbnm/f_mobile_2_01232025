@@ -206,7 +206,7 @@
 
                             let selectedButton = null;
 
-                            console.log(g_button.className);
+                            // console.log(g_button.className);
 
                             // 現在のボタンの選択状態を切り替え
                             if (selectedButton === g_button) {
@@ -222,7 +222,7 @@
                                 console.log(g_button.className);
                                 
                             }
-                            
+                            console.log(g_button_action);
                             // actionがうまくいってない
                             switch(g_button_action){
                                 case '1':
@@ -261,8 +261,8 @@
                                     console.log('Unknown action');
                                     break;
                             }
-                            glass_button_info.value = action;
-                            console.log(action);
+                            glass_button_info.value = g_button_action;
+                            console.log(glass_button_info.value);
                         }
                     });
                 });
