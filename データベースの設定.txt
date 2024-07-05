@@ -6,7 +6,6 @@ grant all privileges on pbl2.* to kobe@localhost identified by 'denshi';
 # データベースpbl2 を使用
 use pbl2;
 
-
 CREATE TABLE drink (
   drink_id int(11) auto_increment primary key,
   drink_name varchar(50),
@@ -36,23 +35,36 @@ INSERT INTO glass (glass_id, glass_name, glass_v) VALUES
 
 # テーブル daily_record の作成
 # sBP：最高血圧　dBP：最低血圧
-create table daily_record(ident int auto_increment primary key,
- drink_id INT,
- glass_id INT,                         
- FOREIGN KEY (drink_id) REFERENCES drink(drink_id),
- FOREIGN KEY (glass_id) REFERENCES glass(glass_id),
- date date,
- account_drunk INT,
- money INT,
- sBP INT,
- dBP INT,
- alchol_volume int(11) NOT NULL
- dBP INT
+create table daily_record(
+  ident int auto_increment primary key,
+  drink_id INT,
+  glass_id INT,                         
+  FOREIGN KEY (drink_id) REFERENCES drink(drink_id),
+  FOREIGN KEY (glass_id) REFERENCES glass(glass_id),
+  date date,
+  account_drunk INT,
+  money INT,
+  sBP INT,
+  dBP INT,
+  alchol_volume int(11) NOT NULL
 );
 
 #テーブル teams の作成
-create table teams(ident int auto_increment primary key,
-    name character(20),
-    detail character(200),
-    size int
+create table teams(
+  ident int auto_increment primary key,
+  name character(20),
+  detail character(200),
+  size int
+);
+
+# テーブル posts の作成
+CREATE TABLE posts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  post_title VARCHAR(255),
+  post_content TEXT,
+  post_url VARCHAR(255),
+  post_image VARCHAR(255),
+  post_tags VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  likes INT DEFAULT 0
 );

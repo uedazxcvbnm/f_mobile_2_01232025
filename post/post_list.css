@@ -1,0 +1,43 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.post-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.post-item h2 {
+    margin-top: 0;
+}
+
+.post-item p {
+    margin: 5px 0;
+}
+
+.post-item a {
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+.post-item a:hover {
+    text-decoration: underline;
+}
