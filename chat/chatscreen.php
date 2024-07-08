@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>chat</title>
+    <title>Chat</title>
     <link rel="stylesheet" href="../chat/chatscreen.css">
 </head>
 
@@ -75,7 +75,7 @@
 
                 try {
                     await saveMessageToServer(message);
-                    displayMessage(message, "sent", new Date());
+                    displayMessage(message, "sent", new Date(), 1); // 仮のIDを1として送信済みメッセージを表示
                 } catch (error) {
                     console.error(error);
                 }
@@ -95,24 +95,23 @@
                 sendMessage();
             });
 
-            function displayMessage(message, type, date, id = null) {
+            function displayMessage(message, type, date, id) {
                 const messageContainer = document.createElement("div");
-                messageContainer.classList.add("message-container");
-                if (id) {
-                    messageContainer.dataset.messageId = id;
-                } else {
-                    messageContainer.dataset.messageId = ++lastMessageId;
-                }
+                messageContainer.classList.add("message-container", type === "sent" ? "sent" : "received");
+                messageContainer.dataset.messageId = id;
 
                 const messageElement = document.createElement("div");
-                messageElement.classList.add("message", type);
-                messageElement.innerHTML = message.replace(/\n/g, "<br>");
+                messageElement.classList.add("message");
+                messageElement.innerHTML = `
+                    <div class="message-name">ユーザー名</div>
+                    <div>${message.replace(/\n/g, "<br>")}</div>
+                    <span class="message-time">${formatDate(date)}</span>
+                `;
 
-                const timeElement = document.createElement("span");
-                timeElement.classList.add("message-time");
-                timeElement.textContent = formatDate(date);
+                const iconElement = document.createElement("div");
+                iconElement.classList.add("icon"); // 仮のアイコンのスタイルを適用するためのクラス
 
-                messageElement.appendChild(timeElement);
+                messageContainer.appendChild(iconElement);
                 messageContainer.appendChild(messageElement);
                 chatArea.appendChild(messageContainer);
 
@@ -162,7 +161,7 @@
                     const messages = await response.json();
 
                     messages.forEach(message => {
-                        displayMessage(message.content, "received", new Date(message.date), message.id);
+                        displayMessage(message.content, message.type === 'sent' ? "sent" : "received", new Date(message.date), message.id);
                         lastMessageId = message.id;
                     });
 
@@ -225,7 +224,11 @@
                 const newMessage = prompt("メッセージを編集:", originalMessage);
 
                 if (newMessage !== null) {
-                    messageElement.innerHTML = newMessage.replace(/\n/g, "<br>") + messageElement.querySelector('.message-time').outerHTML;
+                    messageElement.innerHTML = `
+                        <div class="message-name">ユーザー名</div>
+                        <div>${newMessage.replace(/\n/g, "<br>")}</div>
+                        <span class="message-time">${formatDate(new Date())}</span>
+                    `;
 
                     updateMessageOnServer(messageId, newMessage);
                 }
@@ -244,41 +247,36 @@
                         })
                     });
 
-                    const data = await response.json();
-                    if (data.status === 'success') {
-                        console.log('メッセージが更新されました。');
-                    } else {
-                        console.error('更新に失敗しました:', data.message);
+                    if (!response.ok) {
+                        throw new Error('メッセージの更新に失敗しました');
                     }
                 } catch (error) {
-                    console.error('更新リクエスト時にエラーが発生しました:', error.message);
+                    console.error(error);
                 }
             }
 
-            async function deleteMessage(messageContainer) {
+            function deleteMessage(messageContainer) {
                 const messageId = messageContainer.dataset.messageId;
-                messageContainer.remove();
 
-                try {
-                    const response = await fetch('delete_message.php', {
-                        method: 'POST',
+                fetch('delete_message.php', {
+                        method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
                             id: messageId
                         })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            messageContainer.remove();
+                        } else {
+                            throw new Error('メッセージの削除に失敗しました');
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
                     });
-
-                    const data = await response.json();
-                    if (data.status === 'success') {
-                        console.log('メッセージが削除されました。');
-                    } else {
-                        console.error('削除に失敗しました:', data.message);
-                    }
-                } catch (error) {
-                    console.error('削除リクエスト時にエラーが発生しました:', error.message);
-                }
             }
         });
     </script>
