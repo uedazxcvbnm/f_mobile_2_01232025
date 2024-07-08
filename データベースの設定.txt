@@ -6,7 +6,6 @@ grant all privileges on pbl2.* to kobe@localhost identified by 'denshi';
 # データベースpbl2 を使用
 use pbl2;
 
-
 CREATE TABLE drink (
   drink_id int(11) auto_increment primary key,
   drink_name varchar(50),
@@ -59,10 +58,11 @@ create table record_oneday(ident int auto_increment primary key,
 );
 
 #テーブル teams の作成
-create table teams(ident int auto_increment primary key,
-    name character(20),
-    detail character(200),
-    size int
+create table teams(
+  ident int auto_increment primary key,
+  name character(20),
+  detail character(200),
+  size int
 );
 
 INSERT INTO teams (name, detail, size) VALUES ('グループ1', 'みんなで禁酒しよう', 5), 
@@ -100,3 +100,16 @@ CREATE TABLE IF NOT EXISTS chat (
 
 
 
+
+
+# テーブル posts の作成
+CREATE TABLE posts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  post_title VARCHAR(255),
+  post_content TEXT,
+  post_url VARCHAR(255),
+  post_image VARCHAR(255),
+  post_tags VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  likes INT DEFAULT 0
+);
