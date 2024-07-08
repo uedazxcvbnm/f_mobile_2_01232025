@@ -72,14 +72,6 @@ INSERT INTO teams (name, detail, size) VALUES ('グループ1', 'みんなで禁
 ('グループ5', '絶対にアルコールは入れない', 6), 
 ('グループ6', 'ゆっくり禁酒していきましょう', 3);
 
-# チャットテーブルの作成
-CREATE TABLE chat (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    message TEXT NOT NULL,
-    date DATETIME NOT NULL
-);
-
-
 userテーブル
 CREATE TABLE IF NOT EXISTS user (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
