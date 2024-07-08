@@ -13,7 +13,7 @@ $group = $product->getTeam($ident);
 <html lang="ja">
     <head>
         <title>禁酒アプリ</title>
-        <link rel="stylesheet" href="../css/test.css">
+        <link rel="stylesheet" href="../css/team_search.css">
     </head>
     <body>
         <h1>グループ検索一覧</h1>
