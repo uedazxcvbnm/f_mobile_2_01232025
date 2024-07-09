@@ -1,5 +1,0 @@
-CREATE TABLE chat (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    message TEXT NOT NULL,
-    date DATETIME NOT NULL
-);
