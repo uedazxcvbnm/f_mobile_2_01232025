@@ -43,7 +43,7 @@ $group = $product->getTeam($ident);
                 <?php
                 echo $group['detail'];
                 ?>
-                <br><div class="mt"><a href="./../chat/chatscreen.html"><input type="button" name="join" value="参加"></a></div>
+                <br><div class="mt"><a href="./../../chat/chatscreen.html"><input type="button" name="join" value="参加"></a></div>
             </div>
         </div>
 
