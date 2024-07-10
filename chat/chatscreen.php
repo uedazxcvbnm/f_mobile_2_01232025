@@ -52,7 +52,7 @@
 
             let lastMessageId = 0;
 
-            async function sendMessage() {
+            function sendMessage() {
                 const message = textInput.value.trim();
 
                 if (message === "") {
@@ -60,7 +60,7 @@
                     return; // メッセージが空の場合は何もせずに終了
                 }
 
-                console.log('Sending message:', message); // ログを追加
+                console.log('Sending message:', message); // デバッグ用のログ
 
                 socket.emit('sendMessage', {
                     message: message,
@@ -72,6 +72,7 @@
             }
 
             sendButton.addEventListener("click", function() {
+                console.log('Send button clicked'); // デバッグ用のログ
                 sendMessage();
             });
 
@@ -83,7 +84,22 @@
             });
 
             socket.on('receiveMessage', function(data) {
+                console.log('Received message:', data); // デバッグ用のログ
                 displayMessage(data.message, "received", new Date(data.date), data.id);
+            });
+
+            socket.on('updateMessage', function(data) {
+                const messageElement = document.querySelector(`.message-container[data-message-id='${data.id}'] .message-content`);
+                if (messageElement) {
+                    messageElement.innerHTML = data.message.replace(/\n/g, "<br>");
+                }
+            });
+
+            socket.on('removeMessage', function(data) {
+                const messageContainer = document.querySelector(`.message-container[data-message-id='${data.id}']`);
+                if (messageContainer) {
+                    messageContainer.remove();
+                }
             });
 
             function displayMessage(message, type, date, id) {
@@ -95,7 +111,7 @@
                 messageElement.classList.add("message");
                 messageElement.innerHTML = `
                     <div class="message-name">ユーザー名</div>
-                    <div>${message.replace(/\n/g, "<br>")}</div>
+                    <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
                     <span class="message-time">${formatDate(date)}</span>
                 `;
 
@@ -208,66 +224,25 @@
             });
 
             function editMessage(messageContainer) {
-                const messageElement = messageContainer.querySelector(".message");
-                const originalMessage = messageElement.textContent.replace(/\d{4}年\d{1,2}月\d{1,2}日 \d{2}:\d{2}/, '').trim(); // メッセージ内容を取得して日付を除去
+                const messageElement = messageContainer.querySelector(".message-content");
+                const originalMessage = messageElement.innerHTML.replace(/<br>/g, '\n'); // メッセージ内容を取得して改行を置換
 
                 const messageId = messageContainer.dataset.messageId;
                 const newMessage = prompt("メッセージを編集:", originalMessage);
 
                 if (newMessage !== null) {
-                    messageElement.innerHTML = `
-                        <div class="message-name">ユーザー名</div>
-                        <div>${newMessage.replace(/\n/g, "<br>")}</div>
-                        <span class="message-time">${formatDate(new Date())}</span>
-                    `;
-
-                    updateMessageOnServer(messageId, newMessage);
-                }
-            }
-
-            async function updateMessageOnServer(messageId, newMessage) {
-                try {
-                    const response = await fetch('update_message.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            id: messageId,
-                            message: newMessage
-                        })
+                    socket.emit('editMessage', {
+                        id: messageId,
+                        message: newMessage
                     });
-
-                    if (!response.ok) {
-                        throw new Error('メッセージの更新に失敗しました');
-                    }
-                } catch (error) {
-                    console.error(error);
                 }
             }
 
             function deleteMessage(messageContainer) {
                 const messageId = messageContainer.dataset.messageId;
-
-                fetch('delete_message.php', {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            id: messageId
-                        })
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            messageContainer.remove();
-                        } else {
-                            throw new Error('メッセージの削除に失敗しました');
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+                socket.emit('deleteMessage', {
+                    id: messageId
+                });
             }
         });
     </script>
