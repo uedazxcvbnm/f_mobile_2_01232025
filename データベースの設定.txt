@@ -6,7 +6,6 @@ grant all privileges on pbl2.* to kobe@localhost identified by 'denshi';
 # データベースpbl2 を使用
 use pbl2;
 
-
 CREATE TABLE drink (
   drink_id int(11) auto_increment primary key,
   drink_name varchar(50),
@@ -44,15 +43,65 @@ create table daily_record(ident int auto_increment primary key,
  date date,
  account_drunk INT,
  money INT,
- sBP INT,
- dBP INT,
  alchol_volume int(11) NOT NULL
- dBP INT
+);
+
+create table record_oneday(ident int auto_increment primary key,
+ drink_id INT,
+ glass_id INT,                         
+ FOREIGN KEY (drink_id) REFERENCES drink(drink_id),
+ FOREIGN KEY (glass_id) REFERENCES glass(glass_id),
+ date date,
+ account_drunk INT,
+ money INT,
+ alchol_volume int(11) NOT NULL
 );
 
 #テーブル teams の作成
-create table teams(ident int auto_increment primary key,
-    name character(20),
-    detail character(200),
-    size int
+create table teams(
+  ident int auto_increment primary key,
+  name character(20),
+  detail character(200),
+  size int
+);
+
+INSERT INTO teams (name, detail, size) VALUES ('グループ1', 'みんなで禁酒しよう', 5), 
+('グループ2', '毎月2割アルコール量を減らそう', 13), 
+('グループ3', '絶対にお酒を飲まない', 8), 
+('グループ4', 'ノンアルを楽しんでアルコール摂取量を減らそう', 10), 
+('グループ5', '絶対にアルコールは入れない', 6), 
+('グループ6', 'ゆっくり禁酒していきましょう', 3);
+
+userテーブル
+CREATE TABLE IF NOT EXISTS user (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL
+);
+
+INSERT INTO user (username) VALUES ('中辻'), ('上田'), ('倉掛'), ('木俵'), ('李'), ('阪邊');
+
+
+chatテーブル(#3)
+CREATE TABLE IF NOT EXISTS chat (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message TEXT NOT NULL,
+    date DATETIME NOT NULL,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+
+
+
+
+# テーブル posts の作成
+CREATE TABLE posts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  post_title VARCHAR(255),
+  post_content TEXT,
+  post_url VARCHAR(255),
+  post_image VARCHAR(255),
+  post_tags VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  likes INT DEFAULT 0
 );
