@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
     <link rel="stylesheet" href="../chat/chatscreen.css">
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
 </head>
 
 <body>
@@ -23,7 +24,7 @@
                 <textarea id="text"></textarea>
             </div>
             <div class="message-area-button">
-                <button id="send" class="disabled-button">▻</button>
+                <button id="send">▻</button>
             </div>
         </div>
     </div>
@@ -33,6 +34,8 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            const socket = io('http://localhost:3000');
+
             document.getElementById("back-button").addEventListener("click", function() {
                 window.location.href = "../joingrouplist/joingrouplist.html";
             });
@@ -49,22 +52,6 @@
 
             let lastMessageId = 0;
 
-            async function saveMessageToServer(message) {
-                const response = await fetch('save_message.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: message
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('メッセージの保存に失敗しました');
-                }
-            }
-
             async function sendMessage() {
                 const message = textInput.value.trim();
 
@@ -73,16 +60,20 @@
                     return; // メッセージが空の場合は何もせずに終了
                 }
 
-                try {
-                    await saveMessageToServer(message);
-                    displayMessage(message, "sent", new Date(), 1); // 仮のIDを1として送信済みメッセージを表示
-                } catch (error) {
-                    console.error(error);
-                }
+                console.log('Sending message:', message); // ログを追加
+
+                socket.emit('sendMessage', {
+                    message: message,
+                    user_id: 1 // ユーザーIDは適切な値に置き換えてください
+                });
 
                 textInput.value = "";
                 scrollToBottom();
             }
+
+            sendButton.addEventListener("click", function() {
+                sendMessage();
+            });
 
             textInput.addEventListener("keydown", function(event) {
                 if (event.key === "Enter" && !event.shiftKey) {
@@ -91,8 +82,8 @@
                 }
             });
 
-            sendButton.addEventListener("click", function() {
-                sendMessage();
+            socket.on('receiveMessage', function(data) {
+                displayMessage(data.message, "received", new Date(data.date), data.id);
             });
 
             function displayMessage(message, type, date, id) {
