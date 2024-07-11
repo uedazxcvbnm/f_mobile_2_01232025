@@ -2,11 +2,11 @@
 <html lang="ja">
     <head>
         <title>禁酒アプリ</title>
-        <link rel="stylesheet" href="../css/team_create.css">
+        <link rel="stylesheet" href="../team/team_create.css">
     </head>
     <body>
         <h1>新規グループの作成</h1>
-        <form method="post" action="../src/team_add.php">
+        <form method="post" action="../team/team_add.php">
             <p>&emsp;&emsp;グループ名:<input type="text" name="name" required="required"></p>
             <p>グループの詳細:<input type="text" name="detail" required="required"></p>
             <div class="bc"><button type="submit">決定</button></div>

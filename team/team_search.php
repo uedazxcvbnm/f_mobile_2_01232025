@@ -13,11 +13,14 @@ $group = $product->getTeam($ident);
 <html lang="ja">
     <head>
         <title>禁酒アプリ</title>
-        <link rel="stylesheet" href="../css/team_search.css">
+        <link rel="stylesheet" href="../team/team_search.css">
+        <?php
+            require_once __DIR__ . '../../header/header.php';
+        ?>
     </head>
     <body>
         <h1>グループ検索一覧</h1>
-        <a href="../src/team_create.php"><div class="br"><input type="button" name="new" value="グループ作成"></div></a>
+        <a href="../team/team_create.php"><div class="br"><input type="button" name="new" value="グループ作成"></div></a>
         <div class="bt">
             <form method="POST" action="">
                 <?php
@@ -43,7 +46,7 @@ $group = $product->getTeam($ident);
                 <?php
                 echo $group['detail'];
                 ?>
-                <br><div class="mt"><a href="./../../chat/chatscreen.html"><input type="button" name="join" value="参加"></a></div>
+                <br><a href="../chat/chatscreen.php"><div class="mt"><input type="button" name="join" value="参加"></div></a>
             </div>
         </div>
 
