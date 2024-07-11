@@ -72,7 +72,7 @@ INSERT INTO teams (name, detail, size) VALUES ('グループ1', 'みんなで禁
 ('グループ5', '絶対にアルコールは入れない', 6), 
 ('グループ6', 'ゆっくり禁酒していきましょう', 3);
 
-userテーブル
+# userテーブル
 CREATE TABLE IF NOT EXISTS user (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS user (
 INSERT INTO user (username) VALUES ('中辻'), ('上田'), ('倉掛'), ('木俵'), ('李'), ('阪邊');
 
 
-chatテーブル(#3)
+# chatテーブル(#3)
 CREATE TABLE IF NOT EXISTS chat (
     id INT AUTO_INCREMENT PRIMARY KEY,
     message TEXT NOT NULL,
