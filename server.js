@@ -43,7 +43,18 @@ io.on('connection', (socket) => {
                 console.error('Error inserting message:', err);
                 return;
             }
-            io.emit('receiveMessage', { id: result.insertId, message, date, user_id });
+
+            const messageId = result.insertId;
+            const userQuery = "SELECT username FROM user WHERE user_id = ?";
+            db.query(userQuery, [user_id], (err, userResult) => {
+                if (err) {
+                    console.error('Error fetching username:', err);
+                    return;
+                }
+
+                const username = userResult[0].username;
+                io.emit('receiveMessage', { id: messageId, message, date, user_id, username });
+            });
         });
     });
 

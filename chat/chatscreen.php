@@ -52,6 +52,13 @@
 
             let lastMessageId = 0;
 
+            function getQueryParam(param) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(param);
+            }
+
+            const user_id = getQueryParam('user_id');
+
             function sendMessage() {
                 const message = textInput.value.trim();
 
@@ -64,7 +71,7 @@
 
                 socket.emit('sendMessage', {
                     message: message,
-                    user_id: 1 // ユーザーIDは適切な値に置き換えてください
+                    user_id: user_id
                 });
 
                 textInput.value = "";
@@ -85,7 +92,8 @@
 
             socket.on('receiveMessage', function(data) {
                 console.log('Received message:', data); // デバッグ用のログ
-                displayMessage(data.message, "received", new Date(data.date), data.id);
+                const messageType = data.user_id == user_id ? 'sent' : 'received';
+                displayMessage(data.message, messageType, new Date(data.date), data.id, data.username);
             });
 
             socket.on('updateMessage', function(data) {
@@ -102,7 +110,7 @@
                 }
             });
 
-            function displayMessage(message, type, date, id) {
+            function displayMessage(message, type, date, id, username) {
                 const messageContainer = document.createElement("div");
                 messageContainer.classList.add("message-container", type === "sent" ? "sent" : "received");
                 messageContainer.dataset.messageId = id;
@@ -110,7 +118,7 @@
                 const messageElement = document.createElement("div");
                 messageElement.classList.add("message");
                 messageElement.innerHTML = `
-                    <div class="message-name">ユーザー名</div>
+                    <div class="message-name">${username}</div>
                     <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
                     <span class="message-time">${formatDate(date)}</span>
                 `;
@@ -168,7 +176,8 @@
                     const messages = await response.json();
 
                     messages.forEach(message => {
-                        displayMessage(message.content, message.type === 'sent' ? "sent" : "received", new Date(message.date), message.id);
+                        const messageType = message.user_id == user_id ? 'sent' : 'received';
+                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username);
                         lastMessageId = message.id;
                     });
 
@@ -184,7 +193,8 @@
                     const messages = await response.json();
 
                     messages.forEach(message => {
-                        displayMessage(message.content, message.type === 'sent' ? "sent" : "received", new Date(message.date), message.id);
+                        const messageType = message.user_id == user_id ? 'sent' : 'received';
+                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username);
                         lastMessageId = Math.max(lastMessageId, message.id);
                     });
 
