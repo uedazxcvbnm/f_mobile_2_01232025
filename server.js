@@ -59,28 +59,52 @@ io.on('connection', (socket) => {
     });
 
     socket.on('editMessage', (data) => {
-        const { id, message } = data;
+        const { id, message, user_id } = data;
 
-        const query = "UPDATE chat SET message = ? WHERE id = ?";
-        db.query(query, [message, id], (err, result) => {
+        const getMessageQuery = "SELECT user_id FROM chat WHERE id = ?";
+        db.query(getMessageQuery, [id], (err, result) => {
             if (err) {
-                console.error('Error updating message:', err);
+                console.error('Error fetching message:', err);
                 return;
             }
-            io.emit('updateMessage', { id, message });
+
+            if (result.length > 0 && result[0].user_id === user_id) {
+                const updateQuery = "UPDATE chat SET message = ? WHERE id = ?";
+                db.query(updateQuery, [message, id], (err, result) => {
+                    if (err) {
+                        console.error('Error updating message:', err);
+                        return;
+                    }
+                    io.emit('updateMessage', { id, message });
+                });
+            } else {
+                console.error('User not authorized to edit this message');
+            }
         });
     });
 
     socket.on('deleteMessage', (data) => {
-        const { id } = data;
+        const { id, user_id } = data;
 
-        const query = "DELETE FROM chat WHERE id = ?";
-        db.query(query, [id], (err, result) => {
+        const getMessageQuery = "SELECT user_id FROM chat WHERE id = ?";
+        db.query(getMessageQuery, [id], (err, result) => {
             if (err) {
-                console.error('Error deleting message:', err);
+                console.error('Error fetching message:', err);
                 return;
             }
-            io.emit('removeMessage', { id });
+
+            if (result.length > 0 && result[0].user_id === user_id) {
+                const deleteQuery = "DELETE FROM chat WHERE id = ?";
+                db.query(deleteQuery, [id], (err, result) => {
+                    if (err) {
+                        console.error('Error deleting message:', err);
+                        return;
+                    }
+                    io.emit('removeMessage', { id });
+                });
+            } else {
+                console.error('User not authorized to delete this message');
+            }
         });
     });
 

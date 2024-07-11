@@ -90,15 +90,6 @@
     justify-content: flex-start;
 }
 
-.message {
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px;
-    max-width: 80%;
-    word-wrap: break-word;
-}
-
 .message.sent .message {
     background-color: #d1e7dd;
     /* 自分のメッセージの背景色 */
@@ -107,6 +98,15 @@
 .message.received .message {
     background-color: #f8d7da;
     /* 他人のメッセージの背景色 */
+}
+
+.message {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
 }
 
 .message.empty {
@@ -127,6 +127,11 @@
     background-color: #79afd0;
     border-radius: 50%;
     margin-right: 10px;
+}
+
+.message-container.sent .icon {
+    display: none;
+    /* 自分のメッセージのアイコンを非表示にする */
 }
 
 .message-time {

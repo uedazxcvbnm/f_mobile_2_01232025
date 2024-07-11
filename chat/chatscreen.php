@@ -34,12 +34,15 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // Socket.ioでサーバーに接続
             const socket = io('http://localhost:3000');
 
+            // 「戻る」ボタンのクリックイベントを設定
             document.getElementById("back-button").addEventListener("click", function() {
                 window.location.href = "../joingrouplist/joingrouplist.html";
             });
 
+            // グループ名とメンバー数を設定
             const groupName = "社会人禁酒グループ";
             const groupMembers = 5;
 
@@ -52,13 +55,16 @@
 
             let lastMessageId = 0;
 
+            // URLパラメータからクエリパラメータを取得する関数
             function getQueryParam(param) {
                 const urlParams = new URLSearchParams(window.location.search);
                 return urlParams.get(param);
             }
 
+            // URLからuser_idを取得
             const user_id = getQueryParam('user_id');
 
+            // メッセージを送信する関数
             function sendMessage() {
                 const message = textInput.value.trim();
 
@@ -69,6 +75,7 @@
 
                 console.log('Sending message:', message); // デバッグ用のログ
 
+                // サーバーにメッセージを送信
                 socket.emit('sendMessage', {
                     message: message,
                     user_id: user_id
@@ -78,11 +85,13 @@
                 scrollToBottom();
             }
 
+            // 「送信」ボタンのクリックイベントを設定
             sendButton.addEventListener("click", function() {
                 console.log('Send button clicked'); // デバッグ用のログ
                 sendMessage();
             });
 
+            // Enterキーでメッセージを送信するイベントを設定
             textInput.addEventListener("keydown", function(event) {
                 if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault();
@@ -90,12 +99,14 @@
                 }
             });
 
+            // 新しいメッセージを受信したときの処理
             socket.on('receiveMessage', function(data) {
                 console.log('Received message:', data); // デバッグ用のログ
                 const messageType = data.user_id == user_id ? 'sent' : 'received';
-                displayMessage(data.message, messageType, new Date(data.date), data.id, data.username);
+                displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id);
             });
 
+            // メッセージが更新されたときの処理
             socket.on('updateMessage', function(data) {
                 const messageElement = document.querySelector(`.message-container[data-message-id='${data.id}'] .message-content`);
                 if (messageElement) {
@@ -103,6 +114,7 @@
                 }
             });
 
+            // メッセージが削除されたときの処理
             socket.on('removeMessage', function(data) {
                 const messageContainer = document.querySelector(`.message-container[data-message-id='${data.id}']`);
                 if (messageContainer) {
@@ -110,10 +122,12 @@
                 }
             });
 
-            function displayMessage(message, type, date, id, username) {
+            // メッセージを表示する関数
+            function displayMessage(message, type, date, id, username, messageUserId) {
                 const messageContainer = document.createElement("div");
                 messageContainer.classList.add("message-container", type === "sent" ? "sent" : "received");
                 messageContainer.dataset.messageId = id;
+                messageContainer.dataset.userId = messageUserId;
 
                 const messageElement = document.createElement("div");
                 messageElement.classList.add("message");
@@ -126,21 +140,29 @@
                 const iconElement = document.createElement("div");
                 iconElement.classList.add("icon"); // 仮のアイコンのスタイルを適用するためのクラス
 
-                messageContainer.appendChild(iconElement);
+                // 自分のメッセージにはアイコンを表示しない
+                if (type !== "sent") {
+                    messageContainer.appendChild(iconElement);
+                }
+
                 messageContainer.appendChild(messageElement);
                 chatArea.appendChild(messageContainer);
 
+                // 右クリックでコンテキストメニューを表示
                 messageContainer.addEventListener("contextmenu", function(event) {
                     event.preventDefault();
-                    currentMessageContainer = messageContainer;
-                    contextMenu.style.top = `${event.clientY}px`;
-                    contextMenu.style.left = `${event.clientX}px`;
-                    contextMenu.style.display = "block";
+                    if (messageUserId == user_id) {
+                        currentMessageContainer = messageContainer;
+                        contextMenu.style.top = `${event.clientY}px`;
+                        contextMenu.style.left = `${event.clientX}px`;
+                        contextMenu.style.display = "block";
+                    }
                 });
 
                 scrollToBottom();
             }
 
+            // 空のメッセージを表示する関数
             function displayEmptyMessage() {
                 const messageContainer = document.createElement("div");
                 messageContainer.classList.add("message-container");
@@ -155,10 +177,12 @@
                 scrollToBottom();
             }
 
+            // チャットエリアをスクロールして一番下まで表示する関数
             function scrollToBottom() {
                 chatArea.scrollTop = chatArea.scrollHeight;
             }
 
+            // 日付をフォーマットする関数
             function formatDate(date) {
                 const options = {
                     year: 'numeric',
@@ -170,6 +194,7 @@
                 return date.toLocaleDateString('ja-JP', options);
             }
 
+            // メッセージをサーバーから取得する関数
             async function fetchMessages() {
                 try {
                     const response = await fetch('fetch_messages.php');
@@ -177,7 +202,7 @@
 
                     messages.forEach(message => {
                         const messageType = message.user_id == user_id ? 'sent' : 'received';
-                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username);
+                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id);
                         lastMessageId = message.id;
                     });
 
@@ -187,6 +212,7 @@
                 }
             }
 
+            // 初期メッセージをロードする関数
             async function loadInitialMessages() {
                 try {
                     const response = await fetch('fetch_messages.php');
@@ -194,7 +220,7 @@
 
                     messages.forEach(message => {
                         const messageType = message.user_id == user_id ? 'sent' : 'received';
-                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username);
+                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id);
                         lastMessageId = Math.max(lastMessageId, message.id);
                     });
 
@@ -204,18 +230,20 @@
                 }
             }
 
+            // 初期メッセージをロード
             loadInitialMessages();
-            // setInterval(fetchMessages, 2000); // 定期的にメッセージを取得する
 
             const contextMenu = document.getElementById("context-menu");
             let currentMessageContainer = null;
 
+            // コンテキストメニューのクリックイベントを設定
             document.addEventListener("click", function(event) {
                 if (!contextMenu.contains(event.target)) {
                     contextMenu.style.display = "none";
                 }
             });
 
+            // 「編集」ボタンのクリックイベントを設定
             document.getElementById("edit-button").addEventListener("click", function() {
                 if (currentMessageContainer) {
                     editMessage(currentMessageContainer);
@@ -223,6 +251,7 @@
                 }
             });
 
+            // 「削除」ボタンのクリックイベントを設定
             document.getElementById("delete-button").addEventListener("click", function() {
                 if (currentMessageContainer) {
                     const confirmDelete = confirm("本当に削除しますか？");
@@ -233,6 +262,7 @@
                 }
             });
 
+            // メッセージを編集する関数
             function editMessage(messageContainer) {
                 const messageElement = messageContainer.querySelector(".message-content");
                 const originalMessage = messageElement.innerHTML.replace(/<br>/g, '\n'); // メッセージ内容を取得して改行を置換
@@ -248,6 +278,7 @@
                 }
             }
 
+            // メッセージを削除する関数
             function deleteMessage(messageContainer) {
                 const messageId = messageContainer.dataset.messageId;
                 socket.emit('deleteMessage', {
