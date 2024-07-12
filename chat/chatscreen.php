@@ -89,13 +89,22 @@
 
             socket.on('receiveMessage', function(data) {
                 const messageType = data.user_id == user_id ? 'sent' : 'received';
-                displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id);
+                displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id, data.edited);
             });
 
             socket.on('updateMessage', function(data) {
                 const messageElement = document.querySelector(`.message-container[data-message-id='${data.id}'] .message-content`);
                 if (messageElement) {
                     messageElement.innerHTML = data.message.replace(/\n/g, "<br>");
+                    const editedElement = document.querySelector(`.message-container[data-message-id='${data.id}'] .message-edited`);
+                    if (editedElement) {
+                        editedElement.style.display = 'block';
+                    } else {
+                        const newEditedElement = document.createElement('span');
+                        newEditedElement.classList.add('message-edited');
+                        newEditedElement.textContent = '編集済み';
+                        messageElement.parentNode.appendChild(newEditedElement);
+                    }
                 }
             });
 
@@ -106,7 +115,7 @@
                 }
             });
 
-            function displayMessage(message, type, date, id, username, messageUserId) {
+            function displayMessage(message, type, date, id, username, messageUserId, edited) {
                 const messageContainer = document.createElement("div");
                 messageContainer.classList.add("message-container", type === "sent" ? "sent" : "received");
                 messageContainer.dataset.messageId = id;
@@ -119,6 +128,13 @@
                     <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
                     <span class="message-time">${formatDate(date)}</span>
                 `;
+
+                if (edited) {
+                    const editedElement = document.createElement('span');
+                    editedElement.classList.add('message-edited');
+                    editedElement.textContent = '編集済み';
+                    messageElement.appendChild(editedElement);
+                }
 
                 const iconElement = document.createElement("div");
                 iconElement.classList.add("icon");
@@ -204,7 +220,7 @@
 
                     messages.forEach(message => {
                         const messageType = message.user_id == user_id ? 'sent' : 'received';
-                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id);
+                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id, message.edited);
                         lastMessageId = message.id;
                     });
 
@@ -221,7 +237,7 @@
 
                     messages.forEach(message => {
                         const messageType = message.user_id == user_id ? 'sent' : 'received';
-                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id);
+                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id, message.edited);
                         lastMessageId = Math.max(lastMessageId, message.id);
                     });
 

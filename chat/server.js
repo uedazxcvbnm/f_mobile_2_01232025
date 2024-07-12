@@ -50,7 +50,7 @@ io.on('connection', (socket) => {
                     return;
                 }
                 const username = rows[0].username;
-                io.emit('receiveMessage', { id: result.insertId, message, date, user_id, username });
+                io.emit('receiveMessage', { id: result.insertId, message, date, user_id, username, edited: false });
             });
         });
     });
@@ -59,13 +59,13 @@ io.on('connection', (socket) => {
         const { id, message } = data;
         console.log('Editing message with id:', id, 'to:', message); // デバッグ用ログ
 
-        const query = "UPDATE chat SET message = ? WHERE id = ?";
+        const query = "UPDATE chat SET message = ?, edited = 1 WHERE id = ?";
         db.query(query, [message, id], (err, result) => {
             if (err) {
                 console.error('Error updating message:', err);
                 return;
             }
-            io.emit('updateMessage', { id, message });
+            io.emit('updateMessage', { id, message, edited: true });
         });
     });
 
