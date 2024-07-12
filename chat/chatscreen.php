@@ -34,15 +34,12 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Socket.ioでサーバーに接続
             const socket = io('http://localhost:3000');
 
-            // 「戻る」ボタンのクリックイベントを設定
             document.getElementById("back-button").addEventListener("click", function() {
                 window.location.href = "../joingrouplist/joingrouplist.html";
             });
 
-            // グループ名とメンバー数を設定
             const groupName = "社会人禁酒グループ";
             const groupMembers = 5;
 
@@ -55,27 +52,21 @@
 
             let lastMessageId = 0;
 
-            // URLパラメータからクエリパラメータを取得する関数
             function getQueryParam(param) {
                 const urlParams = new URLSearchParams(window.location.search);
                 return urlParams.get(param);
             }
 
-            // URLからuser_idを取得
             const user_id = getQueryParam('user_id');
 
-            // メッセージを送信する関数
             function sendMessage() {
                 const message = textInput.value.trim();
 
                 if (message === "") {
                     displayEmptyMessage();
-                    return; // メッセージが空の場合は何もせずに終了
+                    return;
                 }
 
-                console.log('Sending message:', message); // デバッグ用のログ
-
-                // サーバーにメッセージを送信
                 socket.emit('sendMessage', {
                     message: message,
                     user_id: user_id
@@ -85,13 +76,10 @@
                 scrollToBottom();
             }
 
-            // 「送信」ボタンのクリックイベントを設定
             sendButton.addEventListener("click", function() {
-                console.log('Send button clicked'); // デバッグ用のログ
                 sendMessage();
             });
 
-            // Enterキーでメッセージを送信するイベントを設定
             textInput.addEventListener("keydown", function(event) {
                 if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault();
@@ -99,14 +87,11 @@
                 }
             });
 
-            // 新しいメッセージを受信したときの処理
             socket.on('receiveMessage', function(data) {
-                console.log('Received message:', data); // デバッグ用のログ
                 const messageType = data.user_id == user_id ? 'sent' : 'received';
                 displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id);
             });
 
-            // メッセージが更新されたときの処理
             socket.on('updateMessage', function(data) {
                 const messageElement = document.querySelector(`.message-container[data-message-id='${data.id}'] .message-content`);
                 if (messageElement) {
@@ -114,7 +99,6 @@
                 }
             });
 
-            // メッセージが削除されたときの処理
             socket.on('removeMessage', function(data) {
                 const messageContainer = document.querySelector(`.message-container[data-message-id='${data.id}']`);
                 if (messageContainer) {
@@ -122,7 +106,6 @@
                 }
             });
 
-            // メッセージを表示する関数
             function displayMessage(message, type, date, id, username, messageUserId) {
                 const messageContainer = document.createElement("div");
                 messageContainer.classList.add("message-container", type === "sent" ? "sent" : "received");
@@ -138,31 +121,53 @@
                 `;
 
                 const iconElement = document.createElement("div");
-                iconElement.classList.add("icon"); // 仮のアイコンのスタイルを適用するためのクラス
+                iconElement.classList.add("icon");
 
-                // 自分のメッセージにはアイコンを表示しない
                 if (type !== "sent") {
                     messageContainer.appendChild(iconElement);
                 }
 
                 messageContainer.appendChild(messageElement);
+
+                if (messageUserId == user_id) {
+                    messageContainer.addEventListener("contextmenu", function(event) {
+                        event.preventDefault();
+                        showContextMenu(event, messageContainer);
+                    });
+                }
+
                 chatArea.appendChild(messageContainer);
-
-                // 右クリックでコンテキストメニューを表示
-                messageContainer.addEventListener("contextmenu", function(event) {
-                    event.preventDefault();
-                    if (messageUserId == user_id) {
-                        currentMessageContainer = messageContainer;
-                        contextMenu.style.top = `${event.clientY}px`;
-                        contextMenu.style.left = `${event.clientX}px`;
-                        contextMenu.style.display = "block";
-                    }
-                });
-
                 scrollToBottom();
             }
 
-            // 空のメッセージを表示する関数
+            function showContextMenu(event, messageContainer) {
+                const contextMenu = document.getElementById("context-menu");
+                const editButton = document.getElementById("edit-button");
+                const deleteButton = document.getElementById("delete-button");
+
+                editButton.onclick = function() {
+                    editMessage(messageContainer);
+                    contextMenu.style.display = 'none';
+                };
+                deleteButton.onclick = function() {
+                    const confirmDelete = confirm("本当に削除しますか？");
+                    if (confirmDelete) {
+                        deleteMessage(messageContainer);
+                    }
+                    contextMenu.style.display = 'none';
+                };
+
+                contextMenu.style.top = `${event.clientY}px`;
+                contextMenu.style.left = `${event.clientX}px`;
+                contextMenu.style.display = 'block';
+
+                document.addEventListener("click", function() {
+                    contextMenu.style.display = 'none';
+                }, {
+                    once: true
+                });
+            }
+
             function displayEmptyMessage() {
                 const messageContainer = document.createElement("div");
                 messageContainer.classList.add("message-container");
@@ -177,12 +182,10 @@
                 scrollToBottom();
             }
 
-            // チャットエリアをスクロールして一番下まで表示する関数
             function scrollToBottom() {
                 chatArea.scrollTop = chatArea.scrollHeight;
             }
 
-            // 日付をフォーマットする関数
             function formatDate(date) {
                 const options = {
                     year: 'numeric',
@@ -194,7 +197,6 @@
                 return date.toLocaleDateString('ja-JP', options);
             }
 
-            // メッセージをサーバーから取得する関数
             async function fetchMessages() {
                 try {
                     const response = await fetch('fetch_messages.php');
@@ -212,7 +214,6 @@
                 }
             }
 
-            // 初期メッセージをロードする関数
             async function loadInitialMessages() {
                 try {
                     const response = await fetch('fetch_messages.php');
@@ -230,59 +231,31 @@
                 }
             }
 
-            // 初期メッセージをロード
             loadInitialMessages();
 
-            const contextMenu = document.getElementById("context-menu");
-            let currentMessageContainer = null;
-
-            // コンテキストメニューのクリックイベントを設定
-            document.addEventListener("click", function(event) {
-                if (!contextMenu.contains(event.target)) {
-                    contextMenu.style.display = "none";
-                }
-            });
-
-            // 「編集」ボタンのクリックイベントを設定
-            document.getElementById("edit-button").addEventListener("click", function() {
-                if (currentMessageContainer) {
-                    editMessage(currentMessageContainer);
-                    contextMenu.style.display = "none";
-                }
-            });
-
-            // 「削除」ボタンのクリックイベントを設定
-            document.getElementById("delete-button").addEventListener("click", function() {
-                if (currentMessageContainer) {
-                    const confirmDelete = confirm("本当に削除しますか？");
-                    if (confirmDelete) {
-                        deleteMessage(currentMessageContainer);
-                    }
-                    contextMenu.style.display = "none";
-                }
-            });
-
-            // メッセージを編集する関数
             function editMessage(messageContainer) {
                 const messageElement = messageContainer.querySelector(".message-content");
-                const originalMessage = messageElement.innerHTML.replace(/<br>/g, '\n'); // メッセージ内容を取得して改行を置換
+                const originalMessage = messageElement.innerHTML.replace(/<br>/g, '\n');
 
                 const messageId = messageContainer.dataset.messageId;
                 const newMessage = prompt("メッセージを編集:", originalMessage);
 
                 if (newMessage !== null) {
+                    console.log('Editing message:', newMessage); // デバッグ用ログ
                     socket.emit('editMessage', {
                         id: messageId,
-                        message: newMessage
+                        message: newMessage,
+                        user_id: user_id
                     });
                 }
             }
 
-            // メッセージを削除する関数
             function deleteMessage(messageContainer) {
                 const messageId = messageContainer.dataset.messageId;
+                console.log('Deleting message:', messageId); // デバッグ用ログ
                 socket.emit('deleteMessage', {
-                    id: messageId
+                    id: messageId,
+                    user_id: user_id
                 });
             }
         });

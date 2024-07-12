@@ -142,10 +142,19 @@
     text-align: right;
 }
 
+.pencil-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
 .context-menu {
+    display: none;
     position: absolute;
     z-index: 1000;
-    display: none;
     background: #ffffff;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
