@@ -257,7 +257,7 @@
                 const newMessage = prompt("メッセージを編集:", originalMessage);
 
                 if (newMessage !== null) {
-                    console.log('Editing message:', newMessage); // デバッグ用ログ
+                    console.log('Editing message:', newMessage);
                     socket.emit('editMessage', {
                         id: messageId,
                         message: newMessage,
@@ -268,7 +268,7 @@
 
             function deleteMessage(messageContainer) {
                 const messageId = messageContainer.dataset.messageId;
-                console.log('Deleting message:', messageId); // デバッグ用ログ
+                console.log('Deleting message:', messageId);
                 socket.emit('deleteMessage', {
                     id: messageId,
                     user_id: user_id

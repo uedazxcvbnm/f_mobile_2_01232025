@@ -6,7 +6,7 @@ const mysql = require('mysql');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -57,9 +57,9 @@ io.on('connection', (socket) => {
 
     socket.on('editMessage', (data) => {
         const { id, message } = data;
-        console.log('Editing message with id:', id, 'to:', message); // デバッグ用ログ
+        console.log('Editing message with id:', id, 'to:', message);
 
-        const query = "UPDATE chat SET message = ?, edited = 1 WHERE id = ?";
+        const query = "UPDATE chat SET message = ?, edited = TRUE WHERE id = ?";
         db.query(query, [message, id], (err, result) => {
             if (err) {
                 console.error('Error updating message:', err);
@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
 
     socket.on('deleteMessage', (data) => {
         const { id } = data;
-        console.log('Deleting message with id:', id); // デバッグ用ログ
+        console.log('Deleting message with id:', id);
 
         const query = "DELETE FROM chat WHERE id = ?";
         db.query(query, [id], (err, result) => {
