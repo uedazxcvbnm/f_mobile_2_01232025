@@ -17,7 +17,7 @@
         <div class="daily_registration_form">
             <form method="POST" action="login_exec.php">
                 <div>ユーザー名：<input type="text" name="user_name_info"></div>
-                <div>パスワード：<input type="text" name="password_info"></div>
+                <div>パスワード：<input type="password" name="password_info"></div>
                 <p><input type="submit" value="送信"></p>
             </form>
         </div>

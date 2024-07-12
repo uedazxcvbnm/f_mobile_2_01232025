@@ -75,11 +75,12 @@ INSERT INTO teams (name, detail, size) VALUES ('グループ1', 'みんなで禁
 # userテーブル
 CREATE TABLE IF NOT EXISTS user (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(12) NOT NULL
 );
 
 INSERT INTO user (username) VALUES ('中辻'), ('上田'), ('倉掛'), ('木俵'), ('李'), ('阪邊');
-
+INSERT INTO user (password) VALUES ('pass1'), ('pass2'), ('pass3'), ('pass4'), ('pass5'), ('pass6');
 
 # chatテーブル(#3)
 CREATE TABLE IF NOT EXISTS chat (
