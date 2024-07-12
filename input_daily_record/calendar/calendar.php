@@ -1,3 +1,12 @@
+<?php
+session_start();
+// ログインしていないときの処理
+if (!isset($_SESSION['user_id'])){
+    header('Location: ./../../login/login_display.php');
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -10,9 +19,11 @@
 
 <body>
     <?php
+        $user_id = $_SESSION['user_id'];
+
         require_once __DIR__.'/../classes/daily_record_method.php';
         $dailydata = new dailyData();
-        $datearray = $dailydata->get_date();
+        $datearray = $dailydata->get_date($user_id);
         // echo var_dump($datearray);
         // foreach ($datearray as $item) {
         //     echo $datearray['date'];

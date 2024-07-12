@@ -1,6 +1,7 @@
 <?php
 include 'config.php';
 
+$user_id = $_SESSION['user_id'];
 $startDate = $_GET['start'];
 $endDate = $_GET['end'];
 

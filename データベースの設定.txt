@@ -43,7 +43,9 @@ create table daily_record(ident int auto_increment primary key,
  date date,
  account_drunk INT,
  money INT,
- alchol_volume int(11) NOT NULL
+ alchol_volume int(11) NOT NULL,
+ user_id INT,
+ FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
 create table record_oneday(ident int auto_increment primary key,
@@ -54,7 +56,9 @@ create table record_oneday(ident int auto_increment primary key,
  date date,
  account_drunk INT,
  money INT,
- alchol_volume int(11) NOT NULL
+ alchol_volume int(11) NOT NULL,
+ user_id INT,
+ FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
 #テーブル teams の作成

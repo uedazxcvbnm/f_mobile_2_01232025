@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 // 飲み物の選択ボタン
 $action_drink = $_POST['drink_button_info'];
 // 容器の選択ボタン
@@ -23,26 +25,26 @@ $action_glass_volume = $dailyData->get_glass_v($action_glass);
 // 計算
 $alchol_volume = $action_glass_volume * $action_drink_volume/100 * 0.8;
 
-// データを登録
-$dailyData->insert_dailyData($action_drink, $action_glass, $account_drunk, $alcohol_money, $alchol_volume);
+$user_id = $_SESSION['user_id'];
 
-echo date('Y-m-d');
+// データを登録
+$dailyData->insert_dailyData($action_drink, $action_glass, $account_drunk, $alcohol_money, $alchol_volume, $user_id);
 
 $today_date = date('Y-m-d');
 
-$alchol_volume_today = $dailyData->get_oneday_alchol($today_date);
+$alchol_volume_today = $dailyData->get_oneday_alchol($today_date, $user_id);
 // var_dump($alchol_volume_today);
 // echo $alchol_volume_today[0]['sum_alchol'];
 
-// dateを取得
-$date_array_sumtable = $dailyData->get_date_oneday();
+// グラフに登録済みの日付を取得
+$date_array_sumtable = $dailyData->get_date($user_id);
 var_dump($date_array_sumtable);
 
 // 今日の日付が含まれているとき
 if (in_array($today_date, $date_array_sumtable)){
-    $dailyData->update_sumData($alchol_volume_today[0]['sum_money'], $alchol_volume_today[0]['sum_alchol'], $today_date);
+    $dailyData->update_sumData($alchol_volume_today[0]['sum_money'], $alchol_volume_today[0]['sum_alchol'], $today_date, $user_id);
 } else {
-    $dailyData->insert_sumData($today_date, $alchol_volume_today[0]['sum_money'], $alchol_volume_today[0]['sum_alchol']);
+    $dailyData->insert_sumData($today_date, $alchol_volume_today[0]['sum_money'], $alchol_volume_today[0]['sum_alchol'], $user_id);
 }
 
 // グラフ画面に移動
