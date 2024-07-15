@@ -6,6 +6,15 @@ grant all privileges on pbl2.* to kobe@localhost identified by 'denshi';
 # データベースpbl2 を使用
 use pbl2;
 
+# userテーブル
+CREATE TABLE IF NOT EXISTS user (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(12) NOT NULL
+);
+
+INSERT INTO user (username, password) VALUES ('中辻', 'pass1'), ('上田', 'pass2'), ('倉掛', 'pass3'), ('木俵', 'pass4'), ('李', 'pass5'), ('阪邊', 'pass6');
+
 CREATE TABLE drink (
   drink_id int(11) auto_increment primary key,
   drink_name varchar(50),
@@ -36,12 +45,7 @@ INSERT INTO glass (glass_id, glass_name, glass_v) VALUES
 # テーブル daily_record の作成
 # sBP：最高血圧　dBP：最低血圧
 create table daily_record(ident int auto_increment primary key,
- drink_id INT,
- glass_id INT,                         
- FOREIGN KEY (drink_id) REFERENCES drink(drink_id),
- FOREIGN KEY (glass_id) REFERENCES glass(glass_id),
  date date,
- account_drunk INT,
  money INT,
  alchol_volume int(11) NOT NULL,
  user_id INT,
@@ -76,15 +80,6 @@ INSERT INTO teams (name, detail, size) VALUES ('グループ1', 'みんなで禁
 ('グループ5', '絶対にアルコールは入れない', 6), 
 ('グループ6', 'ゆっくり禁酒していきましょう', 3);
 
-# userテーブル
-CREATE TABLE IF NOT EXISTS user (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    password VARCHAR(12) NOT NULL
-);
-
-INSERT INTO user (username) VALUES ('中辻'), ('上田'), ('倉掛'), ('木俵'), ('李'), ('阪邊');
-INSERT INTO user (password) VALUES ('pass1'), ('pass2'), ('pass3'), ('pass4'), ('pass5'), ('pass6');
 
 # chatテーブル(#3)
 CREATE TABLE IF NOT EXISTS chat (

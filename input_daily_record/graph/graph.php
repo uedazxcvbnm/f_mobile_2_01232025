@@ -1,11 +1,9 @@
 <?php
     session_start();
-    // ログインしていないときの処理
-    if (!isset($_SESSION['user_id'])){
-        header('Location: ./../../login/login_display.php');
-        exit();
-    }
+    $user_id = $_SESSION['user_id'];
+    // echo $user_id;
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 

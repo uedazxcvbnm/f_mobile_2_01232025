@@ -31,14 +31,18 @@ $user_id = $_SESSION['user_id'];
 $dailyData->insert_dailyData($action_drink, $action_glass, $account_drunk, $alcohol_money, $alchol_volume, $user_id);
 
 $today_date = date('Y-m-d');
+echo $today_date;
 
-$alchol_volume_today = $dailyData->get_oneday_alchol($today_date, $user_id);
-// var_dump($alchol_volume_today);
-// echo $alchol_volume_today[0]['sum_alchol'];
+// $alchol_volume_today = $dailyData->get_oneday_alchol($today_date, $user_id);
+$alchol_volume_today = $dailyData->get_oneday_alchol($today_date);
+var_dump($alchol_volume_today);
+echo $alchol_volume_today[0]['sum_alchol'];
 
 // グラフに登録済みの日付を取得
 $date_array_sumtable = $dailyData->get_date($user_id);
 var_dump($date_array_sumtable);
+
+// echo $user_id;
 
 // 今日の日付が含まれているとき
 if (in_array($today_date, $date_array_sumtable)){

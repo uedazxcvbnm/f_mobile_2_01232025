@@ -8,9 +8,11 @@ class dailyData extends dbdata{
     }
 
     // onedayテーブルのデータを取得
-    public function get_oneday_alchol($today_date, $user_id){
-        $sql = "select date, sum(alchol_volume) as sum_alchol, sum(money) as sum_money from record_oneday where date=? and user_id=? group by date";
-        $stmt = $this->query($sql, [$today_date, $user_id]);
+    // public function get_oneday_alchol($today_date, $user_id){
+    public function get_oneday_alchol($today_date){
+        // $sql = "select date, sum(alchol_volume) as sum_alchol, sum(money) as sum_money from record_oneday where date=? and user_id=? group by date";
+        $sql = "select date, sum(alchol_volume) as sum_alchol, sum(money) as sum_money from record_oneday where date=? group by date";
+        $stmt = $this->query($sql, [$today_date]);
         $items = $stmt->fetchAll();
         return $items;
     }
