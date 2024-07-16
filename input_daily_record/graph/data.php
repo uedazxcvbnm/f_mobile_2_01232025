@@ -1,8 +1,11 @@
 <?php
+session_start();
 include 'config.php';
 
 $startDate = $_GET['start'];
 $endDate = $_GET['end'];
+
+$user_id = $_SESSION['user_id'];
 
 if (!$startDate || !$endDate) {
     http_response_code(400);
@@ -10,8 +13,8 @@ if (!$startDate || !$endDate) {
     exit();
 }
 
-$query = $conn->prepare("SELECT * FROM daily_record WHERE date BETWEEN ? AND ?");
-$query->bind_param("ss", $startDate, $endDate);
+$query = $conn->prepare("SELECT * FROM daily_record WHERE user_id=? AND date BETWEEN ? AND ?");
+$query->bind_param("iss", $user_id, $startDate, $endDate);
 $query->execute();
 $result = $query->get_result();
 

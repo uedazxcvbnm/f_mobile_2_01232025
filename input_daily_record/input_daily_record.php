@@ -1,3 +1,12 @@
+<?php
+    session_start();
+    // ログインしていないときの処理
+    if (!isset($_SESSION['user_id'])){
+        header('Location: ./../login/login_display.php');
+        exit();
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
