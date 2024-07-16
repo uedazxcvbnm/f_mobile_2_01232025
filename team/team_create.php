@@ -3,6 +3,9 @@
     <head>
         <title>禁酒アプリ</title>
         <link rel="stylesheet" href="../team/team_create.css">
+        <?php
+            require_once __DIR__ . '../../header/header.php';
+        ?>
     </head>
     <body>
         <h1>新規グループの作成</h1>
