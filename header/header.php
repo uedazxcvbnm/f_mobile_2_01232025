@@ -13,7 +13,7 @@
         <span class="close-logout" onclick="closeLogoutpop()">×</span>
         <h2>ログアウトしますか？</h2>
         <div class="lobt">
-            <input type="button" name="yes" value="はい">&nbsp;<input type="button" name="no"  value="いいえ" onclick="closeLogoutpop()">
+            <input type="button" name="yes" onclick="location.href='./../login/logout_display.php'" value="はい">&nbsp;<input type="button" name="no"  value="いいえ" onclick="closeLogoutpop()">
         </div>
     </div>
 </div>
