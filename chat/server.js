@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
             }
             const username = rows[0].username;
 
-            const deleteQuery = "UPDATE chat SET is_deleted = TRUE WHERE id = ?";
+            const deleteQuery = "DELETE FROM chat WHERE id = ?";
             db.query(deleteQuery, [id], (err, result) => {
                 if (err) {
                     console.error('Error deleting message:', err);
