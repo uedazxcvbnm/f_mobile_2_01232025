@@ -9,7 +9,7 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $stmt = $conn->prepare("
-        SELECT chat.id, chat.message AS content, chat.date, chat.user_id, chat.edited, user.username 
+        SELECT chat.id, chat.message AS content, chat.date, chat.user_id, chat.edited, chat.is_deleted, user.username 
         FROM chat 
         JOIN user ON chat.user_id = user.user_id 
         ORDER BY chat.id ASC

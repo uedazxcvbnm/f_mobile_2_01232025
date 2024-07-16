@@ -70,16 +70,34 @@ io.on('connection', (socket) => {
     });
 
     socket.on('deleteMessage', (data) => {
-        const { id } = data;
+        const { id, user_id } = data;
         console.log('Deleting message with id:', id);
 
-        const query = "DELETE FROM chat WHERE id = ?";
-        db.query(query, [id], (err, result) => {
+        const selectQuery = "SELECT username FROM user WHERE user_id = ?";
+        db.query(selectQuery, [user_id], (err, rows) => {
             if (err) {
-                console.error('Error deleting message:', err);
+                console.error('Error fetching username:', err);
                 return;
             }
-            io.emit('removeMessage', { id });
+            const username = rows[0].username;
+
+            const deleteQuery = "UPDATE chat SET is_deleted = TRUE WHERE id = ?";
+            db.query(deleteQuery, [id], (err, result) => {
+                if (err) {
+                    console.error('Error deleting message:', err);
+                    return;
+                }
+                const logMessage = `${username}がメッセージを削除しました。`;
+                const logQuery = "INSERT INTO chat (message, date, user_id, is_deleted) VALUES (?, ?, ?, TRUE)";
+                db.query(logQuery, [logMessage, new Date(), user_id], (err, logResult) => {
+                    if (err) {
+                        console.error('Error logging delete message:', err);
+                        return;
+                    }
+                    io.emit('removeMessage', { id });
+                    io.emit('logMessage', { id: logResult.insertId, message: logMessage, date: new Date(), user_id });
+                });
+            });
         });
     });
 

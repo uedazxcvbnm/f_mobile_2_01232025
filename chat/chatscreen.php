@@ -89,7 +89,7 @@
 
             socket.on('receiveMessage', function(data) {
                 const messageType = data.user_id == user_id ? 'sent' : 'received';
-                displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id, data.edited);
+                displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id, data.edited, data.is_deleted);
             });
 
             socket.on('updateMessage', function(data) {
@@ -115,7 +115,16 @@
                 }
             });
 
-            function displayMessage(message, type, date, id, username, messageUserId, edited) {
+            socket.on('logMessage', function(data) {
+                displayLogMessage(data.message, new Date(data.date));
+            });
+
+            function displayMessage(message, type, date, id, username, messageUserId, edited, is_deleted) {
+                if (is_deleted) {
+                    displayLogMessage(message, date);
+                    return;
+                }
+
                 const messageContainer = document.createElement("div");
                 messageContainer.classList.add("message-container", type === "sent" ? "sent" : "received");
                 messageContainer.dataset.messageId = id;
@@ -153,6 +162,17 @@
                 }
 
                 chatArea.appendChild(messageContainer);
+                scrollToBottom();
+            }
+
+            function displayLogMessage(message, date) {
+                const logContainer = document.createElement("div");
+                logContainer.classList.add("log-container");
+                logContainer.innerHTML = `
+                    <span class="log-message">${message}</span>
+                    <span class="log-time">${formatDate(date)}</span>
+                `;
+                chatArea.appendChild(logContainer);
                 scrollToBottom();
             }
 
@@ -220,7 +240,7 @@
 
                     messages.forEach(message => {
                         const messageType = message.user_id == user_id ? 'sent' : 'received';
-                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id, message.edited);
+                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id, message.edited, message.is_deleted);
                         lastMessageId = message.id;
                     });
 
@@ -237,7 +257,7 @@
 
                     messages.forEach(message => {
                         const messageType = message.user_id == user_id ? 'sent' : 'received';
-                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id, message.edited);
+                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id, message.edited, message.is_deleted);
                         lastMessageId = Math.max(lastMessageId, message.id);
                     });
 
