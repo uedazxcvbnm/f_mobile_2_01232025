@@ -90,6 +90,14 @@ CREATE TABLE IF NOT EXISTS chat (
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
+#4追加テーブル
+#chat テーブルに編集済みログのフラグを追加
+ALTER TABLE chat ADD COLUMN edited BOOLEAN DEFAULT FALSE;
+#chatテーブルに削除ログのフラグを追加
+ALTER TABLE chat ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;
+
+
+
 
 
 
