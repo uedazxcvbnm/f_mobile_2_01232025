@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>投稿一覧画面</title>
     <link rel="stylesheet" href="post_list.css">
+    <?php
+            require_once __DIR__ . '../../header/header.php';
+    ?>
 </head>
 
 <body>

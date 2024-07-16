@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../input_daily_record/classes/dbdata.php';
+require_once __DIR__ . '../../input_daily_record/classes/dbdata.php';
 
 class Team extends dbdata
 {
