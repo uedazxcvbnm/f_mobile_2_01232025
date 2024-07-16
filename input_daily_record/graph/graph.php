@@ -1,7 +1,10 @@
 <?php
     session_start();
-    $user_id = $_SESSION['user_id'];
-    // echo $user_id;
+    // ログインしていないときの処理
+    if (!isset($_SESSION['user_id'])){
+        header('Location: ./../../login/login_display.php');
+        exit();
+    }
 ?>
 
 <!DOCTYPE html>
