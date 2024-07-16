@@ -37,7 +37,7 @@
             const socket = io('http://localhost:3000');
 
             document.getElementById("back-button").addEventListener("click", function() {
-                window.location.href = "../joingrouplist/joingrouplist.html";
+                window.location.href = "../joingrouplist/joingrouplist.php";
             });
 
             const groupName = "社会人禁酒グループ";
