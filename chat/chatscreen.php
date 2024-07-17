@@ -15,7 +15,7 @@
             <button id="back-button">&lt; 戻る</button>
             <div class="group-info">
                 <span id="group-name">社会人禁酒グループ</span>
-                <span id="group-members">(5)</span>
+                <span id="group-members">(6)</span>
             </div>
         </div>
         <div class="chat-area"></div>
@@ -41,7 +41,7 @@
             });
 
             const groupName = "社会人禁酒グループ";
-            const groupMembers = 5;
+            const groupMembers = 6;
 
             document.getElementById("group-name").textContent = groupName;
             document.getElementById("group-members").textContent = `(${groupMembers})`;
