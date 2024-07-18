@@ -1,0 +1,21 @@
+chat 環境構築
+
+Node.jsのインストール
+https://nodejs.org/en/
+
+LTS（Long Term Support）バージョンをダウンロード
+
+コマンドプロンプトでnpmをインストール
+コマンド
+>npm install
+
+インストール確認
+>node -v
+>npm -v
+
+>cd [server.jsが入っているファイル]
+
+サーバー構築
+node server.js
+
+Ctrl+Cでサーバー停止
