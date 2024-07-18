@@ -7,7 +7,7 @@
     <title>参加グループ一覧</title>
     <link rel="stylesheet" href="../joingrouplist/joingrouplist.css">
     <?php
-        require_once __DIR__ . '../../header/header.php';
+    require_once __DIR__ . '../../header/header.php';
     ?>
 </head>
 
@@ -36,7 +36,7 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const groupListContainer = document.querySelector(".group-list-container");
             const noGroupsMessage = document.getElementById("no-groups-message");
             const backButton = document.getElementById("back-button");
@@ -49,14 +49,21 @@
             const popupLeaveButton = document.getElementById("popup-leave-button");
 
             // 戻るボタンのクリックイベント
-            backButton.addEventListener("click", function () {
+            backButton.addEventListener("click", function() {
                 window.location.href = "aaa.html";
             });
 
             // 仮のグループデータ
-            const groups = [
-                { name: "社会人禁酒グループ", members: 5, memberNames: ["森田", "小池", "小林", "田村", "山崎"] },
-                { name: "誰でもグループ", members: 20, memberNames: ["森田", "もとき", "芽衣", "はしもと", "yoshiya", "圭介", "陽菜", "神田", "昭英", "オオサキ", "しんじ", "yusei", "tomomi", "佐々木", "よしふみ", "りこ", "ゆうま", "めぐみ", "まる"] },
+            const groups = [{
+                    name: "社会人禁酒グループ",
+                    members: 6,
+                    memberNames: ["上田", "木俵", "倉掛", "阪邊", "中辻", "李"]
+                },
+                {
+                    name: "誰でもグループ",
+                    members: 20,
+                    memberNames: ["森田", "もとき", "芽衣", "はしもと", "yoshiya", "圭介", "陽菜", "神田", "昭英", "オオサキ", "しんじ", "yusei", "tomomi", "佐々木", "よしふみ", "りこ", "ゆうま", "めぐみ", "まる"]
+                },
             ];
 
             // グループがない場合のメッセージ表示
@@ -86,7 +93,7 @@
                 groupListContainer.appendChild(groupItem);
 
                 // グループアイテムのクリックイベント
-                groupItem.addEventListener("click", function () {
+                groupItem.addEventListener("click", function() {
                     // ポップアップにグループ情報を表示
                     popupGroupName.textContent = group.name;
                     popupMemberNames.innerHTML = "";
@@ -111,12 +118,12 @@
                     popup.style.display = "block";
 
                     // チャットボタンのクリックイベント
-                    popupChatButton.onclick = function () {
-                        window.location.href = "../websocket-chat-app/chatscreen.php";
+                    popupChatButton.onclick = function() {
+                        window.location.href = "../chat/chatscreen.php";
                     };
 
                     // 退会ボタンのクリックイベント
-                    popupLeaveButton.onclick = function () {
+                    popupLeaveButton.onclick = function() {
                         const confirmLeave = confirm("本当に退会しますか？");
                         if (confirmLeave) {
                             // グループアイテムを削除
@@ -132,12 +139,12 @@
             });
 
             // ポップアップを閉じるイベント
-            closePopup.addEventListener("click", function () {
+            closePopup.addEventListener("click", function() {
                 popup.style.display = "none";
             });
 
             // ポップアップ外をクリックして閉じるイベント
-            window.addEventListener("click", function (event) {
+            window.addEventListener("click", function(event) {
                 if (event.target == popup) {
                     popup.style.display = "none";
                 }
