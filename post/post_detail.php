@@ -150,7 +150,7 @@ $result_comments = $stmt_comments->get_result();
         }
 
         .comment-input button {
-            background-color: #4CAF50;
+            background-color: #1578c9;
             color: white;
             border: none;
             border-radius: 5px;

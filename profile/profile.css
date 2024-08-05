@@ -1,17 +1,27 @@
-h1{
+/* h1{
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 80%;
     height: 80px;
     margin: 0 auto;
-    background-color: #00ae2f;
+    background-color: #1578c9;
     color: white;
     padding: 10px;
     margin-top: 100px;
     margin-bottom: 20px;
     border-radius: 10px;
+} */
+
+h1{
+    /* display: flex; */
+    text-align: center;
+    padding: 10px;
+    margin-top: 100px;
+    margin-bottom: 20px;
+    border-radius: 10px;
 }
+
 img{
     display: block;
     margin: auto;
@@ -30,7 +40,7 @@ p{
     width: 140px;
     height: 60px;
     margin-left: 180px;
-    background-color: #008924;
+    background-color: #1578c9;
     color: white;
     padding: 10px;
     margin-top: 50px;
@@ -50,4 +60,15 @@ textarea{
 }
 .pb{
     text-align: center;
+}
+
+.pass_change{
+    color:white;
+    background-color: red;
+}
+
+/* 目標を編集するボタン */
+.profile_edit_goal{
+    color:white;
+    background-color: #FFC107;
 }

@@ -12,10 +12,10 @@
         <h2>ユーザーネーム</h2>
         <p>目標</p>
         <textarea readonly>自分の目標を書くところ</textarea>
-        <div class="br"><button>編集</button></div>
+        <div class="br"><button class="profile_edit_goal">編集</button></div>
         <p>パスワード変更</p>
         <div class="pb">
-        <input type="button" name="password" value="パスワード変更ボタン">
+        <input class="pass_change" type="button" name="password" value="パスワード変更ボタン">
         </div>
     </body>
 </html>

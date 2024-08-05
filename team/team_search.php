@@ -19,16 +19,20 @@ $group = $product->getTeam($ident);
         ?>
     </head>
     <body>
-        <h1>グループ検索一覧</h1>
-        <a href="../team/team_create.php"><div class="br"><input type="button" name="new" value="グループ作成"></div></a>
-        <div class="bt">
-            <form method="POST" action="">
-                <?php
-                    foreach($teams as $team){
-                        echo '<button type="submit" name="group" value="'.$team['ident'].'">'.$team['name'].'<br><div class="fsize">参加人数'.$team['size'].'人</div></button>';
-                    }
-                ?>
-            </form>
+        <div class="team_search_side">
+            <div class="team_search_content">
+                <h1>グループ検索一覧</h1>
+                <a href="../team/team_create.php"><div class="br"><input class="new_group_create" type="button" name="new" value="グループ作成"></div></a>
+                <div class="bt">
+                    <form method="POST" action="">
+                        <?php
+                            foreach($teams as $team){
+                                echo '<button type="submit" name="group" value="'.$team['ident'].'" class="group_button">'.$team['name'].'<br><div class="fsize">参加人数'.$team['size'].'人</div></button>';
+                            }
+                        ?>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <?php

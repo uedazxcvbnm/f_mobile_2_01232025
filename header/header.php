@@ -22,7 +22,8 @@
     nav {
         width: 100%;
         height: 70px;
-        background-color: dimgray;
+        /* background-color: dimgray; */
+        background-color: #123C69;
         padding-top: 5px;
         box-sizing: border-box;
         position: fixed;

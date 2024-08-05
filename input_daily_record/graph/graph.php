@@ -26,7 +26,7 @@
     ?>
     <style>
         button {
-            background-color: #4CAF50;
+            background-color: #1578c9;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -39,7 +39,7 @@
             border-radius: 4px;
         }
 
-        .container {
+        /* .container {
             display: flex;
         }
 
@@ -60,7 +60,7 @@
 
         h2 {
             margin-top: 0;
-        }
+        } */
     </style>
 </head>
 

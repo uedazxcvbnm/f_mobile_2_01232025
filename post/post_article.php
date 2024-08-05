@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if (move_uploaded_file($_FILES["post_image"]["tmp_name"], $target_file)) {
         } else {
-            echo "<script>alert('画像DBに登録でき無い');</script>";
+            echo "<script>alert('画像DBに登録できない');</script>";
             exit;
         }
     }
@@ -47,6 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>禁酒サイト - 投稿画面</title>
     <link rel="stylesheet" href="post_article.css">
+    <?php
+            require_once __DIR__ . '../../header/header.php';
+    ?>
 </head>
 
 <body>

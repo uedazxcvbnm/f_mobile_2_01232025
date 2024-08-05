@@ -18,7 +18,7 @@
             <form method="POST" action="login_exec.php">
                 <div>ユーザー名：<input type="text" name="user_name_info"></div>
                 <div>パスワード：<input type="password" name="password_info"></div>
-                <p><input type="submit" value="送信"></p>
+                <p><input type="submit" value="ログイン" class="login_button"></p>
             </form>
         </div>
     </div>
