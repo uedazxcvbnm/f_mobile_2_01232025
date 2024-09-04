@@ -22,6 +22,7 @@
 <body>
     <div class="input_daily_screen">
         <div class="daily_registration_form">
+            <h1>飲酒記録を登録</h1>
             <!-- 飲み物を選択するボタン -->
             <div class="drink_kinds">飲み物を選択：
                 <button id="drink_button" class="drink_button" data-action="1">ビール</button>
@@ -40,7 +41,7 @@
                     <p>お酒に使った金額：<input type="text" name="alcohol_money">円</p>
                     <!-- 血圧いったんコメントアウトしよう -->
                     <!-- <p>最高血圧：<input type="text" name="sBP"> ／ 最低血圧：<input type="text" name="dBP"></p> -->
-                    <p><input type="submit" value="送信"></p>
+                    <p><input type="submit" value="送信" class="record_button"></p>
             </form>
         </div>
     </div>

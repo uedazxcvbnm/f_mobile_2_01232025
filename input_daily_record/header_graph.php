@@ -1,9 +1,9 @@
 <nav>
     <ul>
-        <li><a href="../input_daily_record/input_daily_record.php">登録</a></li>
-        <li><a href="../team/team_search.php">グループ検索</a></li>
-        <li><a href="../joingrouplist/joingrouplist.php">参加グループ</a></li>
-        <li><a href="../post/post_list.php">投稿一覧</a></li>
+        <li><a href="./../../input_daily_record/input_daily_record.php">登録</a></li>
+        <li><a href="./../../team/team_search.php">グループ検索</a></li>
+        <li><a href="./../../joingrouplist/joingrouplist.php">参加グループ</a></li>
+        <li><a href="./../../post/post_list.php">投稿一覧</a></li>
         <li><a onclick="openLogoutpop()">ログアウト</a></li>
     </ul>
 </nav>
@@ -22,8 +22,7 @@
     nav {
         width: 100%;
         height: 70px;
-        /* background-color: dimgray; */
-        background-color: #123C69;
+        background-color: dimgray;
         padding-top: 5px;
         box-sizing: border-box;
         position: fixed;

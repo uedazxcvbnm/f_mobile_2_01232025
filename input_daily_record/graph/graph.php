@@ -15,15 +15,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>禁酒アプリ - グラフ</title>
     <link rel="stylesheet" href="graph.css">
-
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/date-fns"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <?php
+        require_once __DIR__ . '/../header_graph.php';
+    ?>
     <style>
         button {
-            background-color: #4CAF50;
+            background-color: #1578c9;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -36,7 +39,7 @@
             border-radius: 4px;
         }
 
-        .container {
+        /* .container {
             display: flex;
         }
 
@@ -57,11 +60,12 @@
 
         h2 {
             margin-top: 0;
-        }
+        } */
     </style>
 </head>
 
 <body>
+    
     <div class="container">
         <div class="sidebar">
             <h2>禁酒アプリ</h2>

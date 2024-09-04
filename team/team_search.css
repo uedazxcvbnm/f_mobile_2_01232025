@@ -1,20 +1,37 @@
 body{
     margin-top: 50px;
 }
+.team_search_side{
+    background-color: #f5f5f5;
+}
+.team_search_content{
+    margin:0 20%;
+    border: 0px solid #ccc;
+    /* background-color: #e1e9f3; */
+    background-color: #e1e9f3;
+}
 h1{
+    /* display: flex; */
+    padding: 20px;
+    margin-top: 60px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+/* h1{
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 80%;
     height: 80px;
     margin: 0 auto;
-    background-color: #00ae2f;
+    background-color: #1578c9;
     color: white;
     padding: 10px;
     margin-top: 100px;
     margin-bottom: 20px;
     border-radius: 10px;
-}
+} */
 button{
     width:400px;
     height:300px;
@@ -73,3 +90,20 @@ input{
     right: 10px;
     cursor: pointer;
 }
+.new_group_create{
+    background-color: #FFC107;
+    color:white;
+}
+
+.group_button{
+    /* color:white; */
+    color:#1578c9;
+    /* background-color: #FFF9E6; */
+    background-color: #fef9ed;
+}
+/* テスト：参加済みのグループの色 */
+/* .group_button_blue{
+    color:white;
+    background-color: #69a2d4;
+    /* background-color: #3381c1; 
+} */
