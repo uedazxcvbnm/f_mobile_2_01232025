@@ -14,8 +14,6 @@
         <textarea readonly>自分の目標を書くところ</textarea>
         <div class="br"><button>編集</button></div>
         <p>パスワード変更</p>
-        <div class="pb">
-        <input type="button" name="password" value="パスワード変更ボタン">
-        </div>
+        <div class="pb"><input type="button" name="password" value="パスワード変更ボタン"></div>
     </body>
 </html>
