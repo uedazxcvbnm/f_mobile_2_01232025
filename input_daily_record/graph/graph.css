@@ -1,12 +1,26 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
-    margin: 0;
+    margin: 100px, 0;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     height: 100vh;
     overflow: hidden;
+}
+
+.week_change {
+    background-color: #1578c9;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
 }
 
 .container {
@@ -19,6 +33,8 @@ body {
     overflow: hidden;
     position: relative;
     height: 90vh;
+    /* containerをいじれば位置が下がった */
+    margin-top:5%;
 }
 
 .sidebar {
