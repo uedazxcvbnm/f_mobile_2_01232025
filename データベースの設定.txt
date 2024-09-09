@@ -10,7 +10,8 @@ use pbl2;
 CREATE TABLE IF NOT EXISTS user (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
-    password VARCHAR(12) NOT NULL
+    password VARCHAR(12) NOT NULL,
+    teams varchar(200) NOT NULL
 );
 
 INSERT INTO user (username, password) VALUES ('中辻', 'pass1'), ('上田', 'pass2'), ('倉掛', 'pass3'), ('木俵', 'pass4'), ('李', 'pass5'), ('阪邊', 'pass6');
