@@ -22,8 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
 
-    $stmt = $conn->prepare("INSERT INTO posts (post_title, post_content, post_url, post_image, post_tags) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $post_title, $post_content, $post_url, $web_path, $post_tags);
+    // $stmt = $conn->prepare("INSERT INTO posts (post_title, post_content, post_url, post_image, post_tags) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO posts (post_title, post_content, post_url, post_tags) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $post_title, $post_content, $post_url, $post_tags);
     $stmt->execute();
     $new_post_id = $stmt->insert_id;
     $stmt->close();

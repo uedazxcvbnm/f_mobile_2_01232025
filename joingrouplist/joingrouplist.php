@@ -13,7 +13,6 @@
 
 <body>
     <header>
-        <button id="back-button">&lt; 戻る</button>
         <h1>参加しているグループ</h1>
     </header>
 
