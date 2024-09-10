@@ -1,8 +1,7 @@
 <?php
-
+session_start();
 include 'config.php'; // 确保包含数据库连接文件
 
-// 处理评论的提交
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment_text'])) {
     // 如果用户没有登录，跳转到登录页面
     if (!isset($_SESSION['user_id'])) {
