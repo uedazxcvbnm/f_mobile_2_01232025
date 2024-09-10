@@ -24,4 +24,10 @@ class Team extends dbdata
         $sql = "insert into teams (name, detail, size) values(?, ?, 1)";
         $result = $this->exec($sql, [$name, $detail]);
     }
+
+    public function addUserTeam($name, $rname, $user_id)
+    {
+        $sql = "update user set teams = case when teams like '%' ? '%' then teams else concat(teams, ? ',') end where user_id = ?";
+        $result = $this->exec($sql, [$name, $rname, $user_id]);
+    }
 }

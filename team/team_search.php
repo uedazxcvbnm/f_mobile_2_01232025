@@ -1,4 +1,13 @@
 <?php
+    session_start();
+    // ログインしていないときの処理
+    if (!isset($_SESSION['user_id'])){
+        header('Location: ./../login/login_display.php');
+        exit();
+    }
+?>
+
+<?php
 require_once __DIR__ . '/team_class.php';
 $team = new Team();
 $teams = $team->getTeams();
@@ -19,20 +28,16 @@ $group = $product->getTeam($ident);
         ?>
     </head>
     <body>
-        <div class="team_search_side">
-            <div class="team_search_content">
-                <h1>グループ検索一覧</h1>
-                <a href="../team/team_create.php"><div class="br"><input class="new_group_create" type="button" name="new" value="グループ作成"></div></a>
-                <div class="bt">
-                    <form method="POST" action="">
-                        <?php
-                            foreach($teams as $team){
-                                echo '<button type="submit" name="group" value="'.$team['ident'].'" class="group_button">'.$team['name'].'<br><div class="fsize">参加人数'.$team['size'].'人</div></button>';
-                            }
-                        ?>
-                    </form>
-                </div>
-            </div>
+        <h1>グループ検索一覧</h1>
+        <a href="../team/team_create.php"><div class="br"><input type="button" name="new" value="グループ作成"></div></a>
+        <div class="bt">
+            <form method="POST" action="">
+                <?php
+                    foreach($teams as $team){
+                        echo '<button type="submit" name="group" value="'.$team['ident'].'">'.$team['name'].'<br><div class="fsize">参加人数'.$team['size'].'人</div></button>';
+                    }
+                ?>
+            </form>
         </div>
 
         <?php
@@ -48,9 +53,13 @@ $group = $product->getTeam($ident);
                 <span class="close-button" onclick="closePopup()">×</span>
                 <h2>グループ詳細</h2>
                 <?php
+                $group_name = $group['name'];
                 echo $group['detail'];
                 ?>
-                <br><a href="../chat/chatscreen.php"><div class="mt"><input type="button" name="join" value="参加"></div></a>
+                <form method="post" action="../team/team_user.php">
+                    <input type="hidden" name="name" value=<?= $group_name ?>>
+                    <input type="submit" value="参加">
+                </form>
             </div>
         </div>
 
