@@ -1,4 +1,17 @@
 <?php
+session_start();  // 启动会话
+
+// 检查用户是否已经登录
+if (!isset($_SESSION['user_id'])) {
+    // 如果用户没有登录，重定向到登录页面
+    header("Location: /team_F_alcohol/login/login_display.php");
+    exit;
+}
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -6,36 +19,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post_content = $_POST['post_content'];
     $post_url = $_POST['post_url'];
     $post_tags = $_POST['post_tags'];
-    $target_file = "";
+    $user_id = $_SESSION['user_id'];  // 获取当前登录用户的ID
 
-    if (!empty($_FILES["post_image"]["name"])) {
-        $target_dir = "/Applications/XAMPP/xamppfiles/htdocs/team_F_alcohol/uploads/";
-        $file_name = basename($_FILES["post_image"]["name"]);
-        $target_file = $target_dir . $file_name;
-        $web_path = "/team_F_alcohol/uploads/" . $file_name;
+    $stmt = $conn->prepare("INSERT INTO posts (post_title, post_content, post_url, post_tags, user_id) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssi", $post_title, $post_content, $post_url, $post_tags, $user_id);
+    if ($stmt->execute()) {
+        $stmt->close();
+        $conn->close();
 
-        if (move_uploaded_file($_FILES["post_image"]["tmp_name"], $target_file)) {
-        } else {
-            echo "<script>alert('画像DBに登録できない');</script>";
-            exit;
-        }
+        // 投稿成功后重定向
+        echo "<script>
+        alert('投稿成功、3秒後に投稿一覧画面に遷移します。');
+        setTimeout(function(){
+            window.location.href = 'post_list.php';
+        }, 3000);
+        </script>";
+    } else {
+        echo "<script>alert('投稿に失敗しました。');</script>";
     }
-
-
-    $stmt = $conn->prepare("INSERT INTO posts (post_title, post_content, post_url, post_image, post_tags) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $post_title, $post_content, $post_url, $web_path, $post_tags);
-    $stmt->execute();
-    $new_post_id = $stmt->insert_id;
-    $stmt->close();
-    $conn->close();
-
-
-    echo "<script>
-    alert('投稿成功、3秒後に投稿一覧画面に遷移します。');
-    setTimeout(function(){
-        window.location.href = 'post_list.php';
-    }, 3000);
-    </script>";
 }
 ?>
 
@@ -48,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>禁酒サイト - 投稿画面</title>
     <link rel="stylesheet" href="post_article.css">
     <?php
-            require_once __DIR__ . '../../header/header.php';
+    require_once __DIR__ . '../../header/header.php';
     ?>
 </head>
 
@@ -69,13 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="url" id="post_url" name="post_url" placeholder="参考にしたサイトのURLを入力">
             </div>
             <div class="form-group">
-                <label for="post_image">画像:</label>
-                <input type="file" id="post_image" name="post_image">
-                <small>※ 画像は任意です</small>
-            </div>
-            <div class="form-group">
                 <label for="post_tags">タグ:</label>
-                <input type="text" id="post_tags" name="post_tags" placeholder="タグをカンマ区切りで入力">
+                <input type="text" id="post_tags" name="post_tags" placeholder="タグが複数の場合：スペースで区切る
+">
                 <small>※ 複数のタグを追加可能です</small>
             </div>
             <div class="form-group" style="text-align: center;">
