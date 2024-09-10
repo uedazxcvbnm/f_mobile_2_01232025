@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+// チャット画面でユーザーIDと名前を取得する
+$user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
+
+?>
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -7,9 +15,7 @@
     <title>Chat</title>
     <link rel="stylesheet" href="../chat/chatscreen.css">
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <?php
-            require_once __DIR__ . '../../header/header.php';
-    ?>
+    <?php require_once __DIR__ . '../../header/header.php'; ?>
 </head>
 
 <body>
@@ -39,6 +45,9 @@
         document.addEventListener("DOMContentLoaded", function() {
             const socket = io('http://localhost:3000');
 
+            // ユーザーIDをクエリパラメータとしてURLに含める
+            const user_id = "<?php echo $user_id; ?>";
+
             document.getElementById("back-button").addEventListener("click", function() {
                 window.location.href = "../joingrouplist/joingrouplist.php";
             });
@@ -55,26 +64,16 @@
 
             let lastMessageId = 0;
 
-            function getQueryParam(param) {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(param);
-            }
-
-            const user_id = getQueryParam('user_id');
-
             function sendMessage() {
                 const message = textInput.value.trim();
-
                 if (message === "") {
                     displayEmptyMessage();
                     return;
                 }
-
                 socket.emit('sendMessage', {
                     message: message,
                     user_id: user_id
                 });
-
                 textInput.value = "";
                 scrollToBottom();
             }
@@ -234,23 +233,6 @@
                     minute: '2-digit'
                 };
                 return date.toLocaleDateString('ja-JP', options);
-            }
-
-            async function fetchMessages() {
-                try {
-                    const response = await fetch('fetch_messages.php');
-                    const messages = await response.json();
-
-                    messages.forEach(message => {
-                        const messageType = message.user_id == user_id ? 'sent' : 'received';
-                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id, message.edited, message.is_deleted);
-                        lastMessageId = message.id;
-                    });
-
-                    scrollToBottom();
-                } catch (error) {
-                    console.error(error);
-                }
             }
 
             async function loadInitialMessages() {
