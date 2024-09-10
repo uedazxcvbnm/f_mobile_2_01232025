@@ -67,7 +67,11 @@ $post = $result->fetch_assoc();
 $stmt->close();
 
 // 获取评论列表
-$sql_comments = "SELECT * FROM comments WHERE post_id = ?";
+$sql_comments = "
+    SELECT comments.*, user.username 
+    FROM comments 
+    JOIN user ON comments.user_id = user.user_id 
+    WHERE post_id = ?";
 $stmt_comments = $conn->prepare($sql_comments);
 $stmt_comments->bind_param("i", $post_id);
 $stmt_comments->execute();
@@ -211,6 +215,7 @@ $result_comments = $stmt_comments->get_result();
     <div id="comment-list" class="comment-list">
         <?php while ($comment = $result_comments->fetch_assoc()) { ?>
             <div class="comment-item" id="comment-<?php echo $comment['id']; ?>">
+                <p><strong><?php echo htmlspecialchars($comment['username']); ?>:</strong></p> <!-- 显示评论者的名字 -->
                 <p><?php echo htmlspecialchars($comment['comment_text']); ?></p>
                 <p>いいねの数: <?php echo $comment['likes']; ?></p>
                 <button onclick="likeComment(<?php echo $comment['id']; ?>)">いいね</button>
@@ -219,6 +224,7 @@ $result_comments = $stmt_comments->get_result();
             </div>
         <?php } ?>
     </div>
+
 
     <div class="comment-input">
         <form id="comment-form-bottom">
