@@ -24,44 +24,6 @@
     <?php
         require_once __DIR__ . '/../header_graph.php';
     ?>
-    <style>
-        button {
-            background-color: #1578c9;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        /* .container {
-            display: flex;
-        }
-
-        .sidebar {
-            width: 20%;
-            background-color: #4CAF50;
-            padding: 20px;
-            box-sizing: border-box;
-            height: 100vh;
-            color: white;
-        }
-
-        .main-content {
-            width: 80%;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        h2 {
-            margin-top: 0;
-        } */
-    </style>
 </head>
 
 <body>
@@ -70,21 +32,21 @@
         <div class="sidebar">
             <h2>禁酒アプリ</h2>
             <ul>
-                <li><a href="#">ホーム</a></li>
-                <li><a href="./../calendar/calendar.php">カレンダー</a></li>
-                <li><a href="#">？？</a></li>
-                <li><a href="#">？？</a></li>
+                <!-- <p><li><a href="#">ホーム</a></li></p> -->
+                <li><a href="./../calendar/calendar.php">カレンダーを見る</a></li>
             </ul>
         </div>
         <div class="main-content">
-            <button id="prevWeek">先週</button>
-            <button id="nextWeek">来週</button>
+            <button class="week_change" id="prevWeek">先週</button>
+            <button class="week_change" id="nextWeek">来週</button>
             <h2>酒を飲んだ量</h2>
             <canvas id="amountChart" width="400" height="200"></canvas>
             <h2>酒に使った金額</h2>
             <canvas id="costChart" width="400" height="200"></canvas>
-            <h2>血圧</h2>
-            <canvas id="pressureChart" width="400" height="200"></canvas>
+            <!-- 血圧のグラフをいったん消す -->
+            <!-- ヒアリングの結果次第で血圧のグラフをどうするか決める -->
+            <!-- <h2>血圧</h2>
+            <canvas id="pressureChart" width="400" height="200"></canvas> -->
         </div>
     </div>
 

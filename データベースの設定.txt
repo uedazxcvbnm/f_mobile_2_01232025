@@ -10,14 +10,13 @@ use pbl2;
 -- user テーブル
 CREATE TABLE IF NOT EXISTS user (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_mail VARCHAR(100) NOT NULL,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(12) NOT NULL,
     teams varchar(200) NOT NULL
 );
 
--- テストユーザーの挿入
-INSERT INTO user (username, password) VALUES 
-('中辻', 'pass1'), ('上田', 'pass2'), ('倉掛', 'pass3'), ('木俵', 'pass4'), ('李', 'pass5'), ('阪邊', 'pass6');
+INSERT INTO user (username, password) VALUES ('n@gmail.com', '中辻', 'pass1'), ('u@gmail.com', '上田', 'pass2'), ('ku@gmail.com', '倉掛', 'pass3'), ('ki@gmail.com', '木俵', 'pass4'), ('r@gmail.com', '李', 'pass5'), ('s@gmail.com', '阪邊', 'pass6');
 
 -- drink テーブル
 CREATE TABLE drink (
@@ -115,7 +114,7 @@ CREATE TABLE posts (
   post_tags VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   likes INT DEFAULT 0,
-  user_id INT,
+  user_id INT, # 追加
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 

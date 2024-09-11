@@ -199,7 +199,7 @@ $result_comments = $stmt_comments->get_result();
         <p>投稿者: <?php echo htmlspecialchars($post['username']); ?></p> <!-- 显示投稿人的名字 -->
         <p>投稿日: <?php echo $post['created_at']; ?></p>
         <p><?php echo nl2br(htmlspecialchars($post['post_content'])); ?></p>
-        <img src="uploads/<?php echo htmlspecialchars(basename($post['post_image'])); ?>" alt="投稿画像" class="post-image">
+        <!-- <img src="uploads/<?php /*echo htmlspecialchars(basename($post['post_image'])); */?>" alt="投稿画像" class="post-image"> -->
         <p><a href="<?php echo htmlspecialchars($post['post_url']); ?>">参考URL</a></p>
         <p>タグ: <?php echo htmlspecialchars($post['post_tags']); ?></p>
         <p>いいねの数: <?php echo $post['likes']; ?></p>
