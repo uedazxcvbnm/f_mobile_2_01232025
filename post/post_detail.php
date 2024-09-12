@@ -1,12 +1,21 @@
 <?php
-include 'config.php';
-
+session_start();
+include 'config.php'; // 确保包含数据库连接文件
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment_text'])) {
+    // 如果用户没有登录，跳转到登录页面
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: /team_F_alcohol/login/login_display.php");
+        exit;
+    }
+
+    // 如果已经登录，继续处理评论
     $comment_text = $_POST['comment_text'];
     $post_id = $_POST['post_id'];
-    $stmt = $conn->prepare("INSERT INTO comments (post_id, comment_text) VALUES (?, ?)");
-    $stmt->bind_param("is", $post_id, $comment_text);
+    $user_id = $_SESSION['user_id'];  // 从会话中获取登录的用户ID
+
+    $stmt = $conn->prepare("INSERT INTO comments (post_id, comment_text, user_id) VALUES (?, ?, ?)");
+    $stmt->bind_param("isi", $post_id, $comment_text, $user_id);
     if ($stmt->execute()) {
         echo 'success';
     } else {
@@ -16,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment_text'])) {
     exit;
 }
 
-
+// 处理点赞评论的请求
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['like_comment'])) {
     $comment_id = $_POST['like_comment'];
     $stmt = $conn->prepare("UPDATE comments SET likes = likes + 1 WHERE id = ?");
@@ -30,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['like_comment'])) {
     exit;
 }
 
-
+// 处理删除评论的请求
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_comment'])) {
     $comment_id = $_POST['delete_comment'];
     $stmt = $conn->prepare("DELETE FROM comments WHERE id = ?");
@@ -44,8 +53,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_comment'])) {
     exit;
 }
 
+// 获取文章详情
 $post_id = $_GET['id'];
-$sql = "SELECT * FROM posts WHERE id = ?";
+$sql = "SELECT posts.*, user.username 
+        FROM posts 
+        JOIN user ON posts.user_id = user.user_id 
+        WHERE posts.id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $post_id);
 $stmt->execute();
@@ -53,8 +66,12 @@ $result = $stmt->get_result();
 $post = $result->fetch_assoc();
 $stmt->close();
 
-
-$sql_comments = "SELECT * FROM comments WHERE post_id = ?";
+// 获取评论列表
+$sql_comments = "
+    SELECT comments.*, user.username 
+    FROM comments 
+    JOIN user ON comments.user_id = user.user_id 
+    WHERE post_id = ?";
 $stmt_comments = $conn->prepare($sql_comments);
 $stmt_comments->bind_param("i", $post_id);
 $stmt_comments->execute();
@@ -67,6 +84,7 @@ $result_comments = $stmt_comments->get_result();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="post_detail.css">
     <title>投稿詳細画面</title>
     <style>
@@ -160,7 +178,6 @@ $result_comments = $stmt_comments->get_result();
 
         .comment-section {
             padding-bottom: 100px;
-            /* Ensure enough space for the fixed input */
         }
 
         .comment-item {
@@ -179,23 +196,26 @@ $result_comments = $stmt_comments->get_result();
 <body>
     <div class="container">
         <h1><?php echo htmlspecialchars($post['post_title']); ?></h1>
+        <p>投稿者: <?php echo htmlspecialchars($post['username']); ?></p> <!-- 显示投稿人的名字 -->
         <p>投稿日: <?php echo $post['created_at']; ?></p>
         <p><?php echo nl2br(htmlspecialchars($post['post_content'])); ?></p>
         <!-- <img src="uploads/<?php /*echo htmlspecialchars(basename($post['post_image'])); */?>" alt="投稿画像" class="post-image"> -->
         <p><a href="<?php echo htmlspecialchars($post['post_url']); ?>">参考URL</a></p>
         <p>タグ: <?php echo htmlspecialchars($post['post_tags']); ?></p>
         <p>いいねの数: <?php echo $post['likes']; ?></p>
-        <button class="like-btn" onclick="likePost(<?php echo $post['id']; ?>)">いいね</button>
+        <button class="like-btn" onclick="likePost(<?php echo $post['id']; ?>)">
+            <i class="fas fa-thumbs-up"></i>
+        </button>
         <button class="edit-btn" onclick="window.location.href='edit_post.php?id=<?php echo $post['id']; ?>'">編集</button>
         <button class="delete-btn" onclick="deletePost(<?php echo $post['id']; ?>)">削除</button>
     </div>
-
 
 
     <h2>コメント一覧</h2>
     <div id="comment-list" class="comment-list">
         <?php while ($comment = $result_comments->fetch_assoc()) { ?>
             <div class="comment-item" id="comment-<?php echo $comment['id']; ?>">
+                <p><strong><?php echo htmlspecialchars($comment['username']); ?>:</strong></p> <!-- 显示评论者的名字 -->
                 <p><?php echo htmlspecialchars($comment['comment_text']); ?></p>
                 <p>いいねの数: <?php echo $comment['likes']; ?></p>
                 <button onclick="likeComment(<?php echo $comment['id']; ?>)">いいね</button>
@@ -204,7 +224,7 @@ $result_comments = $stmt_comments->get_result();
             </div>
         <?php } ?>
     </div>
-    </div>
+
 
     <div class="comment-input">
         <form id="comment-form-bottom">
@@ -215,21 +235,33 @@ $result_comments = $stmt_comments->get_result();
     </div>
 
     <script>
+        // 投稿のいいね処理
         function likePost(postId) {
             fetch('like_post.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    body: 'id=' + postId
+                    body: 'post_id=' + postId
                 })
                 .then(response => response.text())
                 .then(data => {
-                    if (data === 'success') {
-                        location.reload();
-                    } else {
-                        alert('いいねに失敗しました。');
-                    }
+                    location.reload(); // 成功后刷新页面
+                });
+        }
+
+        // コメントのいいね処理
+        function likeComment(commentId) {
+            fetch('like_comment.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'comment_id=' + commentId
+                })
+                .then(response => response.text())
+                .then(data => {
+                    location.reload(); // 成功后刷新页面
                 });
         }
 
@@ -246,8 +278,6 @@ $result_comments = $stmt_comments->get_result();
                     .then(data => {
                         if (data === 'success') {
                             window.location.href = 'post_list.php';
-                        } else {
-                            alert('削除に失敗しました。');
                         }
                     });
             }
@@ -265,25 +295,7 @@ $result_comments = $stmt_comments->get_result();
                     if (data === 'success') {
                         location.reload();
                     } else {
-                        alert('コメントの投稿に失敗しました。');
-                    }
-                });
-        }
-
-        function likeComment(commentId) {
-            fetch('like_comment.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: 'id=' + commentId
-                })
-                .then(response => response.text())
-                .then(data => {
-                    if (data === 'success') {
-                        location.reload();
-                    } else {
-                        alert('いいねに失敗しました。');
+                        alert('ログインしてください。');
                     }
                 });
         }
@@ -302,11 +314,7 @@ $result_comments = $stmt_comments->get_result();
                     })
                     .then(response => response.text())
                     .then(data => {
-                        if (data === 'success') {
-                            location.reload();
-                        } else {
-                            alert('コメントの編集に失敗しました。');
-                        }
+                        location.reload();
                     });
             }
         }
@@ -322,11 +330,7 @@ $result_comments = $stmt_comments->get_result();
                     })
                     .then(response => response.text())
                     .then(data => {
-                        if (data === 'success') {
-                            location.reload();
-                        } else {
-                            alert('コメントの削除に失敗しました。');
-                        }
+                        location.reload();
                     });
             }
         }

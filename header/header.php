@@ -1,9 +1,9 @@
 <nav>
     <ul>
-        <li><a href="../input_daily_record/input_daily_record.php">登録</a></li>
-        <li><a href="../team/team_search.php">グループ検索</a></li>
-        <li><a href="../joingrouplist/joingrouplist.php">参加グループ</a></li>
-        <li><a href="../post/post_list.php">投稿一覧</a></li>
+        <li><a class="nav-link" href="../input_daily_record/input_daily_record.php">登録</a></li>
+        <li><a class="nav-link" href="../team/team_search.php">グループ検索</a></li>
+        <li><a class="nav-link" href="../joingrouplist/joingrouplist.php">参加グループ</a></li>
+        <li><a class="nav-link" href="../post/post_list.php">投稿一覧</a></li>
         <li><a onclick="openLogoutpop()">ログアウト</a></li>
     </ul>
 </nav>
@@ -78,6 +78,10 @@
     .lobt{
         margin-top: 200px;
     }
+
+    a.active {
+        color: cyan;
+    }
 </style>
 
 <script>
@@ -88,4 +92,10 @@
     function closeLogoutpop() {
         document.getElementById('logoutpop').style.display = 'none';
     }
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+	if(link.href === window.location.href){
+        link.classList.add('active')
+    }
+    })
 </script>
