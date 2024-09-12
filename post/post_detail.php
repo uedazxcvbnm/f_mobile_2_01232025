@@ -87,6 +87,9 @@ $result_comments = $stmt_comments->get_result();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="post_detail.css">
     <title>投稿詳細画面</title>
+    <?php
+    require_once __DIR__ . '../../header/header.php';
+    ?>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -148,6 +151,9 @@ $result_comments = $stmt_comments->get_result();
             background-color: #fff;
             padding: 10px;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            height: 80px;
+            box-sizing: border-box;
         }
 
         .comment-input form {
@@ -176,8 +182,10 @@ $result_comments = $stmt_comments->get_result();
             cursor: pointer;
         }
 
+        /* コメントセクションに余白を追加してフォームと重ならないようにする */
         .comment-section {
-            padding-bottom: 100px;
+            padding-bottom: 200px;
+            /* コメントフォームの高さ + 余白 */
         }
 
         .comment-item {
@@ -189,6 +197,16 @@ $result_comments = $stmt_comments->get_result();
 
         .comment-item button {
             margin: 5px;
+        }
+
+        /* ヘッダーの高さ + 余白を調整 */
+        .container {
+            margin-top: 80px;
+        }
+
+        .comment-list {
+            padding-bottom: 120px;
+            /* コメントフォーム分の余白を確保 */
         }
     </style>
 </head>
