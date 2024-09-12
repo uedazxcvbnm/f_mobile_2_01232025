@@ -28,12 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $conn->close();
 
         // 投稿成功后重定向
-        echo "<script>
-        alert('投稿成功、3秒後に投稿一覧画面に遷移します。');
-        setTimeout(function(){
-            window.location.href = 'post_list.php';
-        }, 3000);
-        </script>";
+        header("Location: ./post_list.php");
+        exit;
     } else {
         echo "<script>alert('投稿に失敗しました。');</script>";
     }
