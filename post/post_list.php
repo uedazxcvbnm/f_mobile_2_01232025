@@ -14,6 +14,7 @@
 <body>
     <div class="container">
         <h1>投稿一覧画面</h1>
+        
         <?php
         include 'config.php';
 
