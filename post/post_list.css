@@ -34,6 +34,12 @@ h1 {
 
 .post-item p {
     margin: 5px 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    /* 2行まで表示 */
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .post-item a {
@@ -45,19 +51,13 @@ h1 {
     text-decoration: underline;
 }
 
-
-
-
 body {
     padding-top: 80px;
-
 }
-
 
 .create-post-button {
     position: absolute;
     top: 200px;
-
     right: 130px;
     background-color: #0056df;
     color: white;

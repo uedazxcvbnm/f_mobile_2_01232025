@@ -76,6 +76,22 @@ $stmt_comments = $conn->prepare($sql_comments);
 $stmt_comments->bind_param("i", $post_id);
 $stmt_comments->execute();
 $result_comments = $stmt_comments->get_result();
+
+// 現在のユーザーのID
+$current_user_id = $_SESSION['user_id'];
+
+// 投稿の取得
+$post_id = $_GET['id'];
+$sql = "SELECT posts.*, user.username 
+        FROM posts 
+        JOIN user ON posts.user_id = user.user_id 
+        WHERE posts.id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $post_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$post = $result->fetch_assoc();
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -83,13 +99,12 @@ $result_comments = $stmt_comments->get_result();
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="post_detail.css">
-    <title>投稿詳細画面</title>
     <?php
     require_once __DIR__ . '../../header/header.php';
     ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>投稿詳細画面</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -104,15 +119,21 @@ $result_comments = $stmt_comments->get_result();
             color: #333;
         }
 
-        p {
-            text-align: center;
+        .post-content {
+            font-size: 18px;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            color: #333;
         }
 
-        .post-image {
-            display: block;
-            margin: 20px auto;
-            max-width: 100%;
-            height: auto;
+        .post-content p {
+            margin-bottom: 15px;
         }
 
         button {
@@ -182,10 +203,8 @@ $result_comments = $stmt_comments->get_result();
             cursor: pointer;
         }
 
-        /* コメントセクションに余白を追加してフォームと重ならないようにする */
         .comment-section {
             padding-bottom: 200px;
-            /* コメントフォームの高さ + 余白 */
         }
 
         .comment-item {
@@ -199,14 +218,12 @@ $result_comments = $stmt_comments->get_result();
             margin: 5px;
         }
 
-        /* ヘッダーの高さ + 余白を調整 */
         .container {
             margin-top: 80px;
         }
 
         .comment-list {
             padding-bottom: 120px;
-            /* コメントフォーム分の余白を確保 */
         }
     </style>
 </head>
@@ -214,36 +231,58 @@ $result_comments = $stmt_comments->get_result();
 <body>
     <div class="container">
         <h1><?php echo htmlspecialchars($post['post_title']); ?></h1>
-        <p>投稿者: <?php echo htmlspecialchars($post['username']); ?></p> <!-- 显示投稿人的名字 -->
+        <p>投稿者: <?php echo htmlspecialchars($post['username']); ?></p>
         <p>投稿日: <?php echo $post['created_at']; ?></p>
-        <p><?php echo nl2br(htmlspecialchars($post['post_content'])); ?></p>
-        <!-- 投稿画像の表示部分をコメントアウト -->
-        <!-- <img src="uploads/<?php echo htmlspecialchars(basename($post['post_image'])); ?>" alt="投稿画像" class="post-image"> -->
+        <div class="post-content">
+            <p><?php echo nl2br(htmlspecialchars($post['post_content'])); ?></p>
+        </div>
         <p><a href="<?php echo htmlspecialchars($post['post_url']); ?>">参考URL</a></p>
         <p>タグ: <?php echo htmlspecialchars($post['post_tags']); ?></p>
         <p>いいねの数: <?php echo $post['likes']; ?></p>
-        <button class="like-btn" onclick="likePost(<?php echo $post['id']; ?>)">
-            <i class="fas fa-thumbs-up"></i>
-        </button>
-        <button class="edit-btn" onclick="window.location.href='edit_post.php?id=<?php echo $post['id']; ?>'">編集</button>
-        <button class="delete-btn" onclick="deletePost(<?php echo $post['id']; ?>)">削除</button>
-    </div>
 
+        <?php
+        // 投稿者本人のみ編集・削除ボタンを表示
+        if ($current_user_id == $post['user_id']) {
+            echo '<button class="edit-btn" onclick="window.location.href=\'edit_post.php?id=' . $post['id'] . '\'">編集</button>';
+            echo '<button class="delete-btn" onclick="deletePost(' . $post['id'] . ')">削除</button>';
+        }
+        ?>
+        <button class="like-btn" onclick="likePost(<?php echo $post['id']; ?>)">
+            <i class="fas fa-thumbs-up"></i> いいね
+        </button>
+    </div>
 
     <h2>コメント一覧</h2>
     <div id="comment-list" class="comment-list">
-        <?php while ($comment = $result_comments->fetch_assoc()) { ?>
+        <?php
+        // コメント一覧を取得
+        $sql_comments = "
+            SELECT comments.*, user.username 
+            FROM comments 
+            JOIN user ON comments.user_id = user.user_id 
+            WHERE post_id = ?";
+        $stmt_comments = $conn->prepare($sql_comments);
+        $stmt_comments->bind_param("i", $post_id);
+        $stmt_comments->execute();
+        $result_comments = $stmt_comments->get_result();
+
+        while ($comment = $result_comments->fetch_assoc()) { ?>
             <div class="comment-item" id="comment-<?php echo $comment['id']; ?>">
-                <p><strong><?php echo htmlspecialchars($comment['username']); ?>:</strong></p> <!-- 显示评论者的名字 -->
+                <p><strong><?php echo htmlspecialchars($comment['username']); ?>:</strong></p>
                 <p><?php echo htmlspecialchars($comment['comment_text']); ?></p>
                 <p>いいねの数: <?php echo $comment['likes']; ?></p>
+
+                <?php
+                // コメント投稿者本人のみ編集・削除ボタンを表示
+                if ($current_user_id == $comment['user_id']) {
+                    echo '<button onclick="editComment(' . $comment['id'] . ')">編集</button>';
+                    echo '<button onclick="deleteComment(' . $comment['id'] . ')">削除</button>';
+                }
+                ?>
                 <button onclick="likeComment(<?php echo $comment['id']; ?>)">いいね</button>
-                <button onclick="editComment(<?php echo $comment['id']; ?>)">編集</button>
-                <button onclick="deleteComment(<?php echo $comment['id']; ?>)">削除</button>
             </div>
         <?php } ?>
     </div>
-
 
     <div class="comment-input">
         <form id="comment-form-bottom">
@@ -265,8 +304,33 @@ $result_comments = $stmt_comments->get_result();
                 })
                 .then(response => response.text())
                 .then(data => {
-                    location.reload(); // 成功后刷新页面
+                    location.reload(); // 成功後にページをリロード
                 });
+        }
+
+        // 投稿の削除処理
+        function deletePost(postId) {
+            if (confirm('本当に削除しますか？')) {
+                fetch('delete_post.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'id=' + postId
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        if (data === 'success') {
+                            window.location.href = 'post_list.php'; // 成功後にリダイレクト
+                        } else {
+                            alert('削除に失敗しました。');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('エラー:', error);
+                        alert('削除リクエスト中にエラーが発生しました。');
+                    });
+            }
         }
 
         // コメントのいいね処理
@@ -280,24 +344,22 @@ $result_comments = $stmt_comments->get_result();
                 })
                 .then(response => response.text())
                 .then(data => {
-                    location.reload(); // 成功后刷新页面
+                    location.reload(); // 成功後にページをリロード
                 });
         }
 
-        function deletePost(postId) {
+        function deleteComment(commentId) {
             if (confirm('本当に削除しますか？')) {
-                fetch('delete_post.php', {
+                fetch('delete_comment.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         },
-                        body: 'id=' + postId
+                        body: 'id=' + commentId
                     })
                     .then(response => response.text())
                     .then(data => {
-                        if (data === 'success') {
-                            window.location.href = 'post_list.php';
-                        }
+                        location.reload(); // 成功後にページをリロード
                     });
             }
         }
@@ -312,46 +374,11 @@ $result_comments = $stmt_comments->get_result();
                 .then(response => response.text())
                 .then(data => {
                     if (data === 'success') {
-                        location.reload();
+                        location.reload(); // 成功後にページをリロード
                     } else {
-                        alert('ログインしてください。');
+                        alert('コメントの投稿に失敗しました。');
                     }
                 });
-        }
-
-        function editComment(commentId) {
-            const commentItem = document.getElementById('comment-' + commentId);
-            const commentText = commentItem.querySelector('p').innerText;
-            const newCommentText = prompt('コメントを編集してください:', commentText);
-            if (newCommentText !== null) {
-                fetch('edit_comment.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: 'id=' + commentId + '&comment_text=' + encodeURIComponent(newCommentText)
-                    })
-                    .then(response => response.text())
-                    .then(data => {
-                        location.reload();
-                    });
-            }
-        }
-
-        function deleteComment(commentId) {
-            if (confirm('本当に削除しますか？')) {
-                fetch('delete_comment.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: 'id=' + commentId
-                    })
-                    .then(response => response.text())
-                    .then(data => {
-                        location.reload();
-                    });
-            }
         }
     </script>
 </body>
