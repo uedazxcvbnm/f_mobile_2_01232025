@@ -33,6 +33,7 @@
     }
     if (empty($login_error)){
         echo 'こんにちは';
+        echo '<p><a href="./../team/team_search.php">移動</a></p>';
         echo '<p><a href="logout_display.php">ログアウト</a></p>';
     } else{
         echo 'ユーザーID、パスワードが違います';

@@ -29,7 +29,8 @@ $group = $product->getTeam($ident);
     </head>
     <body>
         <h1>グループ検索一覧</h1>
-        <a href="../team/team_create.php"><div class="br"><input type="button" name="new" value="グループ作成"></div></a>
+        <!-- <a href="../team/team_create.php"><div class="br"><input type="button" name="new" value="グループ作成"></div></a> -->
+        <div class="br"><input type="button" onclick="location.href='./team_create.php'" name="new" value="グループ作成"></div>
         <div class="bt">
             <form method="POST" action="">
                 <?php
