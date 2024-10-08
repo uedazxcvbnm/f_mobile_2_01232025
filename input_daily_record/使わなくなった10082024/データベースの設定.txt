@@ -49,22 +49,27 @@ INSERT INTO glass (glass_name, glass_v) VALUES
 ('２勺36ml', 36),
 ('２勺半45ml', 45);
 
--- ◇record_oneday
--- ident alchol_data date user_id
-CREATE TABLE record_oneday_pbl3 (
+-- daily_record テーブル
+CREATE TABLE daily_record (
   ident INT AUTO_INCREMENT PRIMARY KEY,
   date DATE,
-  alchol_data BOOLEAN,
+  money INT,
+  alchol_volume INT NOT NULL,
   user_id INT,
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
---◇daily_record
--- ident date alchol_count user_id
-CREATE TABLE daily_record_pbl3 (
+-- record_oneday テーブル
+CREATE TABLE record_oneday (
   ident INT AUTO_INCREMENT PRIMARY KEY,
+  drink_id INT,
+  glass_id INT,                         
+  FOREIGN KEY (drink_id) REFERENCES drink(drink_id),
+  FOREIGN KEY (glass_id) REFERENCES glass(glass_id),
   date DATE,
-  alchol_count INT NOT NULL,
+  account_drunk INT,
+  money INT,
+  alchol_volume INT NOT NULL,
   user_id INT,
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
