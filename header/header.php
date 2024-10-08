@@ -1,9 +1,13 @@
 <nav>
     <ul>
         <li><a class="nav-link" href="../input_daily_record/input_daily_record.php">登録</a></li>
+        <li><a class="nav-link" href="../input_daily_record/graph/graph.php">グラフ</a></li>
         <li><a class="nav-link" href="../team/team_search.php">グループ検索</a></li>
         <li><a class="nav-link" href="../joingrouplist/joingrouplist.php">参加グループ</a></li>
         <li><a class="nav-link" href="../post/post_list.php">投稿一覧</a></li>
+        <li><a class="nav-link" href="../notification/notification.php">通知</a></li>
+        <li><a class="nav-link" href="../profile/profile.php">プロフィール</a></li>
+        <li><a class="nav-link" href="../input_daily_record/calendar/calendar.php">カレンダー</a></li>
         <li><a onclick="openLogoutpop()">ログアウト</a></li>
     </ul>
 </nav>

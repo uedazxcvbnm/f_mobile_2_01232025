@@ -50,6 +50,9 @@ $post = $result->fetch_assoc();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="post_article.css">
     <title>投稿編集 - 禁酒サイト</title>
+    <?php
+    require_once __DIR__ . '../../header/header.php';
+    ?>
 </head>
 
 <body>

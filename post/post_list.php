@@ -7,13 +7,19 @@
     <title>投稿一覧画面</title>
     <link rel="stylesheet" href="post_list.css">
     <?php
-            require_once __DIR__ . '../../header/header.php';
+    require_once __DIR__ . '../../header/header.php';
     ?>
 </head>
 
 <body>
-    <div class="container">
+    <div class="header">
         <h1>投稿一覧画面</h1>
+        <!-- 右上に「投稿を作成する」ボタンを追加 -->
+        <a href="post_article.php" class="create-post-button">投稿を作成する</a>
+    </div>
+
+    <div class="container">
+        
         
         <?php
         include 'config.php';
