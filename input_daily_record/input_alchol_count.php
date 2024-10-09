@@ -24,10 +24,10 @@
         <div class="daily_registration_form">
             <h1>飲酒記録を登録</h1>
             <div>酒を飲んだら送信</div>
-            <button id="drink_button" class="drink_button" data-action="1">はい</button>
-            <button id="drink_button" class="drink_button" data-action="2">いいえ</button>
-            <form method="POST" action="./add_record_count.php">
-                <input type="hidden" id="drink_button_info" name="drink_button_info">
+            <button id="alchol_data_yes" class="alchol_data_boolean">はい</button>
+            <button id="alchol_data_no" class="alchol_data_boolean">いいえ</button>
+            <form id="alcholdata_form" method="POST" action="./add_record_count.php">
+                <input type="hidden" id="alchol_data_boolean_info" name="alchol_data_boolean_info">
                 <p><input type="submit" value="送信" class="record_button"></p>
             </form>
         </div>
@@ -36,21 +36,42 @@
 <script>
     var flag_buttonclick = false;
 
-    var buttons_drink = document.querySelectorAll('.drink_button');
-    var drink_button_info = document.getElementById('drink_button_info');
+    var buttons_dalchol_data = document.querySelectorAll('.alchol_data_boolean');
+    var alchol_data_boolean_info = document.getElementById('alchol_data_boolean_info');
     // 飲み物の種類を選択するボタン
     document.addEventListener('DOMContentLoaded', () => {
-        buttons_drink.forEach((button) => {
-            button.addEventListener('click', function(){
-                // 選択状態を解除
-                // btn.classList.remove('selected');
-                buttons_drink.forEach(
-                    btn => btn.classList.remove('selected')
-                );
-                // 選択状態を追加
-                this.classList.add('selected');
-            })
-        })
+        // はい　がクリックされたときの処理
+        document.getElementById("alchol_data_yes").addEventListener("click", function () {
+            document.getElementById("alchol_data_boolean_info").value = 1;  // 値を1に設定
+            // document.getElementById("alcholdata_form").submit();  // フォームを送信
+        });
+
+        // いいえ　がクリックされたときの処理
+        document.getElementById("alchol_data_no").addEventListener("click", function () {
+            document.getElementById("alchol_data_boolean_info").value = 2;  // 値を2に設定
+            // document.getElementById("alcholdata_form").submit();  // フォームを送信
+        });
     });
+
+    // document.addEventListener('DOMContentLoaded', () => {
+    //     buttons_alchol_data.forEach((button) => {
+    //         button.addEventListener('click', function(){
+    //             // 選択状態を解除
+    //             buttons_alchol_data.forEach(
+    //                 btn => btn.classList.remove('selected')
+    //             );
+    //             // 選択状態を追加
+    //             this.classList.add('selected');
+
+    //             // ボタンごとに別々の処理を実行
+    //             const action_alchol_data = button.getAttribute('data-action');
+
+    //             flag_buttonclick = !flag_buttonclick;
+    //             if (flag_buttonclick){
+    //                 handleButtonClick_alcholdata(action_alchol_data);
+    //             }
+    //         })
+    //     })
+    // });
 </script>
 </html>
