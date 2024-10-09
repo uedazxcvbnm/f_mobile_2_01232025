@@ -12,7 +12,7 @@ class dailyData extends dbdata{
     public function get_oneday_alchol($today_date){
         // $sql = "select date, sum(alchol_volume) as sum_alchol, sum(money) as sum_money from record_oneday where date=? and user_id=? group by date";
         // $sql = "select date, sum(alchol_volume) as sum_alchol, sum(money) as sum_money from record_oneday where date=? group by date";
-        $sql = "select date, count(alchol_data=1) as sum_alchol_data from record_oneday_pbl3 where date=? group by date";
+        $sql = "select date, count(*) as sum_alchol_data from record_oneday_pbl3 where date=? and alchol_data=1 group by date";
         $stmt = $this->query($sql, [$today_date]);
         $items = $stmt->fetchAll();
         return $items;
@@ -20,7 +20,7 @@ class dailyData extends dbdata{
 
     // 日付を取得（daily_recordテーブル）
     public function get_date($user_id){
-        $sql = "select date from daily_record where user_id=?";
+        $sql = "select date from daily_record_pbl3 where user_id=?";
         $stmt = $this->query($sql, [$user_id]);
         $items = $stmt->fetchAll(PDO::FETCH_COLUMN);
         return $items;
@@ -34,7 +34,7 @@ class dailyData extends dbdata{
 
     // daily_recordテーブル
     public function update_sumData($alchol_count, $alchol_date, $user_id){
-        $sql = "update daily_record_pbl3 set alchol_volume=? where date=? and user_id=?";
+        $sql = "update daily_record_pbl3 set alchol_count=? where date=? and user_id=?";
         $result = $this->exec($sql, [$alchol_count, $alchol_date, $user_id]);
     }
 

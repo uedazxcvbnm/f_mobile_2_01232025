@@ -19,7 +19,7 @@ $dailyData->insert_dailyData($alchol_data, $user_id);
 
 // 今日の日付
 $today_date = date('Y-m-d');
-echo $today_date;
+// echo $today_date;
 
 // 今日のアルコール量を取得
 $alchol_volume_today = $dailyData->get_oneday_alchol($today_date);
@@ -28,7 +28,7 @@ echo $alchol_volume_today[0]['sum_alchol_data'];
 
 // グラフに登録済みの日付を取得
 $date_array_sumtable = $dailyData->get_date($user_id);
-var_dump($date_array_sumtable);
+// var_dump($date_array_sumtable);
 
 // 今日の日付が含まれているとき
 if (in_array($today_date, $date_array_sumtable)){
