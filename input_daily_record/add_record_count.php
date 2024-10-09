@@ -38,6 +38,6 @@ if (in_array($today_date, $date_array_sumtable)){
 }
 
 // グラフ画面に移動
-header("Location: ./graph/graph.php");
+header("Location: ./graph/graph_count.php");
 exit;
 ?>

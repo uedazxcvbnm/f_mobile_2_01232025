@@ -1,7 +1,7 @@
 <nav>
     <ul>
         <li><a class="nav-link" href="../../input_daily_record/input_alchol_count.php">登録</a></li>
-        <li><a class="nav-link" href="../input_daily_record/graph/graph.php">グラフ</a></li>
+        <li><a class="nav-link" href="../graph/graph_count.php">グラフ</a></li>
         <li><a class="nav-link" href="../../team/team_search.php">グループ検索</a></li>
         <li><a class="nav-link" href="../../joingrouplist/joingrouplist.php">参加グループ</a></li>
         <li><a class="nav-link" href="../../post/post_list.php">投稿一覧</a></li>
