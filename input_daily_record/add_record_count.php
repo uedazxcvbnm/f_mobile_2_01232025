@@ -5,7 +5,7 @@
 session_start();
 
 // 飲み物の選択ボタン
-$alchol_data = $_POST['alchol_data_boolean_info'];
+$alchol_data = $_POST['alchol_data_button_info'];
 
 // インスタンスを作成
 require_once __DIR__.'/classes/daily_record_method.php';
