@@ -54,6 +54,7 @@ INSERT INTO glass (glass_name, glass_v) VALUES
 CREATE TABLE record_oneday_pbl3 (
   ident INT AUTO_INCREMENT PRIMARY KEY,
   date DATE,
+  date_hms DATETIME,
   alchol_data INT,
   user_id INT,
   FOREIGN KEY (user_id) REFERENCES user(user_id)

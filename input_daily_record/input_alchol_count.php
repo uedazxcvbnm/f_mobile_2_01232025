@@ -22,8 +22,8 @@
 <body>
     <div class="input_daily_screen">
         <div class="daily_registration_form">
-            <h1>飲酒記録を登録</h1>
-            <div>酒を飲んだら送信</div>
+            <h1>飲酒した時間帯を記録</h1>
+            <div>飲酒をしたら送信</div>
             <button id="alchol_data_yes" class="alchol_data_button">はい</button>
             <button id="alchol_data_no" class="alchol_data_button">いいえ</button>
             <form id="alcholdata_form" method="POST" action="./add_record_count.php">

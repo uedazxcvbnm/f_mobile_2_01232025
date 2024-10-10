@@ -3,17 +3,17 @@ require_once __DIR__.'/dbdata.php';
 class dailyData extends dbdata{
     // onedayテーブルにデータを追加
     public function insert_dailyData($account_data, $user_id){
-        $sql = "insert into record_oneday_pbl3(date, alchol_data, user_id) values(NOW(), ?, ?)";
+        $sql = "insert into record_oneday_pbl3(date, date_hms, alchol_data, user_id) values(NOW(), NOW(), ?, ?)";
         $result = $this->exec($sql, [$account_data, $user_id]);
     }
 
-    // onedayテーブルのデータを取得
+    // onedayテーブルの酒を飲んだ回数を取得
     // public function get_oneday_alchol($today_date, $user_id){
-    public function get_oneday_alchol($today_date){
+    public function get_oneday_alchol($today_date, $user_id){
         // $sql = "select date, sum(alchol_volume) as sum_alchol, sum(money) as sum_money from record_oneday where date=? and user_id=? group by date";
         // $sql = "select date, sum(alchol_volume) as sum_alchol, sum(money) as sum_money from record_oneday where date=? group by date";
-        $sql = "select date, count(*) as sum_alchol_data from record_oneday_pbl3 where date=? and alchol_data=1 group by date";
-        $stmt = $this->query($sql, [$today_date]);
+        $sql = "select date, count(*) as sum_alchol_data from record_oneday_pbl3 where date=? and alchol_data=1 and user_id=? group by date";
+        $stmt = $this->query($sql, [$today_date, $user_id]);
         $items = $stmt->fetchAll();
         return $items;
     }
@@ -36,6 +36,15 @@ class dailyData extends dbdata{
     public function update_sumData($alchol_count, $alchol_date, $user_id){
         $sql = "update daily_record_pbl3 set alchol_count=? where date=? and user_id=?";
         $result = $this->exec($sql, [$alchol_count, $alchol_date, $user_id]);
+    }
+
+    // グラフの下に表示する、はいかいいえを送信した時刻を表示する表で使う関数
+    // 降順
+    public function get_yesno_time($selected_date, $user_id){
+        $sql = "select date, date_hms, alchol_data from record_oneday_pbl3 where date=? and user_id=? order by date_hms DESC";
+        $stmt = $this->query($sql, [$selected_date, $user_id]);
+        $items = $stmt->fetchAll();
+        return $items;
     }
 
     

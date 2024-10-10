@@ -42,6 +42,40 @@
             <h2>一日に酒を飲んだ回数</h2>
             <canvas id="amountChart" width="400" height="200"></canvas>
 
+            <?php
+                $today_date = date('Y-m-d');
+                // 今日　昨日　一昨日　を指定できるボタンの設置場所
+                echo '<button value=1></button>';
+                echo '<button value=2></button>';
+                echo '<button value=3></button>';    
+
+                // カレンダーボタン設置場所
+
+
+                $selected_date = $today_date;
+                $user_id = $_SESSION['user_id'];
+                require_once __DIR__.'/../classes/daily_record_method.php';
+                $dailyData = new dailyData();
+                $yesno_items = $dailyData->get_yesno_time($selected_date, $user_id);
+                
+                echo '<table>';
+                    echo '<tr>';
+                        echo '<th>飲酒の有無</th>';
+                        echo '<th>時刻</th>';
+                    echo '</tr>';
+                    foreach($yesno_items as $yesno_item) {
+                        echo '<tr>';
+                            if ($yesno_item['alchol_data'] == 1){
+                                echo '<td>はい</td>';
+                            }elseif($yesno_item['alchol_data'] == 2){
+                                echo '<td>いいえ</td>';
+                            }
+                            echo '<td>'.$yesno_item['date_hms'].'</td>';
+                        echo '</tr>';
+                    }
+                echo '</table>';
+            ?>
+
             <!-- 現時点ではグラフは１つなので、２つ目以降はコメントアウト -->
             <!-- <h2>酒に使った金額</h2>
             <canvas id="costChart" width="400" height="200"></canvas> -->
@@ -162,6 +196,38 @@
             }
         });
 
+        // jsで今日の日付を取得
+
+
+        // ボタンを押すと変数に値を格納
+        var today_button = document.getElementById('today_button');
+        var yesterday_button = document.getElementById('yesterday_button');
+        var b_yesterday_button = document.getElementById('b_yesterday_button');
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            today_button.addEventListener({
+                toggleSelected(selectedButton, otherButton);
+                .value = 
+            });
+
+            yesterday_button.addEventListener({
+                toggleSelected(selectedButton, otherButton);
+            });
+
+            b_yesterday_button.addEventListener({
+                toggleSelected(selectedButton, otherButton);
+            });
+            
+
+        });
+
+        function toggleSelected(selectedButton, otherButton){
+            selectedButton.classList('add');
+            otherButton.classList('remove');
+        }
+
+        // ここ以降のjsは使わない
         // ２つ目のグラフ
         // const costCtx = document.getElementById('costChart').getContext('2d');
         // const costChart = new Chart(costCtx, {
@@ -235,6 +301,7 @@
         //         }
         //     }
         // });
+
     </script>
 </body>
 

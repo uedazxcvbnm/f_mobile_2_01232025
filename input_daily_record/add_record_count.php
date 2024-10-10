@@ -22,7 +22,7 @@ $today_date = date('Y-m-d');
 // echo $today_date;
 
 // 今日のアルコール量を取得
-$alchol_volume_today = $dailyData->get_oneday_alchol($today_date);
+$alchol_volume_today = $dailyData->get_oneday_alchol($today_date, $user_id);
 var_dump($alchol_volume_today);
 echo $alchol_volume_today[0]['sum_alchol_data'];
 
