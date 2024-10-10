@@ -24,7 +24,6 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
             <button id="back-button">&lt; 戻る</button>
             <div class="group-info">
                 <span id="group-name">全体チャット</span>
-                <span id="group-members"></span>
             </div>
         </div>
         <div class="chat-area"></div>
@@ -53,10 +52,10 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
             });
 
             const groupName = "全体チャット";
-            const groupMembers = 6;
+
 
             document.getElementById("group-name").textContent = groupName;
-            document.getElementById("group-members").textContent = `(${groupMembers})`;
+
 
             const sendButton = document.getElementById("send");
             const textInput = document.getElementById("text");
@@ -237,7 +236,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
 
             async function loadInitialMessages() {
                 try {
-                    const response = await fetch('fetch_messages.php');
+                    const response = await fetch('fetch_messages_global.php');
                     const messages = await response.json();
 
                     messages.forEach(message => {
