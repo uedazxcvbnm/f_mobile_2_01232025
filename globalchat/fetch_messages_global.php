@@ -9,10 +9,10 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $stmt = $conn->prepare("
-        SELECT chat.id, chat.message AS content, chat.date, chat.user_id, chat.edited, chat.is_deleted, user.username 
-        FROM chat 
-        JOIN user ON chat.user_id = user.user_id 
-        ORDER BY chat.id ASC
+        SELECT global_chat.id, global_chat.message AS content, global_chat.date, global_chat.user_id, global_chat.edited, global_chat.is_deleted, user.username 
+        FROM global_chat 
+        JOIN user ON global_chat.user_id = user.user_id 
+        ORDER BY global_chat.id ASC
     ");
     $stmt->execute();
 

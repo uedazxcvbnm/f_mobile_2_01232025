@@ -11,7 +11,7 @@ try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $stmt = $conn->prepare("DELETE FROM chat WHERE id = :id");
+    $stmt = $conn->prepare("DELETE FROM global_chat WHERE id = :id");
     $stmt->bindParam(':id', $messageId);
     $stmt->execute();
 

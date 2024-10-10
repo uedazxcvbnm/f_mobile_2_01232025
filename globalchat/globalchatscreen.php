@@ -12,8 +12,8 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat</title>
-    <link rel="stylesheet" href="../chat/chatscreen.css">
+    <title>globalChat</title>
+    <link rel="stylesheet" href="../globalchat/globalchatscreen.css">
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
     <?php require_once __DIR__ . '../../header/header.php'; ?>
 </head>
@@ -23,8 +23,8 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
         <div class="header">
             <button id="back-button">&lt; 戻る</button>
             <div class="group-info">
-                <span id="group-name">社会人禁酒グループ</span>
-                <span id="group-members">(6)</span>
+                <span id="group-name">全体チャット</span>
+                <span id="group-members"></span>
             </div>
         </div>
         <div class="chat-area"></div>
@@ -52,7 +52,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
                 window.location.href = "../joingrouplist/joingrouplist.php";
             });
 
-            const groupName = "社会人禁酒グループ";
+            const groupName = "全体チャット";
             const groupMembers = 6;
 
             document.getElementById("group-name").textContent = groupName;

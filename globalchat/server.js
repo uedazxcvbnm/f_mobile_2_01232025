@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
         const { message, user_id } = data;
         const date = new Date();
 
-        const query = "INSERT INTO chat (message, date, user_id) VALUES (?, ?, ?)";
+        const query = "INSERT INTO global_chat (message, date, user_id) VALUES (?, ?, ?)";
         db.query(query, [message, date, user_id], (err, result) => {
             if (err) {
                 console.error('Error inserting message:', err);
@@ -59,7 +59,7 @@ io.on('connection', (socket) => {
         const { id, message } = data;
         console.log('Editing message with id:', id, 'to:', message);
 
-        const query = "UPDATE chat SET message = ?, edited = TRUE WHERE id = ?";
+        const query = "UPDATE global_chat SET message = ?, edited = TRUE WHERE id = ?";
         db.query(query, [message, id], (err, result) => {
             if (err) {
                 console.error('Error updating message:', err);
@@ -81,14 +81,14 @@ io.on('connection', (socket) => {
             }
             const username = rows[0].username;
 
-            const deleteQuery = "DELETE FROM chat WHERE id = ?";
+            const deleteQuery = "DELETE FROM global_chat WHERE id = ?";
             db.query(deleteQuery, [id], (err, result) => {
                 if (err) {
                     console.error('Error deleting message:', err);
                     return;
                 }
                 const logMessage = `${username}がメッセージを削除しました。`;
-                const logQuery = "INSERT INTO chat (message, date, user_id, is_deleted) VALUES (?, ?, ?, TRUE)";
+                const logQuery = "INSERT INTO global_chat (message, date, user_id, is_deleted) VALUES (?, ?, ?, TRUE)";
                 db.query(logQuery, [logMessage, new Date(), user_id], (err, logResult) => {
                     if (err) {
                         console.error('Error logging delete message:', err);

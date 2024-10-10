@@ -12,7 +12,7 @@ try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $stmt = $conn->prepare("UPDATE chat SET message = :message WHERE id = :id");
+    $stmt = $conn->prepare("UPDATE global_chat SET message = :message WHERE id = :id");
     $stmt->bindParam(':message', $newMessage);
     $stmt->bindParam(':id', $messageId);
     $stmt->execute();
