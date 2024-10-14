@@ -30,7 +30,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
 
         <!-- 定型文メニューをメッセージボックスの上に配置 -->
         <div id="presetMenu" class="preset-menu">
-            <img src="megahon.png" alt="定型文1" class="preset-item" onclick="addPresetMessage('定型メッセージ1')">
+            <img src="megahon.png" alt="定型文1" class="preset-item" onclick="addPresetMessage('一緒に禁酒頑張りましょう！')">
         </div>
 
         <div class="message-area">
