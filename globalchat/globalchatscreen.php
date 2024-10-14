@@ -27,20 +27,52 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
             </div>
         </div>
         <div class="chat-area"></div>
+
+        <!-- 定型文メニューをメッセージボックスの上に配置 -->
+        <div id="presetMenu" class="preset-menu">
+            <img src="megahon.png" alt="定型文1" class="preset-item" onclick="addPresetMessage('定型メッセージ1')">
+        </div>
+
         <div class="message-area">
+            <div class="message-area-button">
+                <button id="presetButton">
+                    <img src="message.png" alt="定型文" class="icon-button">
+                </button>
+            </div>
             <div class="message-area-text">
-                <textarea id="text"></textarea>
+                <textarea id="text" placeholder="メッセージを入力してください"></textarea>
             </div>
             <div class="message-area-button">
                 <button id="send">▻</button>
             </div>
         </div>
     </div>
+
+
     <div id="context-menu" class="context-menu">
         <div class="context-menu-item" id="edit-button">編集</div>
         <div class="context-menu-item" id="delete-button">削除</div>
     </div>
+    </div>
+
     <script>
+        document.getElementById('presetButton').addEventListener('click', function() {
+            const presetMenu = document.getElementById('presetMenu');
+            if (presetMenu.classList.contains('show')) {
+                presetMenu.classList.remove('show'); // メニューを非表示にする
+            } else {
+                presetMenu.classList.add('show'); // メニューを表示する
+            }
+        });
+
+
+        function addPresetMessage(message) {
+            const messageInput = document.getElementById('text');
+            messageInput.value = message;
+            document.getElementById('presetMenu').style.display = 'none'; // メニューを閉じる
+        }
+
+
         document.addEventListener("DOMContentLoaded", function() {
             const socket = io('http://localhost:3000');
 
