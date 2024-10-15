@@ -12,8 +12,7 @@ CREATE TABLE IF NOT EXISTS user (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     user_mail VARCHAR(100) NOT NULL,
     username VARCHAR(50) NOT NULL,
-    password VARCHAR(12) NOT NULL,
-    teams varchar(200) NOT NULL
+    password VARCHAR(12) NOT NULL
 );
 
 INSERT INTO user (username, password) VALUES ('n@gmail.com', '中辻', 'pass1'), ('u@gmail.com', '上田', 'pass2'), ('ku@gmail.com', '倉掛', 'pass3'), ('ki@gmail.com', '木俵', 'pass4'), ('r@gmail.com', '李', 'pass5'), ('s@gmail.com', '阪邊', 'pass6');
@@ -76,7 +75,7 @@ CREATE TABLE record_oneday (
 
 -- teams テーブル
 CREATE TABLE teams (
-  ident INT AUTO_INCREMENT PRIMARY KEY,
+  team_id INT AUTO_INCREMENT PRIMARY KEY,
   name CHAR(20),
   detail CHAR(200),
   size INT
@@ -139,3 +138,13 @@ CREATE TABLE likes (
   FOREIGN KEY (user_id) REFERENCES user(user_id),
   FOREIGN KEY (post_id) REFERENCES posts(id)
 );
+
+-- joined_teams テーブル
+CREATE TABLE joined_teams(
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  team_id INT NOT NULL,
+  user_id INT NOT NULL,
+  UNIQUE (team_id, user_id),
+  FOREIGN KEY (team_id) REFERENCES teams(team_id),
+  FOREIGN KEY (user_id) REFERENCES user(user_id)
+)
