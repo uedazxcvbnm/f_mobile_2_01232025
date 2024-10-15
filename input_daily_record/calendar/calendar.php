@@ -38,7 +38,7 @@ if (!isset($_SESSION['user_id'])){
             <h2>禁酒アプリ</h2>
             <ul>
                 <!-- <li><a href="#">ホーム</a></li> -->
-                <li><a href="./../graph/graph.php">グラフを見る</a></li>
+                <li><a href="./../graph/graph_count.php">グラフを見る</a></li>
             </ul>
         </div>
         <div class="main-content">
