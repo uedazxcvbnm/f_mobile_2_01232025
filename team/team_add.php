@@ -3,13 +3,18 @@ session_start();
 
 $user_id = $_SESSION['user_id'];
 $name = $_POST['name'];
-$rname = $name;
 $detail = $_POST['detail'];
 
 require_once __DIR__ . '/team_class.php';
 $team = new Team();
 $team->addTeam($name, $detail);
-$team->addUserTeam($name, $rname, $user_id)
+$new_team = $team->getNewTeam();
+
+foreach($new_team as $team){
+}
+$new_team_id = $team;
+$product = new Team();
+$product->joinedTeam($new_team_id, $user_id);
 ?>
 <!DOCTYPE html>
 <html lang="ja">

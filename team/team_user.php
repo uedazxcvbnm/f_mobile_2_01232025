@@ -2,12 +2,13 @@
 session_start();
 
 $user_id = $_SESSION['user_id'];
-$name = $_POST['name'];
-$rname = $name;
+$team_id = $_POST['team_id'];
+
 
 require_once __DIR__ . '/team_class.php';
 $team = new Team();
-$team->addUserTeam($name,$rname, $user_id);
+$team->joinedTeam($team_id, $user_id);
+$team->addTeamSize($team_id)
 ?>
 
 <!DOCTYPE html>

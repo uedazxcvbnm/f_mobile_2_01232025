@@ -9,8 +9,9 @@
 
 <?php
 require_once __DIR__ . '/team_class.php';
+$user_id = $_SESSION['user_id'];
 $team = new Team();
-$teams = $team->getTeams();
+$teams = $team->getTeams($user_id, $user_id);
 $ident = 0;
 if($_SERVER["REQUEST_METHOD"] == 'POST'){
     $ident = $_POST['group'];
@@ -30,12 +31,12 @@ $group = $product->getTeam($ident);
     <body>
         <h1>グループ検索一覧</h1>
         <!-- <a href="../team/team_create.php"><div class="br"><input type="button" name="new" value="グループ作成"></div></a> -->
-        <div class="br"><input type="button" onclick="location.href='./team_create.php'" name="new" value="グループ作成"></div>
-        <div class="bt">
+            <div class="br"><input type="button" onclick="location.href='./team_create.php'" name="new" value="グループ作成"></div>
+            <div class="bt">
             <form method="POST" action="">
                 <?php
                     foreach($teams as $team){
-                        echo '<button type="submit" name="group" value="'.$team['ident'].'">'.$team['name'].'<br><div class="fsize">参加人数'.$team['size'].'人</div></button>';
+                        echo '<button type="submit" name="group" value="'.$team['team_id'].'">'.$team['name'].'<br><div class="fsize">参加人数'.$team['size'].'人</div></button>';
                     }
                 ?>
             </form>
@@ -54,11 +55,11 @@ $group = $product->getTeam($ident);
                 <span class="close-button" onclick="closePopup()">×</span>
                 <h2>グループ詳細</h2>
                 <?php
-                $group_name = $group['name'];
+                $team_id = $group['team_id'];
                 echo $group['detail'];
                 ?>
                 <form method="post" action="../team/team_user.php">
-                    <input type="hidden" name="name" value=<?= $group_name ?>>
+                    <input type="hidden" name="team_id" value=<?= $team_id ?>>
                     <input type="submit" value="参加">
                 </form>
             </div>
