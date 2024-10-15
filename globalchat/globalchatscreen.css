@@ -92,12 +92,12 @@
 
 .message.sent .message {
     background-color: #d1e7dd;
-    /* 自分のメッセージの背景色 */
+
 }
 
 .message.received .message {
     background-color: #f8d7da;
-    /* 他人のメッセージの背景色 */
+
 }
 
 .message {
@@ -131,7 +131,6 @@
 
 .message-container.sent .icon {
     display: none;
-    /* 自分のメッセージのアイコンを非表示にする */
 }
 
 .message-time {
@@ -221,7 +220,6 @@
 }
 
 
-/* テキストエリアに定型文ボタンのスペースを確保 */
 .message-area-text {
     flex-grow: 1;
     margin-left: 10px;
@@ -238,7 +236,7 @@
     font-family: 'メイリオ', 'Meiryo', sans-serif;
 }
 
-/* 定型文メニューのスタイル */
+/* 定型文メニュー */
 .preset-menu {
     width: 700px;
     left: 260px;

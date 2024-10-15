@@ -28,9 +28,11 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
         </div>
         <div class="chat-area"></div>
 
-        <!-- 定型文メニューをメッセージボックスの上に配置 -->
+
         <div id="presetMenu" class="preset-menu">
-            <img src="megahon.png" alt="定型文1" class="preset-item" onclick="addPresetMessage('一緒に禁酒頑張りましょう！')">
+            <img src="sakaya.png" alt="定型文1" class="preset-item" onclick="addPresetMessage('今お酒売り場にいます。買ってしまいそうなので誰か止めて')">
+            <img src="obo.png" alt="定型文2" class="preset-item" onclick="addPresetMessage('お酒をどうしても飲みたい。誰か止めて')">
+
         </div>
 
         <div class="message-area">
@@ -58,19 +60,21 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
     <script>
         document.getElementById('presetButton').addEventListener('click', function() {
             const presetMenu = document.getElementById('presetMenu');
-            if (presetMenu.classList.contains('show')) {
-                presetMenu.classList.remove('show'); // メニューを非表示にする
-            } else {
-                presetMenu.classList.add('show'); // メニューを表示する
-            }
+            presetMenu.classList.toggle('show'); // メニューの表示/非表示を切り替え
         });
+
 
 
         function addPresetMessage(message) {
             const messageInput = document.getElementById('text');
             messageInput.value = message;
-            document.getElementById('presetMenu').style.display = 'none'; // メニューを閉じる
+
+            const presetMenu = document.getElementById('presetMenu');
+            if (presetMenu.classList.contains('show')) {
+                presetMenu.classList.remove('show');
+            }
         }
+
 
 
         document.addEventListener("DOMContentLoaded", function() {
