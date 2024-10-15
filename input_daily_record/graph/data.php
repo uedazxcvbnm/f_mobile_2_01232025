@@ -13,7 +13,7 @@ if (!$startDate || !$endDate) {
     exit();
 }
 
-$query = $conn->prepare("SELECT * FROM daily_record WHERE user_id=? AND date BETWEEN ? AND ?");
+$query = $conn->prepare("SELECT * FROM daily_record_pbl3 WHERE user_id=? AND date BETWEEN ? AND ?");
 $query->bind_param("iss", $user_id, $startDate, $endDate);
 $query->execute();
 $result = $query->get_result();

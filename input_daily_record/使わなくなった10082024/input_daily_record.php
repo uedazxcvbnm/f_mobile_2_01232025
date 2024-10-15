@@ -6,7 +6,7 @@
         exit();
     }
 ?>
-
+1
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -68,7 +68,8 @@
 
                 // ボタンごとに別々の処理を実行
                 const action = button.getAttribute('data-action');
-
+                
+                // ↓ここ以降は、飲み物ボタンをクリックしたら、コップボタンが出現する
                 var buttons_glass = document.querySelectorAll('.glass_button');
 
                 // 反転
@@ -104,7 +105,7 @@
             case '2':
                 buttons_glass.forEach((btn_glass) => {
                         var btn_glass_item = btn_glass.getAttribute('data-action');
-                        // console.log(btn_glass_item);
+                        // ドリンクボタンの表示非表示の条件
                         if (btn_glass_item=='1'|| btn_glass_item=='2' || btn_glass_item=='3'|| btn_glass_item=='4'|| btn_glass_item=='5' || btn_glass_item=='6'){
                             btn_glass.style.visibility = 'hidden';
                         }
