@@ -1,0 +1,321 @@
+<?php
+session_start();
+
+// チャット画面でユーザーIDと名前を取得する
+$user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
+
+?>
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>globalChat</title>
+    <link rel="stylesheet" href="../globalchat/globalchatscreen.css">
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <?php require_once __DIR__ . '../../header/header.php'; ?>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <button id="back-button">&lt; 戻る</button>
+            <div class="group-info">
+                <span id="group-name">全体チャット</span>
+            </div>
+        </div>
+        <div class="chat-area"></div>
+
+
+        <div id="presetMenu" class="preset-menu">
+            <img src="sakaya.png" alt="定型文1" class="preset-item" onclick="addPresetMessage('今お酒売り場にいます。買ってしまいそうなので誰か止めて')">
+            <img src="obo.png" alt="定型文2" class="preset-item" onclick="addPresetMessage('お酒をどうしても飲みたい。誰か止めて')">
+
+        </div>
+
+        <div class="message-area">
+            <div class="message-area-button">
+                <button id="presetButton">
+                    <img src="message.png" alt="定型文" class="icon-button">
+                </button>
+            </div>
+            <div class="message-area-text">
+                <textarea id="text" placeholder="メッセージを入力してください"></textarea>
+            </div>
+            <div class="message-area-button">
+                <button id="send">▻</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="context-menu" class="context-menu">
+        <div class="context-menu-item" id="edit-button">編集</div>
+        <div class="context-menu-item" id="delete-button">削除</div>
+    </div>
+    </div>
+
+    <script>
+        document.getElementById('presetButton').addEventListener('click', function() {
+            const presetMenu = document.getElementById('presetMenu');
+            presetMenu.classList.toggle('show'); // メニューの表示/非表示を切り替え
+        });
+
+
+
+        function addPresetMessage(message) {
+            const messageInput = document.getElementById('text');
+            messageInput.value = message;
+
+            const presetMenu = document.getElementById('presetMenu');
+            if (presetMenu.classList.contains('show')) {
+                presetMenu.classList.remove('show');
+            }
+        }
+
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const socket = io('http://localhost:3000');
+
+            // ユーザーIDをクエリパラメータとしてURLに含める
+            const user_id = "<?php echo $user_id; ?>";
+
+            document.getElementById("back-button").addEventListener("click", function() {
+                window.location.href = "../joingrouplist/joingrouplist.php";
+            });
+
+            const groupName = "全体チャット";
+
+
+            document.getElementById("group-name").textContent = groupName;
+
+
+            const sendButton = document.getElementById("send");
+            const textInput = document.getElementById("text");
+            const chatArea = document.querySelector(".chat-area");
+
+            let lastMessageId = 0;
+
+            function sendMessage() {
+                const message = textInput.value.trim();
+                if (message === "") {
+                    displayEmptyMessage();
+                    return;
+                }
+                socket.emit('sendMessage', {
+                    message: message,
+                    user_id: user_id
+                });
+                textInput.value = "";
+                scrollToBottom();
+            }
+
+            sendButton.addEventListener("click", function() {
+                sendMessage();
+            });
+
+            textInput.addEventListener("keydown", function(event) {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            socket.on('receiveMessage', function(data) {
+                const messageType = data.user_id == user_id ? 'sent' : 'received';
+                displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id, data.edited, data.is_deleted);
+            });
+
+            socket.on('updateMessage', function(data) {
+                const messageElement = document.querySelector(`.message-container[data-message-id='${data.id}'] .message-content`);
+                if (messageElement) {
+                    messageElement.innerHTML = data.message.replace(/\n/g, "<br>");
+                    const editedElement = document.querySelector(`.message-container[data-message-id='${data.id}'] .message-edited`);
+                    if (editedElement) {
+                        editedElement.style.display = 'block';
+                    } else {
+                        const newEditedElement = document.createElement('span');
+                        newEditedElement.classList.add('message-edited');
+                        newEditedElement.textContent = '編集済み';
+                        messageElement.parentNode.appendChild(newEditedElement);
+                    }
+                }
+            });
+
+            socket.on('removeMessage', function(data) {
+                const messageContainer = document.querySelector(`.message-container[data-message-id='${data.id}']`);
+                if (messageContainer) {
+                    messageContainer.remove();
+                }
+            });
+
+            socket.on('logMessage', function(data) {
+                displayLogMessage(data.message, new Date(data.date));
+            });
+
+            function displayMessage(message, type, date, id, username, messageUserId, edited, is_deleted) {
+                if (is_deleted) {
+                    displayLogMessage(message, date);
+                    return;
+                }
+
+                const messageContainer = document.createElement("div");
+                messageContainer.classList.add("message-container", type === "sent" ? "sent" : "received");
+                messageContainer.dataset.messageId = id;
+                messageContainer.dataset.userId = messageUserId;
+
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message");
+                messageElement.innerHTML = `
+                    <div class="message-name">${username}</div>
+                    <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
+                    <span class="message-time">${formatDate(date)}</span>
+                `;
+
+                if (edited) {
+                    const editedElement = document.createElement('span');
+                    editedElement.classList.add('message-edited');
+                    editedElement.textContent = '編集済み';
+                    messageElement.appendChild(editedElement);
+                }
+
+                const iconElement = document.createElement("div");
+                iconElement.classList.add("icon");
+
+                if (type !== "sent") {
+                    messageContainer.appendChild(iconElement);
+                }
+
+                messageContainer.appendChild(messageElement);
+
+                if (messageUserId == user_id) {
+                    messageContainer.addEventListener("contextmenu", function(event) {
+                        event.preventDefault();
+                        showContextMenu(event, messageContainer);
+                    });
+                }
+
+                chatArea.appendChild(messageContainer);
+                scrollToBottom();
+            }
+
+            function displayLogMessage(message, date) {
+                const logContainer = document.createElement("div");
+                logContainer.classList.add("log-container");
+                logContainer.innerHTML = `
+                    <span class="log-message">${message}</span>
+                    <span class="log-time">${formatDate(date)}</span>
+                `;
+                chatArea.appendChild(logContainer);
+                scrollToBottom();
+            }
+
+            function showContextMenu(event, messageContainer) {
+                const contextMenu = document.getElementById("context-menu");
+                const editButton = document.getElementById("edit-button");
+                const deleteButton = document.getElementById("delete-button");
+
+                editButton.onclick = function() {
+                    editMessage(messageContainer);
+                    contextMenu.style.display = 'none';
+                };
+                deleteButton.onclick = function() {
+                    const confirmDelete = confirm("本当に削除しますか？");
+                    if (confirmDelete) {
+                        deleteMessage(messageContainer);
+                    }
+                    contextMenu.style.display = 'none';
+                };
+
+                contextMenu.style.top = `${event.clientY}px`;
+                contextMenu.style.left = `${event.clientX}px`;
+                contextMenu.style.display = 'block';
+
+                document.addEventListener("click", function() {
+                    contextMenu.style.display = 'none';
+                }, {
+                    once: true
+                });
+            }
+
+            function displayEmptyMessage() {
+                const messageContainer = document.createElement("div");
+                messageContainer.classList.add("message-container");
+
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message", "empty");
+                messageElement.textContent = "\u00A0".repeat(20);
+
+                messageContainer.appendChild(messageElement);
+                chatArea.appendChild(messageContainer);
+
+                scrollToBottom();
+            }
+
+            function scrollToBottom() {
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+
+            function formatDate(date) {
+                const options = {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+                return date.toLocaleDateString('ja-JP', options);
+            }
+
+            async function loadInitialMessages() {
+                try {
+                    const response = await fetch('fetch_messages_global.php');
+                    const messages = await response.json();
+
+                    messages.forEach(message => {
+                        const messageType = message.user_id == user_id ? 'sent' : 'received';
+                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id, message.edited, message.is_deleted);
+                        lastMessageId = Math.max(lastMessageId, message.id);
+                    });
+
+                    scrollToBottom();
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+            loadInitialMessages();
+
+            function editMessage(messageContainer) {
+                const messageElement = messageContainer.querySelector(".message-content");
+                const originalMessage = messageElement.innerHTML.replace(/<br>/g, '\n');
+
+                const messageId = messageContainer.dataset.messageId;
+                const newMessage = prompt("メッセージを編集:", originalMessage);
+
+                if (newMessage !== null) {
+                    console.log('Editing message:', newMessage);
+                    socket.emit('editMessage', {
+                        id: messageId,
+                        message: newMessage,
+                        user_id: user_id
+                    });
+                }
+            }
+
+            function deleteMessage(messageContainer) {
+                const messageId = messageContainer.dataset.messageId;
+                console.log('Deleting message:', messageId);
+                socket.emit('deleteMessage', {
+                    id: messageId,
+                    user_id: user_id
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
