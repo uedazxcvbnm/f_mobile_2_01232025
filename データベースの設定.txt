@@ -151,3 +151,13 @@ CREATE TABLE joined_teams(
   FOREIGN KEY (team_id) REFERENCES teams(team_id),
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 )
+-- global_chat　テーブル
+CREATE TABLE IF NOT EXISTS global_chat (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message TEXT NOT NULL,
+    date DATETIME NOT NULL,
+    user_id INT,
+    edited BOOLEAN DEFAULT FALSE,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
