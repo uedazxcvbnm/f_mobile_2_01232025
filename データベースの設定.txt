@@ -12,10 +12,17 @@ CREATE TABLE IF NOT EXISTS user (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     user_mail VARCHAR(100) NOT NULL,
     username VARCHAR(50) NOT NULL,
-    password VARCHAR(12) NOT NULL
+    password VARCHAR(12) NOT NULL,
+    teams VARCHAR(200) DEFAULT NULL  
 );
-
-INSERT INTO user (username, password) VALUES ('n@gmail.com', '中辻', 'pass1'), ('u@gmail.com', '上田', 'pass2'), ('ku@gmail.com', '倉掛', 'pass3'), ('ki@gmail.com', '木俵', 'pass4'), ('r@gmail.com', '李', 'pass5'), ('s@gmail.com', '阪邊', 'pass6');
+INSERT INTO user (user_mail, username, password, teams) 
+VALUES 
+('n@gmail.com', '中辻', 'pass1', 'team1'),
+('u@gmail.com', '上田', 'pass2', 'team1'),
+('ku@gmail.com', '倉掛', 'pass3', 'team2'),
+('ki@gmail.com', '木俵', 'pass4', 'team2'),
+('r@gmail.com', '李', 'pass5', 'team3'),
+('s@gmail.com', '阪邊', 'pass6', 'team3');
 
 -- drink テーブル
 CREATE TABLE drink (
