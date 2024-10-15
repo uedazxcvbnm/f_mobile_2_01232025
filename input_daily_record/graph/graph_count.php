@@ -45,9 +45,9 @@
             <?php
                 $today_date = date('Y-m-d');
                 // 今日　昨日　一昨日　を指定できるボタンの設置場所
-                echo '<button value=1></button>';
-                echo '<button value=2></button>';
-                echo '<button value=3></button>';    
+                // echo '<button value=1></button>';
+                // echo '<button value=2></button>';
+                // echo '<button value=3></button>';    
 
                 // カレンダーボタン設置場所
 
@@ -190,7 +190,10 @@
                         }
                     },
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1  // グラフの縦軸の刻み幅を1に設定
+                        }
                     }
                 }
             }
@@ -200,27 +203,27 @@
 
 
         // ボタンを押すと変数に値を格納
-        var today_button = document.getElementById('today_button');
-        var yesterday_button = document.getElementById('yesterday_button');
-        var b_yesterday_button = document.getElementById('b_yesterday_button');
+        // var today_button = document.getElementById('today_button');
+        // var yesterday_button = document.getElementById('yesterday_button');
+        // var b_yesterday_button = document.getElementById('b_yesterday_button');
 
-        document.addEventListener('DOMContentLoaded', () => {
+        // document.addEventListener('DOMContentLoaded', () => {
 
-            today_button.addEventListener({
-                toggleSelected(selectedButton, otherButton);
-                .value = 
-            });
+        //     today_button.addEventListener({
+        //         toggleSelected(selectedButton, otherButton);
+        //         .value = 
+        //     });
 
-            yesterday_button.addEventListener({
-                toggleSelected(selectedButton, otherButton);
-            });
+        //     yesterday_button.addEventListener({
+        //         toggleSelected(selectedButton, otherButton);
+        //     });
 
-            b_yesterday_button.addEventListener({
-                toggleSelected(selectedButton, otherButton);
-            });
+        //     b_yesterday_button.addEventListener({
+        //         toggleSelected(selectedButton, otherButton);
+        //     });
             
 
-        });
+        // });
 
         function toggleSelected(selectedButton, otherButton){
             selectedButton.classList('add');
