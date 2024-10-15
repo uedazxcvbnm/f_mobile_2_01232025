@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS user (
     user_mail VARCHAR(100) NOT NULL,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(12) NOT NULL,
-    teams VARCHAR(200) DEFAULT NULL  
 );
 INSERT INTO user (user_mail, username, password, teams) 
 VALUES 
