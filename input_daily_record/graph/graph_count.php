@@ -66,9 +66,9 @@
                     foreach($yesno_items as $yesno_item) {
                         echo '<tr>';
                             if ($yesno_item['alchol_data'] == 1){
-                                echo '<td>はい</td>';
+                                echo '<td>飲酒した</td>';
                             }elseif($yesno_item['alchol_data'] == 2){
-                                echo '<td>いいえ</td>';
+                                echo '<td>飲酒を我慢した</td>';
                             }
                             echo '<td>'.$yesno_item['date_hms'].'</td>';
                         echo '</tr>';

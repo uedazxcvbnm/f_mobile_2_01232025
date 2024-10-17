@@ -23,17 +23,24 @@ $today_date = date('Y-m-d');
 
 // 今日のアルコール量を取得
 $alchol_volume_today = $dailyData->get_oneday_alchol($today_date, $user_id);
-var_dump($alchol_volume_today);
-echo $alchol_volume_today[0]['sum_alchol_data'];
 
 // グラフに登録済みの日付を取得
 $date_array_sumtable = $dailyData->get_date($user_id);
 // var_dump($date_array_sumtable);
 
+// はいがあるかどうか
+$drunkstate_count = $dailyData->get_yes_count($today_date);
+
+// いいえの数
+$holdingback_count = $dailyData->get_no_count($today_date);
+
 // 今日の日付が含まれているとき
 if (in_array($today_date, $date_array_sumtable)){
     $dailyData->update_sumData($alchol_volume_today[0]['sum_alchol_data'], $today_date, $user_id);
-} else {
+} elseif($drunkstate_count==0 && $holdingback_count==0){
+    // はいがないときにいいえを送信した場合
+    $dailyData->insert_sumData($today_date, 0, $user_id);
+}else {
     $dailyData->insert_sumData($today_date,$alchol_volume_today[0]['sum_alchol_data'], $user_id);
 }
 

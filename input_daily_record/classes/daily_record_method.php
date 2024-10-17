@@ -47,6 +47,22 @@ class dailyData extends dbdata{
         return $items;
     }
 
+    // はいの数を取得　0だったら
+    public function get_yes_count($today_date){
+        $sql = "select alchol_count from daily_record_pbl3 where date=?";
+        $stmt = $this->query($sql, [$today_date]);
+        $items = $stmt->fetchAll();
+    }
+
+    // いいえの数が0
+    public function get_no_count($today_date){
+        $sql = "select alchol_data from record_oneday_pbl3 where date=? and alchol_data=2";
+        $stmt = $this->query($sql, [$today_date]);
+        $items = $stmt->fetchAll();
+    }
+
+
+
     
 
     // 日付を取得（record_onedayテーブル）
