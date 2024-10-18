@@ -24,14 +24,17 @@ if (!isset($_SESSION['user_id'])){
     <?php
         $user_id = $_SESSION['user_id'];
 
+        // カレンダーの日付を取得（記録をしたor）
         require_once __DIR__.'/../classes/daily_record_method.php';
         $dailydata = new dailyData();
         $datearray = $dailydata->get_date($user_id);
-        // echo var_dump($datearray);
-        // foreach ($datearray as $item) {
-        //     echo $datearray['date'];
-        // }
         $datearray_json = json_encode($datearray);
+
+        require_once __DIR__.'/../classes/daily_record_method.php';
+        $dailydata = new dailyData();
+        $alccountarray = $dailydata->get_alccount_calendar($user_id);
+        $alccountarray_json = json_encode($alccountarray);
+        
     ?>
     <div class="container">
         <div class="sidebar">
@@ -57,7 +60,7 @@ if (!isset($_SESSION['user_id'])){
         let currentMonth = date.getMonth();
 
         const datearray = JSON.parse('<?php echo $datearray_json; ?>');
-        // console.log(datearray['date']);
+        const alccountarray = JSON.parse('<?php echo $alccountarray_json; ?>');
 
 
         function createCalendar(year, month) {
@@ -100,6 +103,7 @@ if (!isset($_SESSION['user_id'])){
                         const isToday = dayCount === today.getDate() && month === today.getMonth() && year === today.getFullYear();
                         
                         // console.log(currentMonth);
+                        // datearray.includesでスタンプを表示
                         let currentMonth_comparsion = currentMonth + 1;
 
                         if(currentMonth_comparsion<10){
@@ -117,7 +121,10 @@ if (!isset($_SESSION['user_id'])){
                         
                         console.log(datearray);
                         calendarHTML += `<td class="${isToday ? 'today' : ''}">${dayCount}<br>
-                        ${datearray.includes(today_comparsion)?'<img src="azarashi.png" width=30 height=20>':''}</td>`;
+                        
+                        ${datearray.includes(today_comparsion) && ?'<img src="azarashi.png" width=30 height=20>'
+                        :
+                        :'<img src="cat01.png" width=30 height=20>'}</td>`;
                         
                         // i=0;
                         // i = i+1;

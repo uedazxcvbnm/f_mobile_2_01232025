@@ -29,10 +29,10 @@ $date_array_sumtable = $dailyData->get_date($user_id);
 // var_dump($date_array_sumtable);
 
 // はいがあるかどうか
-$drunkstate_count = $dailyData->get_yes_count($today_date);
+$drunkstate_count = $dailyData->get_yes_count($today_date, $user_id);
 
 // いいえの数
-$holdingback_count = $dailyData->get_no_count($today_date);
+$holdingback_count = $dailyData->get_no_count($today_date, $user_id);
 
 // 今日の日付が含まれているとき
 if (in_array($today_date, $date_array_sumtable)){

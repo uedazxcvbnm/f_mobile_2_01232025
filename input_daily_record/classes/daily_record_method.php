@@ -47,18 +47,26 @@ class dailyData extends dbdata{
         return $items;
     }
 
-    // はいの数を取得　0だったら
-    public function get_yes_count($today_date){
-        $sql = "select alchol_count from daily_record_pbl3 where date=?";
-        $stmt = $this->query($sql, [$today_date]);
+    // 今日の飲酒回数を取得　0だったら
+    public function get_yes_count($today_date, $user_id){
+        $sql = "select alchol_count from daily_record_pbl3 where date=? and user_id=?";
+        $stmt = $this->query($sql, [$today_date, $user_id]);
         $items = $stmt->fetchAll();
     }
 
-    // いいえの数が0
-    public function get_no_count($today_date){
-        $sql = "select alchol_data from record_oneday_pbl3 where date=? and alchol_data=2";
-        $stmt = $this->query($sql, [$today_date]);
+    // 今日の飲酒を我慢した回数が0
+    public function get_no_count($today_date, $user_id){
+        $sql = "select alchol_data from record_oneday_pbl3 where date=? and alchol_data=2 and user_id=?";
+        $stmt = $this->query($sql, [$today_date, $user_id]);
         $items = $stmt->fetchAll();
+    }
+
+    // カレンダー用　一日の酒を飲んだ量
+    public function get_alccount_calendar($user_id){
+        $sql = "select alchol_count from daily_record_pbl3 where user_id=?";
+        $stmt = $this->query($sql, [$user_id]);
+        $items = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        return $items;
     }
 
 
@@ -74,19 +82,19 @@ class dailyData extends dbdata{
     // }
 
     // 飲み物のアルコール度数を取得
-    public function get_alc($drink_id){
-        $sql = "select alc from drink where drink_id=?";
-        $stmt = $this->query($sql, [$drink_id]);
-        $item = $stmt->fetch(PDO::FETCH_COLUMN);
-        return $item;
-    }
+    // public function get_alc($drink_id){
+    //     $sql = "select alc from drink where drink_id=?";
+    //     $stmt = $this->query($sql, [$drink_id]);
+    //     $item = $stmt->fetch(PDO::FETCH_COLUMN);
+    //     return $item;
+    // }
 
-    // コップの体積（１杯で飲んだ量）を取得する
-    public function get_glass_v($glass_id){
-        $sql = "select glass_v from glass where glass_id=?";
-        $stmt = $this->query($sql, [$glass_id]);
-        $item = $stmt->fetch(PDO::FETCH_COLUMN);
-        return $item;
-    }
+    // // コップの体積（１杯で飲んだ量）を取得する
+    // public function get_glass_v($glass_id){
+    //     $sql = "select glass_v from glass where glass_id=?";
+    //     $stmt = $this->query($sql, [$glass_id]);
+    //     $item = $stmt->fetch(PDO::FETCH_COLUMN);
+    //     return $item;
+    // }
 }
 ?>
