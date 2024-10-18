@@ -4,6 +4,8 @@ session_start();
 // チャット画面でユーザーIDと名前を取得する
 $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
+$group_id = isset($_GET['group_id']) ? intval($_GET['group_id']) : 0;
+
 
 ?>
 <!DOCTYPE html>
@@ -47,6 +49,9 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
 
             // ユーザーIDをクエリパラメータとしてURLに含める
             const user_id = "<?php echo $user_id; ?>";
+            const group_id = "<?php echo htmlspecialchars($group_id, ENT_QUOTES, 'UTF-8'); ?>";
+
+
 
             document.getElementById("back-button").addEventListener("click", function() {
                 window.location.href = "../joingrouplist/joingrouplist.php";
@@ -72,7 +77,8 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
                 }
                 socket.emit('sendMessage', {
                     message: message,
-                    user_id: user_id
+                    user_id: user_id,
+                    group_id: group_id
                 });
                 textInput.value = "";
                 scrollToBottom();
@@ -90,9 +96,12 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
             });
 
             socket.on('receiveMessage', function(data) {
-                const messageType = data.user_id == user_id ? 'sent' : 'received';
-                displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id, data.edited, data.is_deleted);
+                if (data.group_id == group_id) {
+                    const messageType = data.user_id == user_id ? 'sent' : 'received';
+                    displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id, data.edited, data.is_deleted);
+                }
             });
+
 
             socket.on('updateMessage', function(data) {
                 const messageElement = document.querySelector(`.message-container[data-message-id='${data.id}'] .message-content`);

@@ -9,12 +9,16 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $stmt = $conn->prepare("
-        SELECT chat.id, chat.message AS content, chat.date, chat.user_id, chat.edited, chat.is_deleted, user.username 
-        FROM chat 
-        JOIN user ON chat.user_id = user.user_id 
-        ORDER BY chat.id ASC
-    ");
+    SELECT group_chat.id, group_chat.message AS content, group_chat.date, group_chat.user_id, group_chat.edited, group_chat.is_deleted, user.username 
+    FROM group_chat 
+    JOIN user ON group_chat.user_id = user.user_id 
+    WHERE group_chat.team_id = :group_id 
+    ORDER BY group_chat.id ASC
+");
+    $stmt->bindParam(':group_id', $group_id);
+
     $stmt->execute();
+
 
     $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
