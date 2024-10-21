@@ -120,10 +120,18 @@ if (!isset($_SESSION['user_id'])){
                         console.log(today_comparsion);
                         
                         console.log(datearray);
-                        calendarHTML += `<td class="${isToday ? 'today' : ''}">${dayCount}<br>
+                        // console.log(today_comparsion);
+                        // console.log(alccountarray);
+                        // console.log(datearray[alccountarray.indexOf(0)]);
+
+                        // ${datearray[alccountarray.indexOf(0)] ?'<img src="azarashi.png" width=30 height=20>'
                         
-                        ${datearray.includes(today_comparsion) && ?'<img src="azarashi.png" width=30 height=20>'
-                        :
+
+                        calendarHTML += `<td class="${isToday ? 'today' : ''}">${dayCount}<br>
+
+                        
+                        ${today_comparsion==datearray[alccountarray.indexOf(0)] ?'<img src="azarashi.png" width=30 height=20>'
+                        : datearray.includes(today_comparsion)?'<img src="usagi01.png" width=30 height=20>'
                         :'<img src="cat01.png" width=30 height=20>'}</td>`;
                         
                         // i=0;
