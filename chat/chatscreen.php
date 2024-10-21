@@ -6,8 +6,40 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
 $group_id = isset($_GET['group_id']) ? intval($_GET['group_id']) : 0;
 
+$servername = "localhost";
+$db_username = "kobe";
+$db_password = "denshi";
+$dbname = "pbl2";
 
+if ($group_id === 0 && $user_id > 0) {
+    try {
+        // データベース接続
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $db_username, $db_password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // joined_teams テーブルから user_id が参加しているチームを取得
+        $stmt = $conn->prepare("SELECT team_id FROM joined_teams WHERE user_id = :user_id LIMIT 1");
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            $group_id = $result['team_id'];
+        } else {
+            die("有効なグループIDを取得できませんでした");
+        }
+    } catch (PDOException $e) {
+        echo "エラー: " . $e->getMessage();
+        exit();
+    }
+}
+
+// group_id が取得できなかった場合にエラーを出す
+if ($group_id === 0) {
+    die("有効なグループIDを指定してください");
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -78,8 +110,9 @@ $group_id = isset($_GET['group_id']) ? intval($_GET['group_id']) : 0;
                 socket.emit('sendMessage', {
                     message: message,
                     user_id: user_id,
-                    group_id: group_id
+                    team_id: group_id
                 });
+
                 textInput.value = "";
                 scrollToBottom();
             }
