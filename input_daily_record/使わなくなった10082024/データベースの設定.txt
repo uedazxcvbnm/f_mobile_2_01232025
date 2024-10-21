@@ -1,0 +1,141 @@
+-- データベースの設定
+set names utf8;
+drop database if exists pbl2;
+create database pbl2 character set utf8 collate utf8_general_ci;
+
+-- ユーザー「kobe」にパスワード「denshi」を設定し、データベース「pbl2」に対する全ての権限を付与
+grant all privileges on pbl2.* to kobe@localhost identified by 'denshi';
+use pbl2;
+
+-- user テーブル
+CREATE TABLE IF NOT EXISTS user (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_mail VARCHAR(100) NOT NULL,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(12) NOT NULL,
+    teams varchar(200) NOT NULL
+);
+
+INSERT INTO user (username, password) VALUES ('n@gmail.com', '中辻', 'pass1'), ('u@gmail.com', '上田', 'pass2'), ('ku@gmail.com', '倉掛', 'pass3'), ('ki@gmail.com', '木俵', 'pass4'), ('r@gmail.com', '李', 'pass5'), ('s@gmail.com', '阪邊', 'pass6');
+
+-- drink テーブル
+CREATE TABLE drink (
+  drink_id INT AUTO_INCREMENT PRIMARY KEY,
+  drink_name VARCHAR(50),
+  alc INT NOT NULL
+);
+
+-- 飲み物データの挿入
+INSERT INTO drink (drink_name, alc) VALUES
+('ビール', 5),
+('日本酒', 15),
+('ワイン', 12);
+
+-- glass テーブル
+CREATE TABLE glass (
+  glass_id INT AUTO_INCREMENT PRIMARY KEY,
+  glass_name VARCHAR(50),
+  glass_v INT NOT NULL
+);
+
+-- グラスデータの挿入
+INSERT INTO glass (glass_name, glass_v) VALUES
+('缶300ml', 300),
+('缶500ml', 500),
+('コップ200ml', 200),
+('グラス100ml', 100),
+('シングル30ml', 30),
+('ダブル60ml', 60),
+('２勺36ml', 36),
+('２勺半45ml', 45);
+
+-- daily_record テーブル
+CREATE TABLE daily_record (
+  ident INT AUTO_INCREMENT PRIMARY KEY,
+  date DATE,
+  money INT,
+  alchol_volume INT NOT NULL,
+  user_id INT,
+  FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+-- record_oneday テーブル
+CREATE TABLE record_oneday (
+  ident INT AUTO_INCREMENT PRIMARY KEY,
+  drink_id INT,
+  glass_id INT,                         
+  FOREIGN KEY (drink_id) REFERENCES drink(drink_id),
+  FOREIGN KEY (glass_id) REFERENCES glass(glass_id),
+  date DATE,
+  account_drunk INT,
+  money INT,
+  alchol_volume INT NOT NULL,
+  user_id INT,
+  FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+-- teams テーブル
+CREATE TABLE teams (
+  ident INT AUTO_INCREMENT PRIMARY KEY,
+  name CHAR(20),
+  detail CHAR(200),
+  size INT
+);
+
+-- チームデータの挿入
+INSERT INTO teams (name, detail, size) VALUES 
+('グループ1', 'みんなで禁酒しよう', 5),
+('グループ2', '毎月2割アルコール量を減らそう', 13),
+('グループ3', '絶対にお酒を飲まない', 8),
+('グループ4', 'ノンアルを楽しんでアルコール摂取量を減らそう', 10),
+('グループ5', '絶対にアルコールは入れない', 6),
+('グループ6', 'ゆっくり禁酒していきましょう', 3);
+
+-- chat テーブル (#3)
+CREATE TABLE IF NOT EXISTS chat (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message TEXT NOT NULL,
+    date DATETIME NOT NULL,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+-- chat テーブルに編集済みログのフラグを追加 (#4)
+ALTER TABLE chat ADD COLUMN edited BOOLEAN DEFAULT FALSE;
+-- chat テーブルに削除ログのフラグを追加
+ALTER TABLE chat ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;
+
+-- posts テーブル
+CREATE TABLE posts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  post_title VARCHAR(255),
+  post_content TEXT,
+  post_url VARCHAR(255),
+  post_tags VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  likes INT DEFAULT 0,
+  user_id INT, # 追加
+  FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+-- comments テーブル
+CREATE TABLE comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT,
+    comment_text TEXT,
+    likes INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id INT,
+    FOREIGN KEY (post_id) REFERENCES posts(id),
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+-- likes テーブル
+CREATE TABLE likes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  post_id INT,
+  UNIQUE KEY unique_like (user_id, post_id),  
+  FOREIGN KEY (user_id) REFERENCES user(user_id),
+  FOREIGN KEY (post_id) REFERENCES posts(id)
+);

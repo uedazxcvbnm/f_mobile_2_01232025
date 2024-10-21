@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS user (
     user_mail VARCHAR(100) NOT NULL,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(12) NOT NULL,
-    teams VARCHAR(200) DEFAULT NULL  
 );
 INSERT INTO user (user_mail, username, password, teams) 
 VALUES 
@@ -55,27 +54,23 @@ INSERT INTO glass (glass_name, glass_v) VALUES
 ('２勺36ml', 36),
 ('２勺半45ml', 45);
 
--- daily_record テーブル
-CREATE TABLE daily_record (
+-- ◇record_oneday
+-- ident alchol_data date user_id
+CREATE TABLE record_oneday_pbl3 (
   ident INT AUTO_INCREMENT PRIMARY KEY,
   date DATE,
-  money INT,
-  alchol_volume INT NOT NULL,
+  date_hms DATETIME,
+  alchol_data INT,
   user_id INT,
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
--- record_oneday テーブル
-CREATE TABLE record_oneday (
+--◇daily_record
+-- ident date alchol_count user_id
+CREATE TABLE daily_record_pbl3 (
   ident INT AUTO_INCREMENT PRIMARY KEY,
-  drink_id INT,
-  glass_id INT,                         
-  FOREIGN KEY (drink_id) REFERENCES drink(drink_id),
-  FOREIGN KEY (glass_id) REFERENCES glass(glass_id),
   date DATE,
-  account_drunk INT,
-  money INT,
-  alchol_volume INT NOT NULL,
+  alchol_count INT NOT NULL,
   user_id INT,
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
@@ -155,3 +150,13 @@ CREATE TABLE joined_teams(
   FOREIGN KEY (team_id) REFERENCES teams(team_id),
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 )
+-- global_chat　テーブル
+CREATE TABLE IF NOT EXISTS global_chat (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message TEXT NOT NULL,
+    date DATETIME NOT NULL,
+    user_id INT,
+    edited BOOLEAN DEFAULT FALSE,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
