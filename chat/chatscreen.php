@@ -11,6 +11,7 @@ $db_username = "kobe";
 $db_password = "denshi";
 $dbname = "pbl2";
 
+// URLパラメータから `group_id` が取得できない場合のみ `joined_teams` テーブルから取得
 if ($group_id === 0 && $user_id > 0) {
     try {
         // データベース接続
@@ -39,6 +40,7 @@ if ($group_id === 0) {
     die("有効なグループIDを指定してください");
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ja">
