@@ -45,10 +45,11 @@
             <?php
                 $today_date = date('Y-m-d');
                 // 今日　昨日　一昨日　を指定できるボタンの設置場所
-                // echo '<button value=1></button>';
-                // echo '<button value=2></button>';
-                // echo '<button value=3></button>';    
+                echo '<button value=1 id="today_button" class="alchol_timelist">今日</button>';
+                echo '<button value=2 id="yesterday_button" class="alchol_timelist">昨日</button>';
+                echo '<button value=3 id="b_yesterday_button" class="alchol_timelist">おととい</button>';    
 
+                echo '<p id="output">選択された日付がここに表示されます</p>';
                 // カレンダーボタン設置場所
 
 
@@ -203,31 +204,43 @@
 
 
         // ボタンを押すと変数に値を格納
-        // var today_button = document.getElementById('today_button');
-        // var yesterday_button = document.getElementById('yesterday_button');
-        // var b_yesterday_button = document.getElementById('b_yesterday_button');
+        var today_button = document.getElementById('today_button');
+        var yesterday_button = document.getElementById('yesterday_button');
+        var b_yesterday_button = document.getElementById('b_yesterday_button');
 
-        // document.addEventListener('DOMContentLoaded', () => {
+        const output = document.getElementById('output');
 
-        //     today_button.addEventListener({
-        //         toggleSelected(selectedButton, otherButton);
-        //         .value = 
-        //     });
-
-        //     yesterday_button.addEventListener({
-        //         toggleSelected(selectedButton, otherButton);
-        //     });
-
-        //     b_yesterday_button.addEventListener({
-        //         toggleSelected(selectedButton, otherButton);
-        //     });
+        document.addEventListener('DOMContentLoaded', () => {
             
 
-        // });
+            today_button.addEventListener("click", function (){
+                const today_alcholList = new Date();
+                today_alcholList.setHours(0, 0, 0, 0);
+                toggleSelected_alcholList(today_button, yesterday_button, b_yesterday_button);
+                output.textContent = today_alcholList;
+            });
 
-        function toggleSelected(selectedButton, otherButton){
-            selectedButton.classList('add');
-            otherButton.classList('remove');
+            yesterday_button.addEventListener("click", function (){
+                const today_alcholList = new Date();
+                today_alcholList.setHours(0, 0, 0, 0);
+                toggleSelected_alcholList(yesterday_button, today_button, b_yesterday_button);
+                output.textContent = new Date(today_alcholList.setDate(today_alcholList.getDate()-1));
+            });
+
+            b_yesterday_button.addEventListener("click", function (){
+                const today_alcholList = new Date();
+                today_alcholList.setHours(0, 0, 0, 0);
+                toggleSelected_alcholList(b_yesterday_button, today_button, yesterday_button);
+                output.textContent = new Date(today_alcholList.setDate(today_alcholList.getDate()-2));
+            });
+            
+
+        });
+
+        function toggleSelected_alcholList(selectedButton, otherButton1, otherButton2){
+            selectedButton.classList.add('selected');
+            otherButton1.classList.remove('selected');
+            otherButton2.classList.remove('selected');
         }
 
         // ここ以降のjsは使わない
