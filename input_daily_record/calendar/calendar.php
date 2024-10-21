@@ -124,16 +124,6 @@ if (!isset($_SESSION['user_id'])){
                         // console.log(alccountarray);
                         // console.log(datearray[alccountarray.indexOf(0)]);
 
-                        // ${datearray[alccountarray.indexOf(0)] ?'<img src="azarashi.png" width=30 height=20>'
-                        
-
-                        calendarHTML += `<td class="${isToday ? 'today' : ''}">${dayCount}<br>
-
-                        
-                        ${today_comparsion==datearray[alccountarray.indexOf(0)] ?'<img src="azarashi.png" width=30 height=20>'
-                        : datearray.includes(today_comparsion)?'<img src="usagi01.png" width=30 height=20>'
-                        :'<img src="cat01.png" width=30 height=20>'}</td>`;
-                        
                         // i=0;
                         // i = i+1;
                         // while(i<2){
@@ -142,10 +132,23 @@ if (!isset($_SESSION['user_id'])){
 
                         // 一時的にコメントアウト
                         // calendarHTML += `<td class="${isToday ? 'today' : ''}" onclick="handleDayClick(${dayCount})">${dayCount}</td>`;
+                        
+
+                        // 今日の日付を取得
+                        const today_date_calendar = new Date();
+                        today_date_calendar.setHours(0, 0, 0, 0);
+                        // console.log(today_date_calendar);
+                        console.log(today_comparsion > today_date_calendar);
+
+                        calendarHTML += `<td class="${isToday ? 'today' : ''}">${dayCount}<br>
+
+                        ${today_comparsion==datearray[alccountarray.indexOf(0)] ?'<img src="azarashi.png" width=30 height=20>'
+                        : datearray.includes(today_comparsion)?'<img src="usagi01.png" width=30 height=20>'
+                        : new Date(today_comparsion) < today_date_calendar ?'<img src="cat01.png" width=30 height=20>':''}
+                        </td>`
                         dayCount++;
                     }
                 }
-
                 calendarHTML += '</tr>';
 
                 if (dayCount - daysInMonth > 7) {
