@@ -3,6 +3,15 @@ require_once __DIR__ . '../../input_daily_record/classes/dbdata.php';
 
 class Team extends dbdata
 {
+    public function getJoinedTeams($user_id)
+    {
+        $sql = "SELECT teams.* FROM teams
+            INNER JOIN joined_teams ON teams.team_id = joined_teams.team_id
+            WHERE joined_teams.user_id = ?";
+        $stmt = $this->query($sql, [$user_id]);
+        return $stmt->fetchAll();
+    }
+
     public function getTeams($ident, $id)
     {
         $sql = "select * from teams right outer join (select * from joined_teams order by user_id = ? desc, team_id asc limit 10000) joined_teams on teams.team_id = joined_teams.team_id group by joined_teams.team_id having not joined_teams.user_id = ?";
