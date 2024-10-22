@@ -12,8 +12,9 @@ CREATE TABLE IF NOT EXISTS user (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     user_mail VARCHAR(100) NOT NULL,
     username VARCHAR(50) NOT NULL,
-    password VARCHAR(12) NOT NULL,
+    password VARCHAR(12) NOT NULL
 );
+
 INSERT INTO user (user_mail, username, password, teams) 
 VALUES 
 ('n@gmail.com', '中辻', 'pass1', 'team1'),
@@ -65,7 +66,7 @@ CREATE TABLE record_oneday_pbl3 (
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
---◇daily_record
+-- ◇daily_record
 -- ident date alchol_count user_id
 CREATE TABLE daily_record_pbl3 (
   ident INT AUTO_INCREMENT PRIMARY KEY,
@@ -149,10 +150,10 @@ CREATE TABLE joined_teams(
   UNIQUE (team_id, user_id),
   FOREIGN KEY (team_id) REFERENCES teams(team_id),
   FOREIGN KEY (user_id) REFERENCES user(user_id)
-)
+);
 -- global_chat　テーブル
 CREATE TABLE IF NOT EXISTS global_chat (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+   	id INT AUTO_INCREMENT PRIMARY KEY,
     message TEXT NOT NULL,
     date DATETIME NOT NULL,
     user_id INT,

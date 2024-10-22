@@ -45,14 +45,15 @@
             <?php
                 $today_date = date('Y-m-d');
 
-                echo '<input type="date" id="datePicker">';
+                // echo '<input type="date" id="datePicker">';
                 echo '<p id="output">選択された日付がここに表示されます</p>';
 
                 // 今日　昨日　一昨日　を指定できるボタンの設置場所
+                echo '<div id="date_select">';
                 echo '<button value=1 id="today_button" class="alchol_timelist">今日</button>';
                 echo '<button value=2 id="yesterday_button" class="alchol_timelist">昨日</button>';
                 echo '<button value=3 id="b_yesterday_button" class="alchol_timelist">おととい</button>';    
-
+                echo '</div>';
                 
                 // カレンダーボタン設置場所
 
@@ -207,7 +208,8 @@
         // jsで今日の日付を取得
 
         // 
-        const dateInput = document.getElementById('datePicker');
+        // const dateInput = document.getElementById('date_select');
+        const dateInput = document.getElementById('date_select');
         const output = document.getElementById('output');
 
         // ボタンを押すと変数に値を格納
@@ -215,27 +217,38 @@
         var yesterday_button = document.getElementById('yesterday_button');
         var b_yesterday_button = document.getElementById('b_yesterday_button');
 
-        dateInput.addEventListener('change', async function() {
-            today_button.addEventListener("click", function (){
+        
+
+        
+            today_button.addEventListener("click", async function (){
                 const today_alcholList = new Date();
                 today_alcholList.setHours(0, 0, 0, 0);
                 toggleSelected_alcholList(today_button, yesterday_button, b_yesterday_button);
                 output.textContent = today_alcholList;
                 // 日付を取得
-                const selectedDate = ;
+                const selectedDate = today_alcholList;
+
+                console.log('a');
                 // 関数呼び出し　PHPにリクエストを送る
-                php_send_selectedDate(selectedDate);
+                dateInput.addEventListener('change', async function() {
+                    php_send_selectedDate(selectedDate);
+                })
             });
 
-            yesterday_button.addEventListener("click", function (){
+            yesterday_button.addEventListener("click",async function (){
                 const today_alcholList = new Date();
                 today_alcholList.setHours(0, 0, 0, 0);
                 toggleSelected_alcholList(yesterday_button, today_button, b_yesterday_button);
                 output.textContent = new Date(today_alcholList.setDate(today_alcholList.getDate()-1));
+                console.log(output.textContent);
+
+                console.log('a');
                 // 日付を取得
-                const selectedDate = ;
+                const selectedDate = output.textContent;
                 // 関数呼び出し　PHPにリクエストを送る
-                php_send_selectedDate(selectedDate);
+                dateInput.addEventListener('change', async function() {
+                    php_send_selectedDate(selectedDate);
+                })
             });
 
             b_yesterday_button.addEventListener("click", function (){
@@ -244,18 +257,21 @@
                 toggleSelected_alcholList(b_yesterday_button, today_button, yesterday_button);
                 output.textContent = new Date(today_alcholList.setDate(today_alcholList.getDate()-2));
                 // 日付を取得
-                const selectedDate = ;
+                const selectedDate = output.textContent;
                 // 関数呼び出し　PHPにリクエストを送る
-                php_send_selectedDate(selectedDate);
+                dateInput.addEventListener('change', async function() {
+                    php_send_selectedDate(selectedDate);
+                })
             });
 
             
             
-        });
+        
 
         // PHPにリクエストを送る
-        function php_send_selectedDate(selectedDate){
+        async function php_send_selectedDate(selectedDate){
             try {
+                console.log('a');
                 const response = await fetch(`realtime_alcholtime.php?date=${selectedDate}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
