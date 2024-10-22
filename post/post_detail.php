@@ -10,13 +10,47 @@ if (!isset($_SESSION['user_id'])) {
 $current_user_id = $_SESSION['user_id'];
 
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['like_post'])) {
+    $post_id = $_POST['post_id'];
+
+    $check_like_sql = "SELECT * FROM likes WHERE post_id = ? AND user_id = ?";
+    $stmt_check_like = $conn->prepare($check_like_sql);
+    $stmt_check_like->bind_param("ii", $post_id, $current_user_id);
+    $stmt_check_like->execute();
+    $result_check_like = $stmt_check_like->get_result();
+
+    if ($result_check_like->num_rows > 0) {
+
+        $unlike_sql = "DELETE FROM likes WHERE post_id = ? AND user_id = ?";
+        $stmt_unlike = $conn->prepare($unlike_sql);
+        $stmt_unlike->bind_param("ii", $post_id, $current_user_id);
+        $stmt_unlike->execute();
+        $stmt_unlike->close();
+    } else {
+
+        $like_sql = "INSERT INTO likes (post_id, user_id) VALUES (?, ?)";
+        $stmt_like = $conn->prepare($like_sql);
+        $stmt_like->bind_param("ii", $post_id, $current_user_id);
+        $stmt_like->execute();
+        $stmt_like->close();
+    }
+
+    $stmt_check_like->close();
+    header("Location: post_detail.php?id=" . $post_id);
+    exit;
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment_text'])) {
     $comment_text = $_POST['comment_text'];
     $post_id = $_POST['post_id'];
-    $stmt = $conn->prepare("INSERT INTO comments (post_id, comment_text, user_id) VALUES (?, ?, ?)");
-    $stmt->bind_param("isi", $post_id, $comment_text, $current_user_id);
-    $stmt->execute();
-    $stmt->close();
+
+    if (!empty($comment_text)) {
+        $stmt = $conn->prepare("INSERT INTO comments (post_id, comment_text, user_id) VALUES (?, ?, ?)");
+        $stmt->bind_param("isi", $post_id, $comment_text, $current_user_id);
+        $stmt->execute();
+        $stmt->close();
+    }
     header("Location: post_detail.php?id=" . $post_id);
     exit;
 }
@@ -30,6 +64,15 @@ $stmt->execute();
 $result = $stmt->get_result();
 $post = $result->fetch_assoc();
 $stmt->close();
+
+
+$check_like_sql = "SELECT * FROM likes WHERE post_id = ? AND user_id = ?";
+$stmt_check_like = $conn->prepare($check_like_sql);
+$stmt_check_like->bind_param("ii", $post_id, $current_user_id);
+$stmt_check_like->execute();
+$result_check_like = $stmt_check_like->get_result();
+$is_liked = ($result_check_like->num_rows > 0); // 判断是否已点赞
+$stmt_check_like->close();
 
 
 $sql_comments = "SELECT comments.*, user.username FROM comments JOIN user ON comments.user_id = user.user_id WHERE post_id = ?";
@@ -47,7 +90,7 @@ $result_comments = $stmt_comments->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>投稿詳細画面</title>
     <?php
-        require_once __DIR__ . '../../header/header.php';
+    require_once __DIR__ . '../../header/header.php';
     ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
@@ -57,11 +100,11 @@ $result_comments = $stmt_comments->get_result();
             color: #333;
             margin: 0;
             padding: 0;
+            padding-top: 80px;
         }
 
-
         .container {
-            margin-top: 50px;
+            margin-top: 20px;
             padding: 20px;
             max-width: 800px;
             margin: 0 auto;
@@ -100,7 +143,6 @@ $result_comments = $stmt_comments->get_result();
             color: #777;
         }
 
-
         .comment-section {
             max-width: 800px;
             margin: 0 auto;
@@ -137,7 +179,6 @@ $result_comments = $stmt_comments->get_result();
             margin-bottom: 5px;
         }
 
-
         .comment-input {
             position: fixed;
             bottom: 0;
@@ -172,13 +213,13 @@ $result_comments = $stmt_comments->get_result();
             background-color: #136aa7;
         }
 
-        /* 提及用户的样式 */
+
         .mention-user {
             cursor: pointer;
             color: #1a73e8;
         }
 
-        /* 按钮样式 */
+
         button {
             background-color: #4CAF50;
             color: white;
@@ -192,6 +233,26 @@ $result_comments = $stmt_comments->get_result();
         button:hover {
             background-color: #45a049;
         }
+
+        .like-btn {
+            background-color: #303030;
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .like-btn i {
+            margin-right: 5px;
+        }
+
+        .like-btn:hover {
+            background-color: #606060;
+        }
     </style>
 </head>
 
@@ -200,16 +261,34 @@ $result_comments = $stmt_comments->get_result();
 
         <h1 class="post-title"><?php echo htmlspecialchars($post['post_title']); ?></h1>
 
-
         <p class="post-author">投稿者: <?php echo htmlspecialchars($post['username']); ?> | 投稿日: <?php echo $post['created_at']; ?></p>
-
 
         <div class="post-content">
             <p class="post-body"><?php echo nl2br(htmlspecialchars($post['post_content'])); ?></p>
             <p class="post-tags">タグ: <?php echo htmlspecialchars($post['post_tags']); ?></p>
         </div>
-    </div>
 
+        <!-- 良いね -->
+        <form method="POST">
+            <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+            <button type="submit" name="like_post" class="like-btn">
+                <?php echo $is_liked ? '<i class="fas fa-thumbs-up"></i>' : '<i class="far fa-thumbs-up"></i>'; ?>
+            </button>
+        </form>
+
+        <p>いいねの数:
+            <?php
+
+            $count_likes_sql = "SELECT COUNT(*) as like_count FROM likes WHERE post_id = ?";
+            $stmt_count_likes = $conn->prepare($count_likes_sql);
+            $stmt_count_likes->bind_param("i", $post_id);
+            $stmt_count_likes->execute();
+            $result_count_likes = $stmt_count_likes->get_result();
+            $like_count = $result_count_likes->fetch_assoc()['like_count'];
+            echo $like_count;
+            ?>
+        </p>
+    </div>
 
     <div class="comment-section">
         <h2>コメント一覧</h2>
@@ -223,7 +302,6 @@ $result_comments = $stmt_comments->get_result();
             </div>
         <?php } ?>
     </div>
-
 
     <div class="comment-input">
         <form id="comment-form-bottom" method="POST">

@@ -12,16 +12,17 @@ CREATE TABLE IF NOT EXISTS user (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     user_mail VARCHAR(100) NOT NULL,
     username VARCHAR(50) NOT NULL,
-    password VARCHAR(12) NOT NULL,
+    password VARCHAR(12) NOT NULL
 );
-INSERT INTO user (user_mail, username, password, teams) 
+
+INSERT INTO user (user_mail, username, password) 
 VALUES 
-('n@gmail.com', '中辻', 'pass1', 'team1'),
-('u@gmail.com', '上田', 'pass2', 'team1'),
-('ku@gmail.com', '倉掛', 'pass3', 'team2'),
-('ki@gmail.com', '木俵', 'pass4', 'team2'),
-('r@gmail.com', '李', 'pass5', 'team3'),
-('s@gmail.com', '阪邊', 'pass6', 'team3');
+('n@gmail.com', '中辻', 'pass1'),
+('u@gmail.com', '上田', 'pass2'),
+('ku@gmail.com', '倉掛', 'pass3'),
+('ki@gmail.com', '木俵', 'pass4'),
+('r@gmail.com', '李', 'pass5'),
+('s@gmail.com', '阪邊', 'pass6');
 
 -- drink テーブル
 CREATE TABLE drink (
@@ -54,8 +55,7 @@ INSERT INTO glass (glass_name, glass_v) VALUES
 ('２勺36ml', 36),
 ('２勺半45ml', 45);
 
--- ◇record_oneday
--- ident alchol_data date user_id
+-- record_oneday テーブル
 CREATE TABLE record_oneday_pbl3 (
   ident INT AUTO_INCREMENT PRIMARY KEY,
   date DATE,
@@ -65,8 +65,7 @@ CREATE TABLE record_oneday_pbl3 (
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
---◇daily_record
--- ident date alchol_count user_id
+-- daily_record テーブル
 CREATE TABLE daily_record_pbl3 (
   ident INT AUTO_INCREMENT PRIMARY KEY,
   date DATE,
@@ -92,7 +91,7 @@ INSERT INTO teams (name, detail, size) VALUES
 ('グループ5', '絶対にアルコールは入れない', 6),
 ('グループ6', 'ゆっくり禁酒していきましょう', 3);
 
--- chat テーブル (#3)
+-- chat テーブル
 CREATE TABLE IF NOT EXISTS chat (
     id INT AUTO_INCREMENT PRIMARY KEY,
     message TEXT NOT NULL,
@@ -101,7 +100,7 @@ CREATE TABLE IF NOT EXISTS chat (
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
--- chat テーブルに編集済みログのフラグを追加 (#4)
+-- chat テーブルに編集済みログのフラグを追加
 ALTER TABLE chat ADD COLUMN edited BOOLEAN DEFAULT FALSE;
 -- chat テーブルに削除ログのフラグを追加
 ALTER TABLE chat ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;
@@ -115,7 +114,7 @@ CREATE TABLE posts (
   post_tags VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   likes INT DEFAULT 0,
-  user_id INT, # 追加
+  user_id INT, 
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
@@ -131,11 +130,11 @@ CREATE TABLE comments (
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
--- likes テーブル
 CREATE TABLE likes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT,
   post_id INT,
+  is_favorite BOOLEAN DEFAULT FALSE,  
   UNIQUE KEY unique_like (user_id, post_id),  
   FOREIGN KEY (user_id) REFERENCES user(user_id),
   FOREIGN KEY (post_id) REFERENCES posts(id)
@@ -149,8 +148,9 @@ CREATE TABLE joined_teams(
   UNIQUE (team_id, user_id),
   FOREIGN KEY (team_id) REFERENCES teams(team_id),
   FOREIGN KEY (user_id) REFERENCES user(user_id)
-)
--- global_chat　テーブル
+);
+
+-- global_chat テーブル
 CREATE TABLE IF NOT EXISTS global_chat (
     id INT AUTO_INCREMENT PRIMARY KEY,
     message TEXT NOT NULL,
