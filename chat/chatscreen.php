@@ -131,11 +131,13 @@ if ($group_id === 0) {
             });
 
             socket.on('receiveMessage', function(data) {
-                if (data.group_id == group_id) {
+                // メッセージが現在のグループIDに属している場合のみ表示する
+                if (data.team_id == group_id) {
                     const messageType = data.user_id == user_id ? 'sent' : 'received';
                     displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id, data.edited, data.is_deleted);
                 }
             });
+
 
 
             socket.on('updateMessage', function(data) {
@@ -179,10 +181,10 @@ if ($group_id === 0) {
                 const messageElement = document.createElement("div");
                 messageElement.classList.add("message");
                 messageElement.innerHTML = `
-                    <div class="message-name">${username}</div>
-                    <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
-                    <span class="message-time">${formatDate(date)}</span>
-                `;
+        <div class="message-name">${username}</div>
+        <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
+        <span class="message-time">${formatDate(date)}</span>
+    `;
 
                 if (edited) {
                     const editedElement = document.createElement('span');
@@ -218,6 +220,7 @@ if ($group_id === 0) {
                     <span class="log-message">${message}</span>
                     <span class="log-time">${formatDate(date)}</span>
                 `;
+                messageContainer.appendChild(messageElement);
                 chatArea.appendChild(logContainer);
                 scrollToBottom();
             }
