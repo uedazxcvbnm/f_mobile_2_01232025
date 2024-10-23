@@ -117,3 +117,39 @@ body {
 .calendar td.mute {
     color: #ccc;
 }
+
+
+/* スタンプ */
+.blue_circle{
+    width: 30px;          /* 幅 */
+    height: 20px;         /* 高さ */
+    background-color: #4689FF; /* 背景色を赤に設定 */
+    border-radius: 50%;    /* 丸くするためのボーダー半径 */
+    display: flex;         /* 中央揃えにするため */
+    align-items: center;   /* 垂直方向中央揃え */
+    justify-content: center;/* 水平方向中央揃え */
+    color: white;          /* テキストの色を白に設定 */
+    font-weight: bold;     /* テキストを太字に設定 */
+}
+.red_circle{
+    width: 30px;          /* 幅 */
+    height: 20px;         /* 高さ */
+    background-color: red; /* 背景色を赤に設定 */
+    border-radius: 50%;    /* 丸くするためのボーダー半径 */
+    display: flex;         /* 中央揃えにするため */
+    align-items: center;   /* 垂直方向中央揃え */
+    justify-content: center;/* 水平方向中央揃え */
+    color: white;          /* テキストの色を白に設定 */
+    font-weight: bold;     /* テキストを太字に設定 */
+}
+.orange_circle{
+    width: 30px;          /* 幅 */
+    height: 20px;         /* 高さ */
+    background-color: orange; /* 背景色を赤に設定 */
+    border-radius: 50%;    /* 丸くするためのボーダー半径 */
+    display: flex;         /* 中央揃えにするため */
+    align-items: center;   /* 垂直方向中央揃え */
+    justify-content: center;/* 水平方向中央揃え */
+    color: white;          /* テキストの色を白に設定 */
+    font-weight: bold;     /* テキストを太字に設定 */
+}

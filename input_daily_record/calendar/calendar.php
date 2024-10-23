@@ -142,9 +142,9 @@ if (!isset($_SESSION['user_id'])){
 
                         calendarHTML += `<td class="${isToday ? 'today' : ''}">${dayCount}<br>
 
-                        ${today_comparsion==datearray[alccountarray.indexOf(0)] ?'<img src="azarashi.png" width=30 height=20>'
-                        : datearray.includes(today_comparsion)?'<img src="usagi01.png" width=30 height=20>'
-                        : new Date(today_comparsion) < today_date_calendar ?'<img src="cat01.png" width=30 height=20>':''}
+                        ${today_comparsion==datearray[alccountarray.indexOf(0)] ?'<div class="blue_circle"></div>'
+                        : datearray.includes(today_comparsion)?'<div class="red_circle"></div>'
+                        : new Date(today_comparsion) < today_date_calendar ?'<div class="orange_circle"></div>':''}
                         </td>`
                         dayCount++;
                     }
