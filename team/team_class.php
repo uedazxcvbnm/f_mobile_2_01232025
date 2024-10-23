@@ -19,6 +19,20 @@ class Team extends dbdata
             throw new Exception('SQLエラー: ' . $e->getMessage());
         }
     }
+    public function decreaseTeamSize($team_id)
+    {
+        try {
+            $sql = "UPDATE teams SET size = size - 1 WHERE team_id = ? AND size > 0";
+            $stmt = $this->query($sql, [$team_id]);
+            if ($stmt->rowCount() > 0) {
+                // 人数の減少に成功
+            } else {
+                throw new Exception('グループ人数の更新に失敗しました。');
+            }
+        } catch (Exception $e) {
+            throw new Exception('グループ人数の更新中にエラーが発生しました: ' . $e->getMessage());
+        }
+    }
 
 
 
