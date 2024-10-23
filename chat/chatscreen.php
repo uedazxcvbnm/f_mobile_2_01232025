@@ -11,13 +11,13 @@ $db_username = "kobe";
 $db_password = "denshi";
 $dbname = "pbl2";
 
-// URLパラメータから `group_id` が取得できない場合のみ `joined_teams` テーブルから取得
-if ($group_id === 0 && $user_id > 0) {
-    try {
-        // データベース接続
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $db_username, $db_password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+try {
+    // データベース接続
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $db_username, $db_password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // URLパラメータから `group_id` が取得できない場合のみ `joined_teams` テーブルから取得
+    if ($group_id === 0 && $user_id > 0) {
         // joined_teams テーブルから user_id が参加しているチームを取得
         $stmt = $conn->prepare("SELECT team_id FROM joined_teams WHERE user_id = :user_id LIMIT 1");
         $stmt->bindParam(':user_id', $user_id);
@@ -29,18 +29,33 @@ if ($group_id === 0 && $user_id > 0) {
         } else {
             die("有効なグループIDを取得できませんでした");
         }
-    } catch (PDOException $e) {
-        echo "エラー: " . $e->getMessage();
-        exit();
     }
+
+    // group_id が取得できなかった場合にエラーを出す
+    if ($group_id === 0) {
+        die("有効なグループIDを指定してください");
+    }
+
+    // グループ名と参加人数を取得する
+    $stmt = $conn->prepare("SELECT t.name AS group_name, COUNT(jt.user_id) AS member_count 
+                            FROM teams t
+                            LEFT JOIN joined_teams jt ON t.team_id = jt.team_id
+                            WHERE t.team_id = :group_id");
+    $stmt->bindParam(':group_id', $group_id);
+    $stmt->execute();
+    $group_info = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$group_info) {
+        die("グループ情報を取得できませんでした");
+    }
+} catch (PDOException $e) {
+    echo "エラー: " . $e->getMessage();
+    exit();
 }
 
-// group_id が取得できなかった場合にエラーを出す
-if ($group_id === 0) {
-    die("有効なグループIDを指定してください");
-}
+$group_name = $group_info['group_name'];
+$member_count = $group_info['member_count'];
 ?>
-
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -59,8 +74,8 @@ if ($group_id === 0) {
         <div class="header">
             <button id="back-button">&lt; 戻る</button>
             <div class="group-info">
-                <span id="group-name">社会人禁酒グループ</span>
-                <span id="group-members">(6)</span>
+                <span id="group-name"><?php echo htmlspecialchars($group_name, ENT_QUOTES, 'UTF-8'); ?></span>
+                <span id="group-members">(<?php echo $member_count; ?>)</span>
             </div>
         </div>
         <div class="chat-area"></div>
@@ -85,17 +100,9 @@ if ($group_id === 0) {
             const user_id = "<?php echo $user_id; ?>";
             const group_id = "<?php echo htmlspecialchars($group_id, ENT_QUOTES, 'UTF-8'); ?>";
 
-
-
             document.getElementById("back-button").addEventListener("click", function() {
                 window.location.href = "../joingrouplist/joingrouplist.php";
             });
-
-            const groupName = "社会人禁酒グループ";
-            const groupMembers = 6;
-
-            document.getElementById("group-name").textContent = groupName;
-            document.getElementById("group-members").textContent = `(${groupMembers})`;
 
             const sendButton = document.getElementById("send");
             const textInput = document.getElementById("text");
@@ -138,8 +145,6 @@ if ($group_id === 0) {
                 }
             });
 
-
-
             socket.on('updateMessage', function(data) {
                 const messageElement = document.querySelector(`.message-container[data-message-id='${data.id}'] .message-content`);
                 if (messageElement) {
@@ -181,10 +186,10 @@ if ($group_id === 0) {
                 const messageElement = document.createElement("div");
                 messageElement.classList.add("message");
                 messageElement.innerHTML = `
-        <div class="message-name">${username}</div>
-        <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
-        <span class="message-time">${formatDate(date)}</span>
-    `;
+                    <div class="message-name">${username}</div>
+                    <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
+                    <span class="message-time">${formatDate(date)}</span>
+                `;
 
                 if (edited) {
                     const editedElement = document.createElement('span');
@@ -220,7 +225,6 @@ if ($group_id === 0) {
                     <span class="log-message">${message}</span>
                     <span class="log-time">${formatDate(date)}</span>
                 `;
-                messageContainer.appendChild(messageElement);
                 chatArea.appendChild(logContainer);
                 scrollToBottom();
             }

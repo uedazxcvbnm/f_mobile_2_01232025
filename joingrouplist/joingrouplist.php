@@ -57,10 +57,12 @@ $joined_teams = $team->getJoinedTeams($user_id);
     </div>
 
     <script>
+        // チャット画面へ遷移する関数
         function goToChat(groupId) {
             window.location.href = "../chat/chatscreen.php?group_id=" + encodeURIComponent(groupId);
         }
 
+        // タイムライン画面へ遷移する関数
         function goToTimeline() {
             window.location.href = "../timeline/timeline.php";
         }
@@ -68,18 +70,35 @@ $joined_teams = $team->getJoinedTeams($user_id);
         function leaveGroup(button, groupId) {
             const confirmLeave = confirm("本当に退会しますか？");
             if (confirmLeave) {
-                // TODO: サーバー側で退会処理を実行する (Ajaxを使うのが推奨されます)
-                const groupItem = button.closest(".group-item");
-                groupItem.remove();
+                // Ajaxでサーバーに退会リクエストを送信
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "../joingrouplist/leave_group.php", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.status === 'success') {
+                            // グループアイテムを削除
+                            const groupItem = button.closest(".group-item");
+                            groupItem.remove();
 
-                // グループがなくなった場合のメッセージ表示
-                const groupListContainer = document.querySelector(".group-list-container");
-                if (groupListContainer.children.length === 0) {
-                    document.getElementById("no-groups-message").style.display = "block";
-                }
+                            // グループがなくなった場合のメッセージ表示
+                            const groupListContainer = document.querySelector(".group-list-container");
+                            if (groupListContainer.children.length === 0) {
+                                document.getElementById("no-groups-message").style.display = "block";
+                            }
+                        } else {
+                            alert(response.message);
+                        }
+                    }
+                };
+                xhr.send("team_id=" + encodeURIComponent(groupId));
             }
         }
     </script>
+
+
+
 </body>
 
 </html>

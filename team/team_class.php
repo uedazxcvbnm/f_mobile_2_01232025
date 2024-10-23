@@ -3,6 +3,26 @@ require_once __DIR__ . '../../input_daily_record/classes/dbdata.php';
 
 class Team extends dbdata
 {
+    public function leaveTeam($team_id, $user_id)
+    {
+        try {
+            $sql = "DELETE FROM joined_teams WHERE team_id = ? AND user_id = ?";
+            $stmt = $this->query($sql, [$team_id, $user_id]);
+            if ($stmt->rowCount() > 0) {
+                error_log("退会処理: team_id: $team_id, user_id: $user_id - 削除成功");
+            } else {
+                error_log("退会処理: team_id: $team_id, user_id: $user_id - 削除失敗。レコードが見つかりませんでした。");
+                throw new Exception('退会処理が行われませんでした。正しいデータがない可能性があります。');
+            }
+        } catch (Exception $e) {
+            error_log("退会処理: SQLエラー - " . $e->getMessage());
+            throw new Exception('SQLエラー: ' . $e->getMessage());
+        }
+    }
+
+
+
+
     public function getJoinedTeams($user_id)
     {
         $sql = "SELECT teams.* FROM teams
