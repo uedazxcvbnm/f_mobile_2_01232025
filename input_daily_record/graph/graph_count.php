@@ -318,28 +318,9 @@
 
                 // console.log(dateOutput);
 
-                document.addEventListener('input', async function() {
-                    // const dateOutput = document.getElementById('dateOutput');
-                    // async function php_send_selectedDate(){
-                    const selectedDate = new Date(this.value);
-                    console.log(selectedDate);
-                    try {
-                        console.log('a');
-                        const response = await fetch(`realtime_alcholtime.php?date=${selectedDate}`);
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        const data = await response.json();  // PHPからのデータをJSON形式で受け取る
-                        console.log("取得したデータ:", data);
+                console.log(dateOutput);
 
-                        // 取得したデータを画面に反映
-                        // output.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-                    } catch (error) {
-                        console.error("データ取得エラー:", error);
-                        // output.innerHTML = "データの取得に失敗しました";
-                    }
-                    
-                })
+                dateOutput.dispatchEvent(new Event('input'));
                 // const selectedDate = new Date(this.value);
                 // console.log(date_output.textContent);
                 // 日付を取得
