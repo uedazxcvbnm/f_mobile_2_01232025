@@ -152,7 +152,7 @@ CREATE TABLE joined_teams(
 
 -- global_chat テーブル
 CREATE TABLE IF NOT EXISTS global_chat (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+   	id INT AUTO_INCREMENT PRIMARY KEY,
     message TEXT NOT NULL,
     date DATETIME NOT NULL,
     user_id INT,

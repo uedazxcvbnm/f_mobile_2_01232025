@@ -101,3 +101,14 @@ h2 {
 .controls button:hover {
     background-color: #1578c9;
 }
+
+.alchol_timelist{
+    color: #1578c9;
+}
+
+.alchol_timelist.selected{
+    border: 2.5px solid #FFD700;
+    background-color: #5797cb;
+    color:#fff;
+}
+

@@ -24,14 +24,17 @@ if (!isset($_SESSION['user_id'])){
     <?php
         $user_id = $_SESSION['user_id'];
 
+        // カレンダーの日付を取得（記録をしたor）
         require_once __DIR__.'/../classes/daily_record_method.php';
         $dailydata = new dailyData();
         $datearray = $dailydata->get_date($user_id);
-        // echo var_dump($datearray);
-        // foreach ($datearray as $item) {
-        //     echo $datearray['date'];
-        // }
         $datearray_json = json_encode($datearray);
+
+        require_once __DIR__.'/../classes/daily_record_method.php';
+        $dailydata = new dailyData();
+        $alccountarray = $dailydata->get_alccount_calendar($user_id);
+        $alccountarray_json = json_encode($alccountarray);
+        
     ?>
     <div class="container">
         <div class="sidebar">
@@ -57,7 +60,7 @@ if (!isset($_SESSION['user_id'])){
         let currentMonth = date.getMonth();
 
         const datearray = JSON.parse('<?php echo $datearray_json; ?>');
-        // console.log(datearray['date']);
+        const alccountarray = JSON.parse('<?php echo $alccountarray_json; ?>');
 
 
         function createCalendar(year, month) {
@@ -100,6 +103,7 @@ if (!isset($_SESSION['user_id'])){
                         const isToday = dayCount === today.getDate() && month === today.getMonth() && year === today.getFullYear();
                         
                         // console.log(currentMonth);
+                        // datearray.includesでスタンプを表示
                         let currentMonth_comparsion = currentMonth + 1;
 
                         if(currentMonth_comparsion<10){
@@ -116,9 +120,10 @@ if (!isset($_SESSION['user_id'])){
                         console.log(today_comparsion);
                         
                         console.log(datearray);
-                        calendarHTML += `<td class="${isToday ? 'today' : ''}">${dayCount}<br>
-                        ${datearray.includes(today_comparsion)?'<img src="azarashi.png" width=30 height=20>':''}</td>`;
-                        
+                        // console.log(today_comparsion);
+                        // console.log(alccountarray);
+                        // console.log(datearray[alccountarray.indexOf(0)]);
+
                         // i=0;
                         // i = i+1;
                         // while(i<2){
@@ -127,10 +132,23 @@ if (!isset($_SESSION['user_id'])){
 
                         // 一時的にコメントアウト
                         // calendarHTML += `<td class="${isToday ? 'today' : ''}" onclick="handleDayClick(${dayCount})">${dayCount}</td>`;
+                        
+
+                        // 今日の日付を取得
+                        const today_date_calendar = new Date();
+                        today_date_calendar.setHours(0, 0, 0, 0);
+                        // console.log(today_date_calendar);
+                        console.log(today_comparsion > today_date_calendar);
+
+                        calendarHTML += `<td class="${isToday ? 'today' : ''}">${dayCount}<br>
+
+                        ${today_comparsion==datearray[alccountarray.indexOf(0)] ?'<div class="blue_circle"></div>'
+                        : datearray.includes(today_comparsion)?'<div class="red_circle"></div>'
+                        : new Date(today_comparsion) < today_date_calendar ?'<div class="orange_circle"></div>':''}
+                        </td>`
                         dayCount++;
                     }
                 }
-
                 calendarHTML += '</tr>';
 
                 if (dayCount - daysInMonth > 7) {

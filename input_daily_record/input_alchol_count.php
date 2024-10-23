@@ -23,7 +23,7 @@
     <div class="input_daily_screen">
         <div class="daily_registration_form">
             <h1>飲酒した時間帯を記録</h1>
-            <div>飲酒をしたら送信</div>
+            <div>飲酒をしたらはいと答え、飲酒を我慢できたらいいえと答える</div>
             <button id="alchol_data_yes" class="alchol_data_button">はい</button>
             <button id="alchol_data_no" class="alchol_data_button">いいえ</button>
             <form id="alcholdata_form" method="POST" action="./add_record_count.php">
@@ -48,20 +48,20 @@
         // はい　がクリックされたときの処理
         yesbutton.addEventListener("click", function () {
             document.getElementById("alchol_data_button_info").value = 1;  // 値を1に設定
-            toggleSelected(alchol_data_yes, alchol_data_no);
+            toggleSelected_inputAlchol(alchol_data_yes, alchol_data_no);
             // document.getElementById("alcholdata_form").submit();  // フォームを送信
         });
 
         // いいえ　がクリックされたときの処理
         nobutton.addEventListener("click", function () {
             document.getElementById("alchol_data_button_info").value = 2;  // 値を2に設定
-            toggleSelected(alchol_data_no, alchol_data_yes);
+            toggleSelected_inputAlchol(alchol_data_no, alchol_data_yes);
             // document.getElementById("alcholdata_form").submit();  // フォームを送信
         });
     });
 
     // selected クラスの追加・解除を行う関数
-    function toggleSelected(selectedButton, otherButton){
+    function toggleSelected_inputAlchol(selectedButton, otherButton){
         selectedButton.classList.add('selected');
         otherButton.classList.remove('selected');
     }
