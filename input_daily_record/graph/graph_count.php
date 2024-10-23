@@ -247,15 +247,19 @@
 
                  // 取得したデータをテーブルに反映
                  selected_data.forEach(item => {
-                        const row = output_table.insertRow();
-                        const dateCell = row.insertCell(0);
-                        const alcoholCell = row.insertCell(1);
-                        const otherDataCell = row.insertCell(2); // その他のデータ用
+                    const row = output_table.insertRow();
+                    // const dateCell = row.insertCell(0);
+                    const alcoholCell = row.insertCell(0);
+                    const otherDataCell = row.insertCell(1); // その他のデータ用
 
-                        dateCell.textContent = item.date; // 日付のプロパティ名に合わせる
-                        alcoholCell.textContent = item.alcohol_count; // アルコール量のプロパティ名に合わせる
-                        otherDataCell.textContent = item.other_data; // その他のデータのプロパティ名に合わせる
-                    });
+                    // dateCell.textContent = item.date; // 日付のプロパティ名に合わせる
+                    if(item.alchol_data==1){
+                        alcoholCell.textContent = '飲酒した'; // アルコール量のプロパティ名に合わせる
+                    }else if(item.alchol_data==2){
+                        alcoholCell.textContent = '飲酒しなかった'; // その他のデータのプロパティ名に合わせる
+                    }
+                    otherDataCell.textContent = item.date_hms;
+                });
                 
                 // 取得したデータをtextareaに反映
                 // output_table.value = JSON.stringify(selected_data, null, 2);
