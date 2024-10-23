@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>DOM確認</title>
+</head>
+<body>
+    <h1>DOMの確認</h1>
+    <input type="date" id="dateOutput">
+    <p id="selectedDate">選択された日付: なし</p>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMが読み込まれました！');  // ここで確認メッセージが表示されるはず
+
+            const dateOutput = document.getElementById('dateOutput');
+            const selectedDate = document.getElementById('selectedDate');
+
+            dateOutput.addEventListener('input', function() {
+                const selectedValue = dateOutput.value;
+                selectedDate.textContent = '選択された日付: ' + selectedValue;
+            });
+        });
+    </script>
+</body>
+</html>

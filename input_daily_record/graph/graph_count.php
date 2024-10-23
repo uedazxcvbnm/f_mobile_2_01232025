@@ -46,7 +46,7 @@
                 $today_date = date('Y-m-d');
 
                 // echo '<input type="date" id="datePicker">';
-                echo '<p id="output">選択された日付がここに表示されます</p>';
+                echo '<textarea id="date_output">選択された日付がここに表示されます</textarea>';
 
                 // 今日　昨日　一昨日　を指定できるボタンの設置場所
                 echo '<div id="date_select">';
@@ -54,6 +54,12 @@
                 echo '<button value=2 id="yesterday_button" class="alchol_timelist">昨日</button>';
                 echo '<button value=3 id="b_yesterday_button" class="alchol_timelist">おととい</button>';    
                 echo '</div>';
+
+                // こっちのほうがよさそう
+                // echo '<button value=1 id="date_select" name="today_button" class="alchol_timelist">今日</button>';
+                // echo '<button value=2 id="date_select" name="yesterday_button" class="alchol_timelist">昨日</button>';
+                // echo '<button value=3 id="date_select" name="b_yesterday_button" class="alchol_timelist">おととい</button>';    
+                
                 
                 // カレンダーボタン設置場所
 
@@ -64,7 +70,7 @@
                 $dailyData = new dailyData();
                 $yesno_items = $dailyData->get_yesno_time($selected_date, $user_id);
                 
-                echo '<table>';
+                echo '<table id="output_table">';
                     echo '<tr>';
                         echo '<th>飲酒の有無</th>';
                         echo '<th>時刻</th>';
@@ -210,82 +216,156 @@
         // 
         // const dateInput = document.getElementById('date_select');
         const dateInput = document.getElementById('date_select');
-        const output = document.getElementById('output');
+        const dateOutput = document.getElementById('date_output');
+        const output_table = document.getElementById('output_table');
+        
 
         // ボタンを押すと変数に値を格納
         var today_button = document.getElementById('today_button');
         var yesterday_button = document.getElementById('yesterday_button');
         var b_yesterday_button = document.getElementById('b_yesterday_button');
 
-        
+        dateOutput.addEventListener('input', async function() {
+            var selectedDate = new Date(this.value);
+            // console.log(selectedDate);
+            selectedDate.getDate
 
-        
+            var selected_year = selectedDate.getFullYear();
+            var selected_month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // 月は0から始まるので1足す
+            var selected_day = String(selectedDate.getDate()).padStart(2, '0');
+            try {
+                var response = await fetch(`realtime_alcholtime.php?date=${selected_year}/${selected_month}/${selected_day}`);
+                // console.log(response);
+                if (!response.ok) {
+                    console.log('232');
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                var selected_data = await response.json();  // PHPからのデータをJSON形式で受け取る
+                console.log("取得したデータ:", selected_data);
+
+                output_table.innerHTML = '';
+
+                 // 取得したデータをテーブルに反映
+                 selected_data.forEach(item => {
+                        const row = output_table.insertRow();
+                        const dateCell = row.insertCell(0);
+                        const alcoholCell = row.insertCell(1);
+                        const otherDataCell = row.insertCell(2); // その他のデータ用
+
+                        dateCell.textContent = item.date; // 日付のプロパティ名に合わせる
+                        alcoholCell.textContent = item.alcohol_count; // アルコール量のプロパティ名に合わせる
+                        otherDataCell.textContent = item.other_data; // その他のデータのプロパティ名に合わせる
+                    });
+                
+                // 取得したデータをtextareaに反映
+                // output_table.value = JSON.stringify(selected_data, null, 2);
+            } catch (error) {
+                console.error("データ取得エラー:", error);
+                output_table.value = "データの取得に失敗しました";
+            }
+        });
+
+        // document.addEventListener('DOMContentLoaded', function() {
             today_button.addEventListener("click", async function (){
                 const today_alcholList = new Date();
                 today_alcholList.setHours(0, 0, 0, 0);
                 toggleSelected_alcholList(today_button, yesterday_button, b_yesterday_button);
-                output.textContent = today_alcholList;
+                dateOutput.textContent = today_alcholList;
                 // 日付を取得
                 const selectedDate = today_alcholList;
 
-                console.log('a');
+                dateOutput.dispatchEvent(new Event('input'));
+
+                // console.log('a');
                 // 関数呼び出し　PHPにリクエストを送る
-                dateInput.addEventListener('change', async function() {
-                    php_send_selectedDate(selectedDate);
-                })
+                // dateOutput.addEventListener('DOMContentLoaded', async function() {
+                //     // php_send_selectedDate();
+                // })
             });
 
             yesterday_button.addEventListener("click",async function (){
                 const today_alcholList = new Date();
                 today_alcholList.setHours(0, 0, 0, 0);
                 toggleSelected_alcholList(yesterday_button, today_button, b_yesterday_button);
-                output.textContent = new Date(today_alcholList.setDate(today_alcholList.getDate()-1));
-                console.log(output.textContent);
+                date_output.textContent = new Date(today_alcholList.setDate(today_alcholList.getDate()-1));
+                // console.log(output.textContent);
 
-                console.log('a');
+                console.log(dateOutput);
+
+                dateOutput.dispatchEvent(new Event('input'));
+
                 // 日付を取得
-                const selectedDate = output.textContent;
+                // dateOutput.addEventListener('DOMContentLoaded', async function() {
+                //     // php_send_selectedDate();
+                // })
+                
+                // console.log(selectedDate);
                 // 関数呼び出し　PHPにリクエストを送る
-                dateInput.addEventListener('change', async function() {
-                    php_send_selectedDate(selectedDate);
-                })
+                // dateOutput.addEventListener('change', async function() {
+                //     php_send_selectedDate(selectedDate);
+                // })
             });
 
             b_yesterday_button.addEventListener("click", function (){
                 const today_alcholList = new Date();
                 today_alcholList.setHours(0, 0, 0, 0);
                 toggleSelected_alcholList(b_yesterday_button, today_button, yesterday_button);
-                output.textContent = new Date(today_alcholList.setDate(today_alcholList.getDate()-2));
-                // 日付を取得
-                const selectedDate = output.textContent;
-                // 関数呼び出し　PHPにリクエストを送る
-                dateInput.addEventListener('change', async function() {
-                    php_send_selectedDate(selectedDate);
-                })
-            });
+                date_output.textContent = new Date(today_alcholList.setDate(today_alcholList.getDate()-2));
 
-            
-            
+                // console.log(dateOutput);
+
+                document.addEventListener('input', async function() {
+                    // const dateOutput = document.getElementById('dateOutput');
+                    // async function php_send_selectedDate(){
+                    const selectedDate = new Date(this.value);
+                    console.log(selectedDate);
+                    try {
+                        console.log('a');
+                        const response = await fetch(`realtime_alcholtime.php?date=${selectedDate}`);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        const data = await response.json();  // PHPからのデータをJSON形式で受け取る
+                        console.log("取得したデータ:", data);
+
+                        // 取得したデータを画面に反映
+                        // output.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                    } catch (error) {
+                        console.error("データ取得エラー:", error);
+                        // output.innerHTML = "データの取得に失敗しました";
+                    }
+                    
+                })
+                // const selectedDate = new Date(this.value);
+                // console.log(date_output.textContent);
+                // 日付を取得
+                // dateOutput.addEventListener('change', async function() {
+                
+            });
+        // })
         
 
         // PHPにリクエストを送る
-        async function php_send_selectedDate(selectedDate){
-            try {
-                console.log('a');
-                const response = await fetch(`realtime_alcholtime.php?date=${selectedDate}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();  // PHPからのデータをJSON形式で受け取る
-                console.log("取得したデータ:", data);
+        // async function php_send_selectedDate(){
+        //     const selectedDate = new Date(this.value);
+        //     console.log(selectedDate);
+        //     try {
+        //         console.log('a');
+        //         const response = await fetch(`realtime_alcholtime.php?date=${selectedDate}`);
+        //         if (!response.ok) {
+        //             throw new Error(`HTTP error! status: ${response.status}`);
+        //         }
+        //         const data = await response.json();  // PHPからのデータをJSON形式で受け取る
+        //         console.log("取得したデータ:", data);
 
-                // 取得したデータを画面に反映
-                output.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-            } catch (error) {
-                console.error("データ取得エラー:", error);
-                output.innerHTML = "データの取得に失敗しました";
-            }
-        }
+        //         // 取得したデータを画面に反映
+        //         // output.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        //     } catch (error) {
+        //         console.error("データ取得エラー:", error);
+        //         // output.innerHTML = "データの取得に失敗しました";
+        //     }
+        // }
+        
 
         function toggleSelected_alcholList(selectedButton, otherButton1, otherButton2){
             selectedButton.classList.add('selected');
