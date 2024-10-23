@@ -4,8 +4,59 @@ session_start();
 // チャット画面でユーザーIDと名前を取得する
 $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
+$group_id = isset($_GET['group_id']) ? intval($_GET['group_id']) : 0;
 
+$servername = "localhost";
+$db_username = "kobe";
+$db_password = "denshi";
+$dbname = "pbl2";
+
+try {
+    // データベース接続
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $db_username, $db_password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // URLパラメータから `group_id` が取得できない場合のみ `joined_teams` テーブルから取得
+    if ($group_id === 0 && $user_id > 0) {
+        // joined_teams テーブルから user_id が参加しているチームを取得
+        $stmt = $conn->prepare("SELECT team_id FROM joined_teams WHERE user_id = :user_id LIMIT 1");
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            $group_id = $result['team_id'];
+        } else {
+            die("有効なグループIDを取得できませんでした");
+        }
+    }
+
+    // group_id が取得できなかった場合にエラーを出す
+    if ($group_id === 0) {
+        die("有効なグループIDを指定してください");
+    }
+
+    // グループ名と参加人数を取得する
+    $stmt = $conn->prepare("SELECT t.name AS group_name, COUNT(jt.user_id) AS member_count 
+                            FROM teams t
+                            LEFT JOIN joined_teams jt ON t.team_id = jt.team_id
+                            WHERE t.team_id = :group_id");
+    $stmt->bindParam(':group_id', $group_id);
+    $stmt->execute();
+    $group_info = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$group_info) {
+        die("グループ情報を取得できませんでした");
+    }
+} catch (PDOException $e) {
+    echo "エラー: " . $e->getMessage();
+    exit();
+}
+
+$group_name = $group_info['group_name'];
+$member_count = $group_info['member_count'];
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -23,8 +74,8 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
         <div class="header">
             <button id="back-button">&lt; 戻る</button>
             <div class="group-info">
-                <span id="group-name">社会人禁酒グループ</span>
-                <span id="group-members">(6)</span>
+                <span id="group-name"><?php echo htmlspecialchars($group_name, ENT_QUOTES, 'UTF-8'); ?></span>
+                <span id="group-members">(<?php echo $member_count; ?>)</span>
             </div>
         </div>
         <div class="chat-area"></div>
@@ -47,16 +98,11 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
 
             // ユーザーIDをクエリパラメータとしてURLに含める
             const user_id = "<?php echo $user_id; ?>";
+            const group_id = "<?php echo htmlspecialchars($group_id, ENT_QUOTES, 'UTF-8'); ?>";
 
             document.getElementById("back-button").addEventListener("click", function() {
                 window.location.href = "../joingrouplist/joingrouplist.php";
             });
-
-            const groupName = "社会人禁酒グループ";
-            const groupMembers = 6;
-
-            document.getElementById("group-name").textContent = groupName;
-            document.getElementById("group-members").textContent = `(${groupMembers})`;
 
             const sendButton = document.getElementById("send");
             const textInput = document.getElementById("text");
@@ -72,8 +118,10 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
                 }
                 socket.emit('sendMessage', {
                     message: message,
-                    user_id: user_id
+                    user_id: user_id,
+                    team_id: group_id
                 });
+
                 textInput.value = "";
                 scrollToBottom();
             }
@@ -90,8 +138,11 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
             });
 
             socket.on('receiveMessage', function(data) {
-                const messageType = data.user_id == user_id ? 'sent' : 'received';
-                displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id, data.edited, data.is_deleted);
+                // メッセージが現在のグループIDに属している場合のみ表示する
+                if (data.team_id == group_id) {
+                    const messageType = data.user_id == user_id ? 'sent' : 'received';
+                    displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id, data.edited, data.is_deleted);
+                }
             });
 
             socket.on('updateMessage', function(data) {

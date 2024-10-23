@@ -34,11 +34,11 @@ io.on('connection', (socket) => {
     console.log('New client connected');
 
     socket.on('sendMessage', (data) => {
-        const { message, user_id } = data;
+        const { message, user_id, team_id } = data;
         const date = new Date();
 
-        const query = "INSERT INTO chat (message, date, user_id) VALUES (?, ?, ?)";
-        db.query(query, [message, date, user_id], (err, result) => {
+        const query = "INSERT INTO group_chat (message, date, user_id,team_id) VALUES (?, ?, ?, ?)";
+        db.query(query, [message, date, user_id, team_id], (err, result) => {
             if (err) {
                 console.error('Error inserting message:', err);
                 return;
@@ -50,10 +50,20 @@ io.on('connection', (socket) => {
                     return;
                 }
                 const username = rows[0].username;
-                io.emit('receiveMessage', { id: result.insertId, message, date, user_id, username, edited: false });
+                // クライアントに新しいメッセージを送信
+                io.emit('receiveMessage', {
+                    id: result.insertId,
+                    message,
+                    date,
+                    user_id,
+                    team_id,
+                    username,
+                    edited: false
+                });
             });
         });
     });
+
 
     socket.on('editMessage', (data) => {
         const { id, message } = data;
