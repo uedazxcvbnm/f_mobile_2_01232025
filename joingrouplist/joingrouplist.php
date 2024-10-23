@@ -22,7 +22,6 @@ $joined_teams = $team->getJoinedTeams($user_id);
     <link rel="stylesheet" href="../joingrouplist/joingrouplist.css">
     <?php
     require_once __DIR__ . '/../header/header.php';
-
     ?>
 </head>
 
@@ -37,82 +36,49 @@ $joined_teams = $team->getJoinedTeams($user_id);
         <?php } else { ?>
             <?php foreach ($joined_teams as $group) { ?>
                 <div class="group-item" data-group-id="<?= htmlspecialchars($group['team_id'], ENT_QUOTES, 'UTF-8') ?>" data-group-name="<?= htmlspecialchars($group['name'], ENT_QUOTES, 'UTF-8') ?>" data-group-size="<?= htmlspecialchars($group['size'], ENT_QUOTES, 'UTF-8') ?>">
-                    <div class="group-name"><?= htmlspecialchars($group['name'], ENT_QUOTES, 'UTF-8') ?></div>
-                    <div class="group-members">メンバー数: <?= htmlspecialchars($group['size'], ENT_QUOTES, 'UTF-8') ?></div>
+                    <div class="group-info">
+                        <div class="group-name"><?= htmlspecialchars($group['name'], ENT_QUOTES, 'UTF-8') ?></div>
+                        <div class="group-members">メンバー数: <?= htmlspecialchars($group['size'], ENT_QUOTES, 'UTF-8') ?></div>
+                    </div>
+                    <div class="group-buttons">
+                        <button class="chat-button" onclick="goToChat(<?= htmlspecialchars($group['team_id'], ENT_QUOTES, 'UTF-8') ?>)">
+                            <img src="../chat/mesicon.png" alt="チャット" />
+                        </button>
+                        <button class="timeline-button" onclick="goToTimeline()">
+                            <img src="../chat/timeline.png" alt="タイムライン" />
+                        </button>
+                        <button class="leave-button" onclick="leaveGroup(this, <?= htmlspecialchars($group['team_id'], ENT_QUOTES, 'UTF-8') ?>)">
+                            <img src="../chat/taikaiicon.png" alt="退会" />
+                        </button>
+                    </div>
                 </div>
             <?php } ?>
         <?php } ?>
     </div>
 
-    <!-- ポップアップ -->
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <span class="close">&times;</span>
-            <h2 id="popup-group-name"></h2>
-            <div class="popup-buttons">
-                <button id="popup-chat-button" class="chat-button">チャット画面へ</button>
-                <button id="popup-leave-button" class="leave-button">退会</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const groupListContainer = document.querySelector(".group-list-container");
-            const noGroupsMessage = document.getElementById("no-groups-message");
-            const popup = document.getElementById("popup");
-            const closePopup = document.querySelector(".close");
-            const popupGroupName = document.getElementById("popup-group-name");
-            const popupChatButton = document.getElementById("popup-chat-button");
-            const popupLeaveButton = document.getElementById("popup-leave-button");
+        function goToChat(groupId) {
+            window.location.href = "../chat/chatscreen.php?group_id=" + encodeURIComponent(groupId);
+        }
 
-            // グループアイテムをクリックするとポップアップを表示
-            groupListContainer.addEventListener("click", function(event) {
-                const groupItem = event.target.closest(".group-item");
-                if (groupItem) {
-                    const groupId = groupItem.getAttribute("data-group-id");
-                    const groupName = groupItem.getAttribute("data-group-name");
+        function goToTimeline() {
+            window.location.href = "../timeline/timeline.php";
+        }
 
-                    // ポップアップにグループ情報を表示
-                    popupGroupName.textContent = groupName;
+        function leaveGroup(button, groupId) {
+            const confirmLeave = confirm("本当に退会しますか？");
+            if (confirmLeave) {
+                // TODO: サーバー側で退会処理を実行する (Ajaxを使うのが推奨されます)
+                const groupItem = button.closest(".group-item");
+                groupItem.remove();
 
-                    // チャットボタンのクリックイベント
-                    popupChatButton.onclick = function() {
-                        window.location.href = "../chat/chatscreen.php?group_id=" + encodeURIComponent(groupId);
-                    };
-
-                    // 退会ボタンのクリックイベント
-                    popupLeaveButton.onclick = function() {
-                        const confirmLeave = confirm("本当に退会しますか？");
-                        if (confirmLeave) {
-                            // サーバー側で退会処理を行う（ここでは簡略化してアイテムを削除）
-                            groupItem.remove();
-                            popup.style.display = "none";
-
-                            // グループがなくなった場合のメッセージ表示
-                            if (groupListContainer.children.length === 0) {
-                                noGroupsMessage.style.display = "block";
-                            }
-                        }
-                    };
-
-                    // ポップアップを表示
-                    popup.style.display = "block";
+                // グループがなくなった場合のメッセージ表示
+                const groupListContainer = document.querySelector(".group-list-container");
+                if (groupListContainer.children.length === 0) {
+                    document.getElementById("no-groups-message").style.display = "block";
                 }
-            });
-
-            // ポップアップを閉じるイベント
-            closePopup.addEventListener("click", function() {
-                popup.style.display = "none";
-            });
-
-            // ポップアップ外をクリックして閉じるイベント
-            window.addEventListener("click", function(event) {
-                if (event.target == popup) {
-                    popup.style.display = "none";
-                }
-            });
-        });
+            }
+        }
     </script>
 </body>
 
