@@ -127,7 +127,7 @@ $member_count = $group_info['member_count'];
             }
 
             sendButton.addEventListener("click", function() {
-                sendMessage();
+                sendMessage(); // メッセージを送信する関数を呼び出す
             });
 
             textInput.addEventListener("keydown", function(event) {
@@ -144,6 +144,7 @@ $member_count = $group_info['member_count'];
                     displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id, data.edited, data.is_deleted);
                 }
             });
+
 
             socket.on('updateMessage', function(data) {
                 const messageElement = document.querySelector(`.message-container[data-message-id='${data.id}'] .message-content`);
@@ -186,10 +187,10 @@ $member_count = $group_info['member_count'];
                 const messageElement = document.createElement("div");
                 messageElement.classList.add("message");
                 messageElement.innerHTML = `
-                    <div class="message-name">${username}</div>
-                    <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
-                    <span class="message-time">${formatDate(date)}</span>
-                `;
+        <div class="message-name">${username}</div>
+        <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
+        <span class="message-time">${formatDate(date)}</span>
+    `;
 
                 if (edited) {
                     const editedElement = document.createElement('span');
@@ -213,7 +214,6 @@ $member_count = $group_info['member_count'];
                         showContextMenu(event, messageContainer);
                     });
                 }
-
                 chatArea.appendChild(messageContainer);
                 scrollToBottom();
             }
@@ -288,20 +288,40 @@ $member_count = $group_info['member_count'];
 
             async function loadInitialMessages() {
                 try {
-                    const response = await fetch('fetch_messages.php');
+                    // サーバーからメッセージを取得
+                    const response = await fetch('fetch_messages.php?group_id=' + group_id);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
                     const messages = await response.json();
 
                     messages.forEach(message => {
                         const messageType = message.user_id == user_id ? 'sent' : 'received';
-                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id, message.edited, message.is_deleted);
+                        displayMessage(
+                            message.content,
+                            messageType,
+                            new Date(message.date),
+                            message.id,
+                            message.username,
+                            message.user_id,
+                            message.edited,
+                            message.is_deleted
+                        );
                         lastMessageId = Math.max(lastMessageId, message.id);
                     });
 
                     scrollToBottom();
                 } catch (error) {
-                    console.error(error);
+                    console.error('Error loading messages:', error);
                 }
             }
+
+
+
+            // ページがロードされたらメッセージをロードする
+            document.addEventListener("DOMContentLoaded", function() {
+                loadInitialMessages();
+            });
 
             loadInitialMessages();
 
