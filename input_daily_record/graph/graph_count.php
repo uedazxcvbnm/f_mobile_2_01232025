@@ -245,18 +245,36 @@
 
                 output_table.innerHTML = '';
 
+                const header = output_table.createTHead();
+                // const alcholHeader = header.insertCell(0);
+                // const otherDataHeader = header.insertCell(1);
+                const headerRow = header.insertRow(0); // ヘッダーの最初の行を作成
+                const alcholHeader = document.createElement('th');
+                const dateHeader = document.createElement('th');
+
+                alcholHeader.textContent = '飲酒の有無';
+                dateHeader.textContent = '時刻';
+
+                // ヘッダー行に各カラム名を追加
+                headerRow.appendChild(alcholHeader);
+                headerRow.appendChild(dateHeader);
+
                  // 取得したデータをテーブルに反映
                  selected_data.forEach(item => {
                     const row = output_table.insertRow();
-                    // const dateCell = row.insertCell(0);
-                    const alcoholCell = row.insertCell(0);
-                    const otherDataCell = row.insertCell(1); // その他のデータ用
+                    const dateCell = row.insertCell(0);
+                    const alcholCell = row.insertCell(0);
+                    const otherDataCell = row.insertCell(1);
+
+                    
+
+                    
 
                     // dateCell.textContent = item.date; // 日付のプロパティ名に合わせる
                     if(item.alchol_data==1){
-                        alcoholCell.textContent = '飲酒した'; // アルコール量のプロパティ名に合わせる
+                        alcholCell.textContent = '飲酒した'; // アルコール量のプロパティ名に合わせる
                     }else if(item.alchol_data==2){
-                        alcoholCell.textContent = '飲酒しなかった'; // その他のデータのプロパティ名に合わせる
+                        alcholCell.textContent = '飲酒しなかった'; // その他のデータのプロパティ名に合わせる
                     }
                     otherDataCell.textContent = item.date_hms;
                 });
