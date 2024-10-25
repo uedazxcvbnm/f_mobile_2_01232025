@@ -218,15 +218,8 @@ $member_count = $group_info['member_count'];
                 scrollToBottom();
             }
 
-            function displayLogMessage(message, date) {
-                const logContainer = document.createElement("div");
-                logContainer.classList.add("log-container");
-                logContainer.innerHTML = `
-                    <span class="log-message">${message}</span>
-                    <span class="log-time">${formatDate(date)}</span>
-                `;
-                chatArea.appendChild(logContainer);
-                scrollToBottom();
+            function displayLogMessage(message, date, type = "received", username = "システム") {
+                displayMessage(message, type, date, null, username, null, false, false);
             }
 
             function showContextMenu(event, messageContainer) {
@@ -297,16 +290,22 @@ $member_count = $group_info['member_count'];
 
                     messages.forEach(message => {
                         const messageType = message.user_id == user_id ? 'sent' : 'received';
-                        displayMessage(
-                            message.content,
-                            messageType,
-                            new Date(message.date),
-                            message.id,
-                            message.username,
-                            message.user_id,
-                            message.edited,
-                            message.is_deleted
-                        );
+                        if (message.is_deleted) {
+                            // 削除されたメッセージをログメッセージとして表示
+                            displayLogMessage(message.content, new Date(message.date), messageType, message.username);
+                        } else {
+                            // 通常メッセージを表示
+                            displayMessage(
+                                message.content,
+                                messageType,
+                                new Date(message.date),
+                                message.id,
+                                message.username,
+                                message.user_id,
+                                message.edited,
+                                message.is_deleted
+                            );
+                        }
                         lastMessageId = Math.max(lastMessageId, message.id);
                     });
 
