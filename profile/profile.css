@@ -13,7 +13,7 @@
     border-radius: 10px;
 } */
 
-h1{
+h1 {
     /* display: flex; */
     text-align: center;
     padding: 10px;
@@ -22,17 +22,19 @@ h1{
     border-radius: 10px;
 }
 
-img{
+img {
     display: block;
     margin: auto;
     width: 250px;
     border-radius: 50%;
     border: solid 2px black;
 }
-h2{
+
+h2 {
     text-align: center;
 }
-p{
+
+p {
     font-size: larger;
     display: flex;
     justify-content: space-between;
@@ -47,28 +49,30 @@ p{
     margin-bottom: 20px;
     border-radius: 10px;
 }
-.br{
+
+.br {
     text-align: right;
     margin-right: 180px;
 }
 
-textarea{
+textarea {
     width: 75%;
     height: 80px;
     margin-left: 200px;
     font-size: larger;
 }
-.pb{
+
+.pb {
     text-align: center;
 }
 
-.pass_change{
-    color:white;
-    background-color: red;
+.pass_change {
+    color: white;
+    background-color: #1578c9;
 }
 
 /* 目標を編集するボタン */
-.profile_edit_goal{
-    color:white;
+.profile_edit_goal {
+    color: white;
     background-color: #FFC107;
 }
