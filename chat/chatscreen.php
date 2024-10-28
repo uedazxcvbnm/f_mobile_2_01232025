@@ -96,6 +96,7 @@ $member_count = $group_info['member_count'];
         document.addEventListener("DOMContentLoaded", function() {
             const socket = io('http://localhost:3000');
 
+
             // ユーザーIDをクエリパラメータとしてURLに含める
             const user_id = "<?php echo $user_id; ?>";
             const group_id = "<?php echo htmlspecialchars($group_id, ENT_QUOTES, 'UTF-8'); ?>";
@@ -162,6 +163,7 @@ $member_count = $group_info['member_count'];
                 }
             });
 
+
             socket.on('removeMessage', function(data) {
                 const messageContainer = document.querySelector(`.message-container[data-message-id='${data.id}']`);
                 if (messageContainer) {
@@ -170,8 +172,18 @@ $member_count = $group_info['member_count'];
             });
 
             socket.on('logMessage', function(data) {
-                displayLogMessage(data.message, new Date(data.date));
+                const logContainer = document.createElement("div");
+                logContainer.classList.add("log-container"); // ログ専用のクラスでスタイルを設定可能
+                logContainer.innerHTML = `
+        <span class="log-message">${data.message}</span>
+        <span class="log-time">${formatDate(new Date(data.date))}</span>
+    `;
+                document.querySelector(".chat-area").appendChild(logContainer);
+                scrollToBottom();
             });
+
+
+
 
             function displayMessage(message, type, date, id, username, messageUserId, edited, is_deleted) {
                 if (is_deleted) {
@@ -187,10 +199,10 @@ $member_count = $group_info['member_count'];
                 const messageElement = document.createElement("div");
                 messageElement.classList.add("message");
                 messageElement.innerHTML = `
-        <div class="message-name">${username}</div>
-        <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
-        <span class="message-time">${formatDate(date)}</span>
-    `;
+                    <div class="message-name">${username}</div>
+                    <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
+                    <span class="message-time">${formatDate(date)}</span>
+                `;
 
                 if (edited) {
                     const editedElement = document.createElement('span');
@@ -214,12 +226,38 @@ $member_count = $group_info['member_count'];
                         showContextMenu(event, messageContainer);
                     });
                 }
+
                 chatArea.appendChild(messageContainer);
                 scrollToBottom();
             }
 
-            function displayLogMessage(message, date, type = "received", username = "システム") {
-                displayMessage(message, type, date, null, username, null, false, false);
+
+
+            function deleteMessage(messageContainer) {
+                const messageId = messageContainer.dataset.messageId;
+                const userId = messageContainer.dataset.userId;
+
+                // クライアント側で即座にメッセージを画面から削除
+                messageContainer.remove();
+
+                // サーバーに削除リクエストを送信
+                socket.emit('deleteMessage', {
+                    id: messageId,
+                    user_id: userId
+                });
+            }
+
+
+
+            function displayLogMessage(message, date) {
+                const logContainer = document.createElement("div");
+                logContainer.classList.add("log-container");
+                logContainer.innerHTML = `
+                    <span class="log-message">${message}</span>
+                    <span class="log-time">${formatDate(date)}</span>
+                `;
+                chatArea.appendChild(logContainer);
+                scrollToBottom();
             }
 
             function showContextMenu(event, messageContainer) {
@@ -250,19 +288,7 @@ $member_count = $group_info['member_count'];
                 });
             }
 
-            function displayEmptyMessage() {
-                const messageContainer = document.createElement("div");
-                messageContainer.classList.add("message-container");
 
-                const messageElement = document.createElement("div");
-                messageElement.classList.add("message", "empty");
-                messageElement.textContent = "\u00A0".repeat(20);
-
-                messageContainer.appendChild(messageElement);
-                chatArea.appendChild(messageContainer);
-
-                scrollToBottom();
-            }
 
             function scrollToBottom() {
                 chatArea.scrollTop = chatArea.scrollHeight;
@@ -283,44 +309,20 @@ $member_count = $group_info['member_count'];
                 try {
                     // サーバーからメッセージを取得
                     const response = await fetch('fetch_messages.php?group_id=' + group_id);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
                     const messages = await response.json();
+
 
                     messages.forEach(message => {
                         const messageType = message.user_id == user_id ? 'sent' : 'received';
-                        if (message.is_deleted) {
-                            // 削除されたメッセージをログメッセージとして表示
-                            displayLogMessage(message.content, new Date(message.date), messageType, message.username);
-                        } else {
-                            // 通常メッセージを表示
-                            displayMessage(
-                                message.content,
-                                messageType,
-                                new Date(message.date),
-                                message.id,
-                                message.username,
-                                message.user_id,
-                                message.edited,
-                                message.is_deleted
-                            );
-                        }
+                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id, message.edited, message.is_deleted);
                         lastMessageId = Math.max(lastMessageId, message.id);
                     });
 
                     scrollToBottom();
                 } catch (error) {
-                    console.error('Error loading messages:', error);
+                    console.error(error);
                 }
             }
-
-
-
-            // ページがロードされたらメッセージをロードする
-            document.addEventListener("DOMContentLoaded", function() {
-                loadInitialMessages();
-            });
 
             loadInitialMessages();
 
@@ -343,12 +345,27 @@ $member_count = $group_info['member_count'];
 
             function deleteMessage(messageContainer) {
                 const messageId = messageContainer.dataset.messageId;
-                console.log('Deleting message:', messageId);
+                const userId = messageContainer.dataset.userId;
+
+                // クライアント側で即座にメッセージを画面から削除
+                messageContainer.remove();
+
+                // サーバーに削除リクエストを送信
                 socket.emit('deleteMessage', {
                     id: messageId,
-                    user_id: user_id
+                    user_id: userId
                 });
             }
+
+            const deleteButton = document.getElementById("delete-button");
+            deleteButton.onclick = function() {
+                const confirmDelete = confirm("本当に削除しますか？");
+                if (confirmDelete) {
+                    deleteMessage(selectedMessageContainer);
+                }
+                contextMenu.style.display = 'none';
+            };
+
         });
     </script>
 </body>

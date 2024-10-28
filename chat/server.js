@@ -30,6 +30,7 @@ db.connect((err) => {
     console.log('MySQL Connected...');
 });
 
+
 io.on('connection', (socket) => {
     console.log('New client connected');
 
@@ -69,15 +70,36 @@ io.on('connection', (socket) => {
         const { id, message } = data;
         console.log('Editing message with id:', id, 'to:', message);
 
-        const query = "UPDATE chat SET message = ?, edited = TRUE WHERE id = ?";
-        db.query(query, [message, id], (err, result) => {
+        // group_chatテーブルでメッセージを更新する
+        const query = "UPDATE group_chat SET message = ?, edited = TRUE WHERE id = ?";
+        db.query(query, [message, parseInt(id, 10)], (err, result) => {
             if (err) {
                 console.error('Error updating message:', err);
                 return;
             }
+
+            // 影響を受けた行が0の場合、メッセージが見つからなかったことを警告
+            if (result.affectedRows === 0) {
+                console.warn('No message found with id:', id);
+                return;
+            }
+
+            // クエリが成功した場合、クライアントに更新を通知
             io.emit('updateMessage', { id, message, edited: true });
         });
     });
+    socket.on('removeMessage', function (data) {
+        const messageContainer = document.querySelector(`.message-container[data-message-id='${data.id}']`);
+        if (messageContainer) {
+            messageContainer.remove();
+        }
+    });
+
+    socket.on('deleteFailed', function (data) {
+        alert('メッセージの削除に失敗しました。もう一度お試しください。');
+    });
+
+
 
     socket.on('deleteMessage', (data) => {
         const { id, user_id } = data;
@@ -89,27 +111,38 @@ io.on('connection', (socket) => {
                 console.error('Error fetching username:', err);
                 return;
             }
+
+            if (rows.length === 0) {
+                console.warn('No user found with user_id:', user_id);
+                return;
+            }
+
             const username = rows[0].username;
 
-            const deleteQuery = "DELETE FROM chat WHERE id = ?";
-            db.query(deleteQuery, [id], (err, result) => {
+            const deleteQuery = "DELETE FROM group_chat WHERE id = ?";
+            db.query(deleteQuery, [parseInt(id, 10)], (err, result) => {
                 if (err) {
                     console.error('Error deleting message:', err);
                     return;
                 }
+
+                if (result.affectedRows === 0) {
+                    console.warn('No message found with id:', id);
+                    return;
+                }
+
+                // 削除が成功したら全クライアントに通知
+                io.emit('removeMessage', { id });
+
+                // 「〇〇さんがメッセージを削除しました」というログメッセージを送信
                 const logMessage = `${username}がメッセージを削除しました。`;
-                const logQuery = "INSERT INTO chat (message, date, user_id, is_deleted) VALUES (?, ?, ?, TRUE)";
-                db.query(logQuery, [logMessage, new Date(), user_id], (err, logResult) => {
-                    if (err) {
-                        console.error('Error logging delete message:', err);
-                        return;
-                    }
-                    io.emit('removeMessage', { id });
-                    io.emit('logMessage', { id: logResult.insertId, message: logMessage, date: new Date(), user_id });
-                });
+                io.emit('logMessage', { message: logMessage, date: new Date() });
             });
         });
     });
+
+
+
 
     socket.on('disconnect', () => {
         console.log('Client disconnected');
