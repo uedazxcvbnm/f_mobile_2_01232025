@@ -87,6 +87,15 @@ if (!isset($_SESSION['user_id'])){
             let dayCount = 1;
             let prevDayCount = daysInPrevMonth - firstDay + 1;
 
+            // アルコールの摂取量が０の日付を取得
+            alccount_zero_date_list = [];
+            for (let i=0;i<alccountarray.length;i++){
+                if (alccountarray[i]==0){
+                    alccount_zero_date_list.push(datearray[i]);
+                }
+            }
+            console.log(alccount_zero_date_list);
+
             for (let i = 0; i < 6; i++) {
                 calendarHTML += '<tr>';
 
@@ -116,10 +125,11 @@ if (!isset($_SESSION['user_id'])){
                         else{
                             daycount_comparsion = dayCount;
                         }
+
                         today_comparsion = currentYear+'-'+currentMonth_comparsion+'-'+daycount_comparsion;
-                        console.log(today_comparsion);
+                        // console.log(today_comparsion);
                         
-                        console.log(datearray);
+                        // console.log(datearray);
                         // console.log(today_comparsion);
                         // console.log(alccountarray);
                         // console.log(datearray[alccountarray.indexOf(0)]);
@@ -138,12 +148,19 @@ if (!isset($_SESSION['user_id'])){
                         const today_date_calendar = new Date();
                         today_date_calendar.setHours(0, 0, 0, 0);
                         // console.log(today_date_calendar);
-                        console.log(today_comparsion > today_date_calendar);
+                        // console.log(today_comparsion > today_date_calendar);
+
+                        // console.log(alccountarray.includes[0]);
+                        // console.log();
+                        
+                        
 
                         calendarHTML += `<td class="${isToday ? 'today' : ''}">${dayCount}<br>
+                        
+                        
 
-                        ${today_comparsion==datearray[alccountarray.indexOf(0)] ?'<div class="blue_circle"></div>'
-                        : datearray.includes(today_comparsion)?'<div class="red_circle"></div>'
+                        ${alccount_zero_date_list.includes(today_comparsion)?'<div class="blue_circle"></div>'
+                        : datearray.includes(today_comparsion) ?'<div class="red_circle"></div>'
                         : new Date(today_comparsion) < today_date_calendar ?'<div class="orange_circle"></div>':''}
                         </td>`
                         dayCount++;
