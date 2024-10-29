@@ -91,6 +91,7 @@ try {
 </head>
 
 <body>
+    <!-- 編集画面のコンテナ -->
     <div class="edit-container">
         <h1>プロフィール編集</h1>
         <form action="profile_edit.php" method="post" enctype="multipart/form-data">
