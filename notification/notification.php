@@ -34,16 +34,20 @@
                     <?php
                         $date = 0;
                         foreach($all as $one){
-                            if($date != date('m/d', strtotime($one['created_at']))){
-                                $date = date('m/d', strtotime($one['created_at']));
+                            if($date != date('m/d', strtotime($one['date']))){
+                                $date = date('m/d', strtotime($one['date']));
                                 echo '<p>' . $date . '</p>';
                             };
                             echo '<div class="notification-item">';
                             echo $one['username'] . 'さん&nbsp;';
-                            echo date('H:i', strtotime($one['created_at']));
-                            echo '<h2>&emsp;' . $one['comment_text'] . '</h2><br>';
+                            echo date('H:i', strtotime($one['date']));
+                            echo '<h2>&emsp;' . $one['message'] . '</h2><br>';
                             if(is_null($one['post_title'])){
-                                echo '<div class="tag">&emsp;全体チャット</div>';
+                                if(is_null($one['name'])){
+                                    echo '<div class="tag">&emsp;全体チャット</div>';
+                                }else{
+                                    echo '<div class="tag">&emsp;' . $one['name'] .'</div>';
+                                }
                             }else{
                                 echo '<div class="tag">&emsp;' . $one['post_title'] .'</div>';
                             }
@@ -82,7 +86,7 @@
                             echo $chat['username'] . 'さん&nbsp;';
                             echo date('H:i', strtotime($chat['date']));
                             echo '<h2>&emsp;' . $chat['message'] . '</h2><br>';
-                            echo '<div class="tag">&emsp;' . '</div>';
+                            echo '<div class="tag">&emsp;' . $chat['name'] . '</div>';
                             echo '</div>';
                         }
                     ?>
