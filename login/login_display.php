@@ -20,6 +20,7 @@
                 <div>パスワード：<input type="password" name="password_info"></div>
                 <p><input type="submit" value="ログイン" class="login_button"></p>
             </form>
+            <a href="new_account_display.php">アカウントがない場合新規登録</a>
         </div>
     </div>
     
