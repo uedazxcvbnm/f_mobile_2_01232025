@@ -12,6 +12,11 @@ p{
     margin-left: 180px;
     margin-right: 200px;
 }
+
+.center{
+    text-align: center;
+}
+
 .wrap-tab{
     overflow: hidden;
 }

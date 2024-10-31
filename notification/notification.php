@@ -32,6 +32,14 @@
             <div class="wrap-tab-content">
                 <div class="tab-content active">
                     <?php
+                        $count = 0;
+                        foreach($all as $one){
+                            $date = date('m/d', strtotime($one['date']));
+                            if($date == date('m/d')){
+                                $count++;
+                            }
+                        }
+                        echo '<div class="center">本日の通知数：' . $count . '</div>';
                         $date = 0;
                         foreach($all as $one){
                             if($date != date('m/d', strtotime($one['date']))){
@@ -58,6 +66,14 @@
 
                 <div class="tab-content">
                     <?php
+                        $count = 0;
+                        foreach($globalChats as $globalChat){
+                            $date = date('m/d', strtotime($globalChat['date']));
+                            if($date == date('m/d')){
+                                $count++;
+                            }
+                        }
+                        echo '<div class="center">本日の通知数：' . $count . '</div>';
                         $date = 0;
                         foreach($globalChats as $globalChat){
                             if($date != date('m/d', strtotime($globalChat['date']))){
@@ -76,12 +92,20 @@
             
                 <div class="tab-content">
                     <?php
+                        $count = 0;
+                        foreach($chats as $chat){
+                            $date = date('m/d', strtotime($chat['date']));
+                            if($date == date('m/d')){
+                                $count++;
+                            }
+                        }
+                        echo '<div class="center">本日の通知数：' . $count . '</div>';
                         $date = 0;
                         foreach($chats as $chat){
                             if($date != date('m/d', strtotime($chat['date']))){
                                 $date = date('m/d', strtotime($chat['date']));
                                 echo '<p>' . $date . '</p>';
-                            };
+                            }
                             echo '<div class="notification-item">';
                             echo $chat['username'] . 'さん&nbsp;';
                             echo date('H:i', strtotime($chat['date']));
@@ -94,6 +118,14 @@
             
                 <div class="tab-content">
                     <?php
+                        $count = 0;
+                        foreach($comments as $comment){
+                            $date = date('m/d', strtotime($comment['created_at']));
+                            if($date == date('m/d')){
+                                $count++;
+                            }
+                        }
+                        echo '<div class="center">本日の通知数：' . $count . '</div>';
                         $date = 0;
                         foreach($comments as $comment){
                             if($date != date('m/d', strtotime($comment['created_at']))){
@@ -106,6 +138,9 @@
                             echo '<h2>&emsp;' . $comment['comment_text'] . '</h2><br>';
                             echo '<div class="tag">&emsp;' . $comment['post_title'] . '</div>';
                             echo '</div>';
+                            if($date == date('m/d')){
+                                $count++;
+                            }
                         }
                     ?>
                 </div>
