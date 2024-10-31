@@ -39,7 +39,7 @@
                                 $count++;
                             }
                         }
-                        echo '<div class="center">本日の通知数：' . $count . '</div>';
+                        echo '<div class="center">本日の通知：' . $count . '件</div>';
                         $date = 0;
                         foreach($all as $one){
                             if($date != date('m/d', strtotime($one['date']))){
@@ -73,7 +73,7 @@
                                 $count++;
                             }
                         }
-                        echo '<div class="center">本日の通知数：' . $count . '</div>';
+                        echo '<div class="center">本日の全体チャット：' . $count . '件</div>';
                         $date = 0;
                         foreach($globalChats as $globalChat){
                             if($date != date('m/d', strtotime($globalChat['date']))){
@@ -99,7 +99,7 @@
                                 $count++;
                             }
                         }
-                        echo '<div class="center">本日の通知数：' . $count . '</div>';
+                        echo '<div class="center">本日のグループチャット：' . $count . '件</div>';
                         $date = 0;
                         foreach($chats as $chat){
                             if($date != date('m/d', strtotime($chat['date']))){
@@ -125,7 +125,7 @@
                                 $count++;
                             }
                         }
-                        echo '<div class="center">本日の通知数：' . $count . '</div>';
+                        echo '<div class="center">本日のコメント：' . $count . '件</div>';
                         $date = 0;
                         foreach($comments as $comment){
                             if($date != date('m/d', strtotime($comment['created_at']))){
