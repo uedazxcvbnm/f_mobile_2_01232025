@@ -44,7 +44,7 @@ $joined_teams = $team->getJoinedTeams($user_id);
                         <button class="chat-button" onclick="goToChat(<?= htmlspecialchars($group['team_id'], ENT_QUOTES, 'UTF-8') ?>)">
                             <img src="../chat/mesicon.png" alt="チャット" />
                         </button>
-                        <button class="timeline-button" onclick="goToTimeline()">
+                        <button class="timeline-button" onclick="goToTimeline(<?= htmlspecialchars($group['team_id'], ENT_QUOTES, 'UTF-8') ?>)">
                             <img src="../chat/timeline.png" alt="タイムライン" />
                         </button>
                         <button class="leave-button" onclick="leaveGroup(this, <?= htmlspecialchars($group['team_id'], ENT_QUOTES, 'UTF-8') ?>)">
@@ -63,8 +63,8 @@ $joined_teams = $team->getJoinedTeams($user_id);
         }
 
         // タイムライン画面へ遷移する関数
-        function goToTimeline() {
-            window.location.href = "../timeline/timeline.php";
+        function goToTimeline(groupId) {
+            window.location.href = "../timeline/timeline.php?team_id=" + encodeURIComponent(groupId);
         }
 
         function leaveGroup(button, groupId) {
