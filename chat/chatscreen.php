@@ -139,7 +139,6 @@ $member_count = $group_info['member_count'];
             });
 
             socket.on('receiveMessage', function(data) {
-                // メッセージが現在のグループIDに属している場合のみ表示する
                 if (data.team_id == group_id) {
                     const messageType = data.user_id == user_id ? 'sent' : 'received';
                     displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id, data.edited, data.is_deleted);
@@ -151,17 +150,23 @@ $member_count = $group_info['member_count'];
                 const messageElement = document.querySelector(`.message-container[data-message-id='${data.id}'] .message-content`);
                 if (messageElement) {
                     messageElement.innerHTML = data.message.replace(/\n/g, "<br>");
-                    const editedElement = document.querySelector(`.message-container[data-message-id='${data.id}'] .message-edited`);
-                    if (editedElement) {
-                        editedElement.style.display = 'block';
-                    } else {
-                        const newEditedElement = document.createElement('span');
-                        newEditedElement.classList.add('message-edited');
-                        newEditedElement.textContent = '編集済み';
-                        messageElement.parentNode.appendChild(newEditedElement);
+                    let editedElement = document.querySelector(`.message-container[data-message-id='${data.id}'] .message-edited`);
+                    if (data.edited == 1) { // データベースの edited が 1 の場合にのみ「編集済み」を表示
+                        if (editedElement) {
+                            editedElement.style.display = 'block';
+                        } else {
+                            editedElement = document.createElement('span');
+                            editedElement.classList.add('message-edited');
+                            editedElement.textContent = '編集済み';
+                            messageElement.parentNode.appendChild(editedElement);
+                        }
+                    } else if (editedElement) {
+                        editedElement.style.display = 'none';
                     }
                 }
             });
+
+
 
 
             socket.on('removeMessage', function(data) {
@@ -172,25 +177,13 @@ $member_count = $group_info['member_count'];
             });
 
             socket.on('logMessage', function(data) {
-                const logContainer = document.createElement("div");
-                logContainer.classList.add("log-container"); // ログ専用のクラスでスタイルを設定可能
-                logContainer.innerHTML = `
-        <span class="log-message">${data.message}</span>
-        <span class="log-time">${formatDate(new Date(data.date))}</span>
-    `;
-                document.querySelector(".chat-area").appendChild(logContainer);
-                scrollToBottom();
+                displayLogMessage(data.message, new Date(data.date));
             });
 
 
 
 
             function displayMessage(message, type, date, id, username, messageUserId, edited, is_deleted) {
-                if (is_deleted) {
-                    displayLogMessage(message, date);
-                    return;
-                }
-
                 const messageContainer = document.createElement("div");
                 messageContainer.classList.add("message-container", type === "sent" ? "sent" : "received");
                 messageContainer.dataset.messageId = id;
@@ -199,12 +192,12 @@ $member_count = $group_info['member_count'];
                 const messageElement = document.createElement("div");
                 messageElement.classList.add("message");
                 messageElement.innerHTML = `
-                    <div class="message-name">${username}</div>
-                    <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
-                    <span class="message-time">${formatDate(date)}</span>
-                `;
+        <div class="message-name">${username}</div>
+        <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
+        <span class="message-time">${formatDate(date)}</span>
+    `;
 
-                if (edited) {
+                if (edited == 1) { // edited が 1 の場合のみ編集済みを表示
                     const editedElement = document.createElement('span');
                     editedElement.classList.add('message-edited');
                     editedElement.textContent = '編集済み';
@@ -253,9 +246,9 @@ $member_count = $group_info['member_count'];
                 const logContainer = document.createElement("div");
                 logContainer.classList.add("log-container");
                 logContainer.innerHTML = `
-                    <span class="log-message">${message}</span>
-                    <span class="log-time">${formatDate(date)}</span>
-                `;
+            <span class="log-message">${message}</span>
+            <span class="log-time">${formatDate(date)}</span>
+        `;
                 chatArea.appendChild(logContainer);
                 scrollToBottom();
             }
@@ -307,15 +300,20 @@ $member_count = $group_info['member_count'];
 
             async function loadInitialMessages() {
                 try {
-                    // サーバーからメッセージを取得
                     const response = await fetch('fetch_messages.php?group_id=' + group_id);
                     const messages = await response.json();
-
 
                     messages.forEach(message => {
                         const messageType = message.user_id == user_id ? 'sent' : 'received';
                         displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id, message.edited, message.is_deleted);
-                        lastMessageId = Math.max(lastMessageId, message.id);
+                    });
+
+                    // 削除ログメッセージも表示
+                    const logResponse = await fetch('fetch_log_messages.php?group_id=' + group_id);
+                    const logMessages = await logResponse.json();
+
+                    logMessages.forEach(log => {
+                        displayLogMessage(log.message, new Date(log.date));
                     });
 
                     scrollToBottom();
@@ -323,6 +321,7 @@ $member_count = $group_info['member_count'];
                     console.error(error);
                 }
             }
+
 
             loadInitialMessages();
 
