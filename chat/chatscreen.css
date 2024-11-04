@@ -34,7 +34,7 @@
 }
 
 .chat-area {
-    height: 73vh;
+    height: 62vh;
     background: #e1e9f3;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -49,6 +49,7 @@
 }
 
 .message-area-text {
+
     flex-grow: 1;
     margin-right: 10px;
 }
