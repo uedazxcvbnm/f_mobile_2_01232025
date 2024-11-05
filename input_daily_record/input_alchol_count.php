@@ -24,8 +24,8 @@
         <div class="daily_registration_form">
             <h1>飲酒した時間帯を記録</h1>
             <div>飲酒をしたらはいと答え、飲酒を我慢できたらいいえと答える</div>
-            <button id="alchol_data_yes" class="alchol_data_button">はい</button>
-            <button id="alchol_data_no" class="alchol_data_button">いいえ</button>
+            <button id="alchol_data_yes" class="alchol_data_button">飲酒した</button>
+            <button id="alchol_data_no" class="alchol_data_button">飲酒を我慢した</button>
             <form id="alcholdata_form" method="POST" action="./add_record_count.php">
                 <input type="hidden" id="alchol_data_button_info" name="alchol_data_button_info">
                 <p><input type="submit" value="送信" class="record_button"></p>

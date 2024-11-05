@@ -32,18 +32,30 @@
             <div class="wrap-tab-content">
                 <div class="tab-content active">
                     <?php
+                        $count = 0;
+                        foreach($all as $one){
+                            $date = date('m/d', strtotime($one['date']));
+                            if($date == date('m/d')){
+                                $count++;
+                            }
+                        }
+                        echo '<div class="center">本日の通知：' . $count . '件</div>';
                         $date = 0;
                         foreach($all as $one){
-                            if($date != date('m/d', strtotime($one['created_at']))){
-                                $date = date('m/d', strtotime($one['created_at']));
+                            if($date != date('m/d', strtotime($one['date']))){
+                                $date = date('m/d', strtotime($one['date']));
                                 echo '<p>' . $date . '</p>';
                             };
                             echo '<div class="notification-item">';
                             echo $one['username'] . 'さん&nbsp;';
-                            echo date('H:i', strtotime($one['created_at']));
-                            echo '<h2>&emsp;' . $one['comment_text'] . '</h2><br>';
+                            echo date('H:i', strtotime($one['date']));
+                            echo '<h2>&emsp;' . $one['message'] . '</h2><br>';
                             if(is_null($one['post_title'])){
-                                echo '<div class="tag">&emsp;全体チャット</div>';
+                                if(is_null($one['name'])){
+                                    echo '<div class="tag">&emsp;全体チャット</div>';
+                                }else{
+                                    echo '<div class="tag">&emsp;' . $one['name'] .'</div>';
+                                }
                             }else{
                                 echo '<div class="tag">&emsp;' . $one['post_title'] .'</div>';
                             }
@@ -54,6 +66,14 @@
 
                 <div class="tab-content">
                     <?php
+                        $count = 0;
+                        foreach($globalChats as $globalChat){
+                            $date = date('m/d', strtotime($globalChat['date']));
+                            if($date == date('m/d')){
+                                $count++;
+                            }
+                        }
+                        echo '<div class="center">本日の全体チャット：' . $count . '件</div>';
                         $date = 0;
                         foreach($globalChats as $globalChat){
                             if($date != date('m/d', strtotime($globalChat['date']))){
@@ -72,17 +92,25 @@
             
                 <div class="tab-content">
                     <?php
+                        $count = 0;
+                        foreach($chats as $chat){
+                            $date = date('m/d', strtotime($chat['date']));
+                            if($date == date('m/d')){
+                                $count++;
+                            }
+                        }
+                        echo '<div class="center">本日のグループチャット：' . $count . '件</div>';
                         $date = 0;
                         foreach($chats as $chat){
                             if($date != date('m/d', strtotime($chat['date']))){
                                 $date = date('m/d', strtotime($chat['date']));
                                 echo '<p>' . $date . '</p>';
-                            };
+                            }
                             echo '<div class="notification-item">';
                             echo $chat['username'] . 'さん&nbsp;';
                             echo date('H:i', strtotime($chat['date']));
                             echo '<h2>&emsp;' . $chat['message'] . '</h2><br>';
-                            echo '<div class="tag">&emsp;' . '</div>';
+                            echo '<div class="tag">&emsp;' . $chat['name'] . '</div>';
                             echo '</div>';
                         }
                     ?>
@@ -90,6 +118,14 @@
             
                 <div class="tab-content">
                     <?php
+                        $count = 0;
+                        foreach($comments as $comment){
+                            $date = date('m/d', strtotime($comment['created_at']));
+                            if($date == date('m/d')){
+                                $count++;
+                            }
+                        }
+                        echo '<div class="center">本日のコメント：' . $count . '件</div>';
                         $date = 0;
                         foreach($comments as $comment){
                             if($date != date('m/d', strtotime($comment['created_at']))){
@@ -102,6 +138,9 @@
                             echo '<h2>&emsp;' . $comment['comment_text'] . '</h2><br>';
                             echo '<div class="tag">&emsp;' . $comment['post_title'] . '</div>';
                             echo '</div>';
+                            if($date == date('m/d')){
+                                $count++;
+                            }
                         }
                     ?>
                 </div>

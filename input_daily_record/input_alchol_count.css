@@ -20,7 +20,7 @@ h1{
     /* background-color: #FFF9E6; */
     border: none;
     color: #1578c9;
-    padding: 15px 32px;
+    padding: 15px 5px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -29,7 +29,7 @@ h1{
     cursor: pointer;
     border-radius: 8px;
     height:58px;
-    width:116px;
+    width:160px;
 }
 
 /* 選択後のボタン */
