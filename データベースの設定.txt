@@ -176,3 +176,15 @@ CREATE TABLE IF NOT EXISTS group_chat (
 
 
 ALTER TABLE group_chat MODIFY team_id INT NOT NULL;
+
+
+#3 profile
+
+CREATE TABLE profiles (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    profile_image VARCHAR(255), 
+    goal TEXT                     
+);
+ALTER TABLE profiles
+ADD COLUMN user_id INT NOT NULL,
+ADD FOREIGN KEY (user_id) REFERENCES user(user_id);
