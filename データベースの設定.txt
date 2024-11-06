@@ -31,7 +31,7 @@ CREATE TABLE drink (
   alc INT NOT NULL
 );
 
--- 飲み物データの挿入
+-- グラスデータの挿入
 INSERT INTO drink (drink_name, alc) VALUES
 ('ビール', 5),
 ('日本酒', 15),
@@ -112,10 +112,13 @@ CREATE TABLE posts (
   post_content TEXT,
   post_url VARCHAR(255),
   post_tags VARCHAR(255),
+  team_id INT,
+  visibility ENUM('public', 'group') DEFAULT 'public',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   likes INT DEFAULT 0,
   user_id INT, 
-  FOREIGN KEY (user_id) REFERENCES user(user_id)
+  FOREIGN KEY (user_id) REFERENCES user(user_id),
+  FOREIGN KEY (team_id) REFERENCES teams(team_id)
 );
 
 -- comments テーブル
@@ -141,7 +144,7 @@ CREATE TABLE likes (
 );
 
 -- joined_teams テーブル
-CREATE TABLE joined_teams(
+CREATE TABLE joined_teams (
   id INT AUTO_INCREMENT PRIMARY KEY,
   team_id INT NOT NULL,
   user_id INT NOT NULL,
@@ -152,7 +155,7 @@ CREATE TABLE joined_teams(
 
 -- global_chat テーブル
 CREATE TABLE IF NOT EXISTS global_chat (
-   	id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     message TEXT NOT NULL,
     date DATETIME NOT NULL,
     user_id INT,
@@ -161,18 +164,15 @@ CREATE TABLE IF NOT EXISTS global_chat (
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
-#2  新chat テーブル
+-- group_chat テーブル
 CREATE TABLE IF NOT EXISTS group_chat (
     id INT AUTO_INCREMENT PRIMARY KEY,
     message TEXT NOT NULL,
     date DATETIME NOT NULL,
     user_id INT,
-    team_id INT,
+    team_id INT NOT NULL,
     edited BOOLEAN DEFAULT FALSE,
     is_deleted BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES user(user_id),
     FOREIGN KEY (team_id) REFERENCES teams(team_id)
 );
-
-
-ALTER TABLE group_chat MODIFY team_id INT NOT NULL;

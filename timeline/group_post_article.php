@@ -1,34 +1,48 @@
 <?php
-session_start();  // 启动会话
+session_start();
+include 'config.php';
 
-// 检查用户是否已经登录
 if (!isset($_SESSION['user_id'])) {
-    // 如果用户没有登录，重定向到登录页面
     header("Location: /team_F_alcohol/login/login_display.php");
     exit;
 }
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+$current_user_id = $_SESSION['user_id'];
 
-include 'config.php';
+// 获取 URL 中的 team_id 参数
+$team_id = isset($_GET['team_id']) ? (int)$_GET['team_id'] : null;
+if (!$team_id) {
+    echo "無効なグループIDです。";
+    exit;
+}
+
+// 获取组名
+$sql_team_name = "SELECT name FROM teams WHERE team_id = ?";
+$stmt_team_name = $conn->prepare($sql_team_name);
+$stmt_team_name->bind_param("i", $team_id);
+$stmt_team_name->execute();
+$result_team_name = $stmt_team_name->get_result();
+$team_data = $result_team_name->fetch_assoc();
+$team_name = $team_data['name'] ?? '未知のグループ'; // 如果没有找到组名，使用默认名称
+$stmt_team_name->close();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // 获取表单数据
     $post_title = $_POST['post_title'];
     $post_content = $_POST['post_content'];
     $post_url = $_POST['post_url'];
     $post_tags = $_POST['post_tags'];
-    $user_id = $_SESSION['user_id'];  // 获取当前登录用户的ID
 
-    $stmt = $conn->prepare("INSERT INTO posts (post_title, post_content, post_url, post_tags, user_id) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssi", $post_title, $post_content, $post_url, $post_tags, $user_id);
+    // 插入投稿
+    $stmt = $conn->prepare("INSERT INTO posts (post_title, post_content, post_url, post_tags, user_id, team_id) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssii", $post_title, $post_content, $post_url, $post_tags, $current_user_id, $team_id);
+
     if ($stmt->execute()) {
         $stmt->close();
         $conn->close();
 
-        // 投稿成功后重定向
-        header("Location: ./post_list.php");
+        // 投稿成功后重定向到团队的 timeline 页面
+        header("Location: timeline.php?team_id=" . $team_id);
         exit;
     } else {
         echo "<script>alert('投稿に失敗しました。');</script>";
@@ -42,17 +56,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>全体公开 - 投稿画面</title>
-    <link rel="stylesheet" href="post_article.css">
-    <?php
-    require_once __DIR__ . '../../header/header.php';
-    ?>
+    <title><?php echo htmlspecialchars($team_name); ?> - 限定公開 - 投稿フォーム</title>
+    <?php require_once __DIR__ . '../../header/header.php'; ?>
+    <link rel="stylesheet" href="group_post_article.css">
 </head>
 
 <body>
     <div class="container">
-        <h2 style="text-align: center;">禁酒サイト - 投稿フォーム</h2>
-        <form action="post_article.php" method="post" enctype="multipart/form-data">
+        <h2 style="text-align: center;"><?php echo htmlspecialchars($team_name); ?> - 限定公開 - 投稿フォーム</h2>
+        <form action="group_post_article.php?team_id=<?php echo $team_id; ?>" method="post">
             <div class="form-group">
                 <label for="post_title">タイトル:</label>
                 <input type="text" id="post_title" name="post_title" placeholder="タイトルを入力（任意）">
@@ -67,8 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div class="form-group">
                 <label for="post_tags">タグ:</label>
-                <input type="text" id="post_tags" name="post_tags" placeholder="タグが複数の場合：スペースで区切る
-">
+                <input type="text" id="post_tags" name="post_tags" placeholder="タグが複数の場合：スペースで区切る">
                 <small>※ 複数のタグを追加可能です</small>
             </div>
             <div class="form-group" style="text-align: center;">

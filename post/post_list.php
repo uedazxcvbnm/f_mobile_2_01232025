@@ -10,8 +10,17 @@ if (!isset($_SESSION['user_id'])) {
 $current_user_id = $_SESSION['user_id'];
 
 
-$sql = "SELECT posts.*, user.username FROM posts JOIN user ON posts.user_id = user.user_id ORDER BY posts.created_at DESC";
-$result = $conn->query($sql);
+// 查询语句，确保只显示全体公开的帖子
+$sql = "SELECT posts.*, user.username 
+        FROM posts 
+        JOIN user ON posts.user_id = user.user_id 
+        WHERE posts.visibility = 'public' AND (posts.team_id IS NULL OR posts.team_id = 0)
+        ORDER BY posts.created_at DESC";
+
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$result = $stmt->get_result();
+
 ?>
 
 <!DOCTYPE html>
