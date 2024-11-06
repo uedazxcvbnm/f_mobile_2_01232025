@@ -8,6 +8,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 $message = $data['message'];
 $date = date('Y-m-d H:i:s');
 
+
 try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
