@@ -146,7 +146,7 @@ $result_comments = $stmt_comments->get_result();
         .comment-section {
             max-width: 800px;
             margin: 0 auto;
-            padding-bottom: 100px;
+            padding-bottom: 1200px;
         }
 
         .comment-item {
@@ -154,22 +154,24 @@ $result_comments = $stmt_comments->get_result();
             margin-bottom: 15px;
             border-radius: 10px;
             width: 60%;
-            display: flex;
             background-color: #eef6fa;
             box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .comment-left {
-            justify-content: flex-start;
-            background-color: #eef6fa;
             text-align: left;
+            background-color: #eef6fa;
+            float: left;
+            clear: both;
         }
 
         .comment-right {
-            justify-content: flex-end;
+            text-align: left;
+            /* 从左对齐 */
             background-color: #e1f7d5;
-            text-align: right;
             margin-left: auto;
+            float: right;
+            clear: both;
         }
 
         .comment-item strong {
@@ -177,6 +179,14 @@ $result_comments = $stmt_comments->get_result();
             font-size: 14px;
             color: #555;
             margin-bottom: 5px;
+        }
+
+        .comment-item p {
+            margin: 5px 0;
+            word-break: break-word;
+            /* 添加这个属性实现自动换行 */
+            white-space: pre-wrap;
+            /* 保留文本中的换行符 */
         }
 
         .comment-input {
@@ -298,7 +308,7 @@ $result_comments = $stmt_comments->get_result();
         ?>
             <div class="comment-item <?php echo $comment_class; ?>">
                 <strong><span class="mention-user" onclick="mentionUser('<?php echo htmlspecialchars($comment['username']); ?>')"><?php echo htmlspecialchars($comment['username']); ?></span></strong>
-                <p><?php echo htmlspecialchars($comment['comment_text']); ?></p>
+                <p><?php echo nl2br(htmlspecialchars($comment['comment_text'])); ?></p>
             </div>
         <?php } ?>
     </div>

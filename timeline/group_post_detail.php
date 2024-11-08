@@ -64,6 +64,30 @@ $stmt_comments = $conn->prepare($sql_comments);
 $stmt_comments->bind_param("i", $post_id);
 $stmt_comments->execute();
 $result_comments = $stmt_comments->get_result();
+
+// コメント
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment_text'])) {
+    $comment_text = $_POST['comment_text'];
+    $post_id = $_POST['post_id'];
+
+    if (!empty($comment_text)) {
+
+        $stmt = $conn->prepare("INSERT INTO comments (post_id, comment_text, user_id) VALUES (?, ?, ?)");
+        $stmt->bind_param("isi", $post_id, $comment_text, $current_user_id);
+
+        if ($stmt->execute()) {
+
+            header("Location: group_post_detail.php?id=" . $post_id . "&team_id=" . $team_id);
+            exit;
+        } else {
+            echo "コメントの投稿に失敗しました。";
+        }
+
+        $stmt->close();
+    }
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -128,30 +152,41 @@ $result_comments = $stmt_comments->get_result();
         .comment-section {
             max-width: 800px;
             margin: 0 auto;
-            padding-bottom: 100px;
+            padding-bottom: 990px;
         }
+
 
         .comment-item {
             padding: 15px;
             margin-bottom: 15px;
             border-radius: 10px;
             width: 60%;
-            display: flex;
             background-color: #eef6fa;
             box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .comment-left {
-            justify-content: flex-start;
-            background-color: #eef6fa;
             text-align: left;
+            background-color: #eef6fa;
+            float: left;
+            clear: both;
         }
 
         .comment-right {
-            justify-content: flex-end;
+            text-align: left;
+
             background-color: #e1f7d5;
-            text-align: right;
             margin-left: auto;
+            float: right;
+            clear: both;
+        }
+
+        .comment-item p {
+            margin: 5px 0;
+            word-break: break-word;
+
+            white-space: pre-wrap;
+
         }
 
         .comment-item strong {
@@ -275,7 +310,7 @@ $result_comments = $stmt_comments->get_result();
         ?>
             <div class="comment-item <?php echo $comment_class; ?>">
                 <strong><span class="mention-user" onclick="mentionUser('<?php echo htmlspecialchars($comment['username']); ?>')"><?php echo htmlspecialchars($comment['username']); ?></span></strong>
-                <p><?php echo htmlspecialchars($comment['comment_text']); ?></p>
+                <p><?php echo nl2br(htmlspecialchars($comment['comment_text'])); ?></p>
             </div>
         <?php } ?>
     </div>
