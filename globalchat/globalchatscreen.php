@@ -15,7 +15,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
     <title>globalChat</title>
     <link rel="stylesheet" href="../globalchat/globalchatscreen.css">
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <?php require_once __DIR__ . '../../header/header.php'; ?>
+
 </head>
 
 <body>
