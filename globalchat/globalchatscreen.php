@@ -15,13 +15,13 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
     <title>globalChat</title>
     <link rel="stylesheet" href="../globalchat/globalchatscreen.css">
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-
+    <?php require_once __DIR__ . '../../header/header.php'; ?>
 </head>
 
 <body>
     <div class="container">
         <div class="header">
-            <button id="back-button">&lt; 戻る</button>
+            <!-- <button id="back-button">&lt; 戻る</button> -->
             <div class="group-info">
                 <span id="group-name">全体チャット</span>
             </div>
