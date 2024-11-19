@@ -1,13 +1,15 @@
 <?php
-    session_start();
-    $_SESSION = array();
-    session_destroy();
+session_start();
+$_SESSION = array();
+session_destroy();
 ?>
 <html>
+
 <body>
-<?php
+    <?php
     echo 'ログアウトしました';
     echo '<p><a href="login_display.php">ログインページへ</a></p>';
-?>
+    ?>
 </body>
+
 </html>
