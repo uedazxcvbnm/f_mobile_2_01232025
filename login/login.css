@@ -1,46 +1,63 @@
+/* 移动端样式调整 */
+
 .input_daily_screen {
     background-color: #e6f0ff;
-    /* 柔らかな青色の背景 */
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 500px;
-    margin: 50px auto;
+    /* 保持原有的最大宽度 */
+    width: 90%;
+    /* 设置宽度为90%，适应移动端屏幕 */
+    margin: 0 auto;
+    /* 水平居中 */
+    position: absolute;
+    /* 绝对定位 */
+    top: 50%;
+    /* 距离顶部50% */
+    left: 50%;
+    /* 距离左侧50% */
+    transform: translate(-50%, -50%);
+    /* 使元素真正居中 */
+    box-sizing: border-box;
+    /* 确保内边距和边框计入总宽度 */
 }
 
 .daily_registration_form {
     margin: 0;
-    padding: 20px;
+    padding: 15px;
     border: 1px solid #b3d1ff;
     background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .daily_registration_form div {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     font-family: Arial, sans-serif;
     font-size: 14px;
 }
 
 .daily_registration_form input[type="text"],
 .daily_registration_form input[type="password"] {
-    width: calc(100% - 20px);
-    padding: 10px;
+    width: 100%;
+    padding: 8px;
     border: 1px solid #b3d1ff;
     border-radius: 5px;
     font-size: 14px;
+    box-sizing: border-box;
 }
 
 .login_button {
     background-color: #1578c9;
     color: #ffffff;
-    padding: 10px 20px;
+    padding: 12px 0;
+    width: 100%;
     border: none;
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-top: 10px;
 }
 
 .login_button:hover {
@@ -50,53 +67,63 @@
 .welcome_container {
     text-align: center;
     background-color: #e6f0ff;
-    padding: 30px;
+    padding: 20px;
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    max-width: 600px;
-    margin: 50px auto;
+    max-width: 500px;
+    width: 90%;
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     font-family: Arial, sans-serif;
+    box-sizing: border-box;
 }
 
 .welcome_container h1 {
-    font-size: 24px;
+    font-size: 22px;
     color: #1578c9;
+    margin-bottom: 15px;
 }
 
 .welcome_container p {
-    font-size: 16px;
+    font-size: 14px;
     color: #333333;
     margin: 10px 0;
-}
-
-.welcome_actions a {
-    display: inline-block;
-    text-decoration: none;
-    color: #ffffff;
-    background-color: #1578c9;
-    padding: 10px 15px;
-    border-radius: 5px;
-    margin: 10px;
-    transition: background-color 0.3s;
-}
-
-.welcome_actions a:hover {
-    background-color: #105ea6;
 }
 
 .welcome_actions {
     margin-top: 20px;
 }
 
+.welcome_actions a {
+    display: block;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #1578c9;
+    padding: 12px 0;
+    border-radius: 5px;
+    margin: 10px 0;
+    transition: background-color 0.3s;
+    font-size: 16px;
+}
+
+.welcome_actions a:hover {
+    background-color: #105ea6;
+}
+
 .login_button_secondary {
     background-color: #4a90e2;
     color: #ffffff;
-    padding: 10px 20px;
+    padding: 12px 0;
+    width: 100%;
     border: none;
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-top: 10px;
 }
 
 .login_button_secondary:hover {
