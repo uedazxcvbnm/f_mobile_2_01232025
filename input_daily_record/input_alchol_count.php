@@ -1,10 +1,10 @@
 <?php
-    session_start();
-    // ログインしていないときの処理
-    if (!isset($_SESSION['user_id'])){
-        header('Location: ./../login/login_display.php');
-        exit();
-    }
+session_start();
+// ログインしていないときの処理
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ./../login/login_display.php');
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -13,11 +13,99 @@
 <head>
     <title>毎日の記録の入力画面</title>
     <link rel="stylesheet" href="input_alchol_count.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <?php
-        require_once __DIR__ . '../../header/header.php';
+    require_once __DIR__ . '../../header/header.php';
     ?>
 </head>
+<style>
+    body {
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+
+        display: flex;
+        justify-content: center;
+
+        align-items: center;
+
+    }
+
+
+    .input_daily_screen {
+        background-color: #e1e9f3;
+
+        padding: 20px;
+        border-radius: 10px;
+        box-sizing: border-box;
+
+        width: 90%;
+
+        max-width: 500px;
+
+        margin: 0 auto;
+
+    }
+
+    .daily_registration_form {
+        margin: 0;
+        padding: 20px;
+        border: 0;
+        background-color: #ffffff;
+
+        border-radius: 10px;
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 24px;
+
+        margin-bottom: 20px;
+
+    }
+
+    .button,
+    .alchol_data_button {
+        background-color: #fef9ed;
+        border: none;
+        color: #1578c9;
+        padding: 15px 0;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+
+        font-size: 16px;
+        margin: 10px 0;
+
+        cursor: pointer;
+        border-radius: 8px;
+        width: 100%;
+
+        box-sizing: border-box;
+    }
+
+
+    .alchol_data_button.selected {
+        border: 2.5px solid #FFD700;
+        background-color: #5797cb;
+        color: #fff;
+    }
+
+
+    .record_button {
+        background-color: #5797cb;
+        color: white;
+    }
+
+    .record_button:hover {
+        background-color: #FFD700;
+        color: black;
+    }
+</style>
 
 <body>
     <div class="input_daily_screen">
@@ -39,29 +127,29 @@
     // var buttons_alchol_data = document.querySelectorAll('.alchol_data_button');
     var yesbutton = document.getElementById('alchol_data_yes');
     var nobutton = document.getElementById('alchol_data_no');
-    
+
     var alchol_data_button_info = document.getElementById('alchol_data_button_info');
-    
-    
+
+
     // 飲み物の種類を選択するボタン
     document.addEventListener('DOMContentLoaded', () => {
         // はい　がクリックされたときの処理
-        yesbutton.addEventListener("click", function () {
-            document.getElementById("alchol_data_button_info").value = 1;  // 値を1に設定
+        yesbutton.addEventListener("click", function() {
+            document.getElementById("alchol_data_button_info").value = 1; // 値を1に設定
             toggleSelected_inputAlchol(alchol_data_yes, alchol_data_no);
             // document.getElementById("alcholdata_form").submit();  // フォームを送信
         });
 
         // いいえ　がクリックされたときの処理
-        nobutton.addEventListener("click", function () {
-            document.getElementById("alchol_data_button_info").value = 2;  // 値を2に設定
+        nobutton.addEventListener("click", function() {
+            document.getElementById("alchol_data_button_info").value = 2; // 値を2に設定
             toggleSelected_inputAlchol(alchol_data_no, alchol_data_yes);
             // document.getElementById("alcholdata_form").submit();  // フォームを送信
         });
     });
 
     // selected クラスの追加・解除を行う関数
-    function toggleSelected_inputAlchol(selectedButton, otherButton){
+    function toggleSelected_inputAlchol(selectedButton, otherButton) {
         selectedButton.classList.add('selected');
         otherButton.classList.remove('selected');
     }
@@ -87,4 +175,5 @@
     //     })
     // });
 </script>
+
 </html>
