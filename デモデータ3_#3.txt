@@ -1,22 +1,200 @@
-INSERT INTO daily_record_pbl3(date, alchol_count, user_id) VALUES 
-('2024-10-21', 2, 1),
-('2024-10-23', 1, 1),
-('2024-10-25', 0, 1),
-('2024-10-26', 4, 1),
-('2024-10-27', 2, 1),
-('2024-10-28', 0, 1),
-('2024-10-29', 1, 1),
-('2024-10-29', 4, 6);
+-- データベースの設定
+set names utf8;
+drop database if exists pbl2;
+create database pbl2 character set utf8 collate utf8_general_ci;
 
-# 全体公開のタイムライン
-#限定公開のタイムラインはまだinsert分が書けてないけど、デモデータの中身は全体公開のタイムラインとほぼ同じ##内容（チームIdのカラムがあるかないかの違い等、２つのテーブルのデモデータの中身で異なっている部分は少な###い）
+-- ユーザー「kobe」にパスワード「denshi」を設定し、データベース「pbl2」に対する全ての権限を付与
+grant all privileges on pbl2.* to kobe@localhost identified by 'denshi';
+use pbl2;
 
-INSERT INTO posts(post_title, post_content, post_url, post_tags, created_at, likes, user_id) VALUES('断酒会での交流について', 'あちこちの会場に足を運ぶうち、出会いが広がり、「今度はあの人のいる会場に行ってみようか」「最近あの会場に行っていないな」という感じで飲まないことを考える時間が増えていき、だんだんと自助会が楽しくなっていきました。', 'http://alcoholic-navi.jp/follow/memoir/person/story09/', '断酒会', '2024-10-29 11:57:38', 0, 6),('家族がアル中', '実は当時、兄がアルコール依存症と診断されており、家の中はそのことで混乱していました。両親は兄を自助会につなげるため奔走していましたが、私は「自分には関係ない、関わりあいたくない」という気持ちが強く、家に寄り付きたくありませんでした。それも毎晩の飲み屋通いに拍車をかけた背景の一つです。','http://alcoholic-navi.jp/follow/memoir/person/story09/', '人間関係',  '2024-10-29 11:57:38', 0, 6),('仕事のエネルギーが酒', '私は酒をガソリン代わりに飲んで仕事に邁進していました。上司が変わるたび、「ここは自分が頑張らねば」「これは俺にしかできない」と仕事を抱え込み、そのストレスもまた酒で発散したのです。', 'http://alcoholic-navi.jp/follow/memoir/person/story02/','仕事　ストレス', '2024-10-29 11:57:38', 0, 6),('終電を逃す時間まで居酒屋で飲んだ話', '行きつけの飲み屋がいくつもありました。「今日はほどほどにしよう」と思っても、終電に間に合わずタクシーで帰る毎日でした。タクシー代がかさむので、やがてサウナに泊まるようになり、そのうちサウナへ行くお金もなくなり、繁華街を歩いて朝を待ちました。疲れて駅前に座り込んでいると、必ず同じように始発を待つ人の姿があります。それが「いつもの光景」になり、おかしいとも思わなくなっている自分がいました。', 'http://alcoholic-navi.jp/follow/memoir/person/story07/','居酒屋', '2024-10-29 11:57:38', 0, 6);
+-- user テーブル
+CREATE TABLE IF NOT EXISTS user (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_mail VARCHAR(100) NOT NULL,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(12) NOT NULL
+);
 
-# 仕事のエネルギーが酒　というタイトルの投稿に対するコメント
-INSERT INTO comments(post_id, comment_text, likes, created_at, user_id) 
+INSERT INTO user (user_mail, username, password) 
 VALUES 
-(3, '飲酒しないと仕事なんてやってられない', 0, '2024-10-29 11:58:38', 2),
-(3, '私の周りに、飲酒によって仕事を休みがちの人がいるので、その人にアドバイスする際に使える有益な情報を知ってる人っていますか？', 0,'2024-10-29 11:58:38', 5);
+('n@gmail.com', '中辻', 'pass1'),
+('u@gmail.com', '上田', 'pass2'),
+('ku@gmail.com', '倉掛', 'pass3'),
+('ki@gmail.com', '木俵', 'pass4'),
+('r@gmail.com', '李', 'pass5'),
+('s@gmail.com', '阪邊', 'pass6');
+
+-- drink テーブル
+CREATE TABLE drink (
+  drink_id INT AUTO_INCREMENT PRIMARY KEY,
+  drink_name VARCHAR(50),
+  alc INT NOT NULL
+);
+
+-- グラスデータの挿入
+INSERT INTO drink (drink_name, alc) VALUES
+('ビール', 5),
+('日本酒', 15),
+('ワイン', 12);
+
+-- glass テーブル
+CREATE TABLE glass (
+  glass_id INT AUTO_INCREMENT PRIMARY KEY,
+  glass_name VARCHAR(50),
+  glass_v INT NOT NULL
+);
+
+-- グラスデータの挿入
+INSERT INTO glass (glass_name, glass_v) VALUES
+('缶300ml', 300),
+('缶500ml', 500),
+('コップ200ml', 200),
+('グラス100ml', 100),
+('シングル30ml', 30),
+('ダブル60ml', 60),
+('２勺36ml', 36),
+('２勺半45ml', 45);
+
+-- record_oneday テーブル
+CREATE TABLE record_oneday_pbl3 (
+  ident INT AUTO_INCREMENT PRIMARY KEY,
+  date DATE,
+  date_hms DATETIME,
+  alchol_data INT,
+  user_id INT,
+  FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+-- daily_record テーブル
+CREATE TABLE daily_record_pbl3 (
+  ident INT AUTO_INCREMENT PRIMARY KEY,
+  date DATE,
+  alchol_count INT NOT NULL,
+  user_id INT,
+  FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+-- teams テーブル
+CREATE TABLE teams (
+  team_id INT AUTO_INCREMENT PRIMARY KEY,
+  name CHAR(20),
+  detail CHAR(200),
+  size INT
+);
+
+-- チームデータの挿入
+INSERT INTO teams (name, detail, size) VALUES 
+('グループ1', 'みんなで禁酒しよう', 5),
+('グループ2', '毎月2割アルコール量を減らそう', 13),
+('グループ3', '絶対にお酒を飲まない', 8),
+('グループ4', 'ノンアルを楽しんでアルコール摂取量を減らそう', 10),
+('グループ5', '絶対にアルコールは入れない', 6),
+('グループ6', 'ゆっくり禁酒していきましょう', 3);
+
+-- chat テーブル
+CREATE TABLE IF NOT EXISTS chat (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message TEXT NOT NULL,
+    date DATETIME NOT NULL,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+-- chat テーブルに編集済みログのフラグを追加
+ALTER TABLE chat ADD COLUMN edited BOOLEAN DEFAULT FALSE;
+-- chat テーブルに削除ログのフラグを追加
+ALTER TABLE chat ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;
+
+-- posts テーブル
+CREATE TABLE posts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  post_title VARCHAR(255),
+  post_content TEXT,
+  post_url VARCHAR(255),
+  post_tags VARCHAR(255),
+  team_id INT,
+  visibility ENUM('public', 'group') DEFAULT 'public',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  likes INT DEFAULT 0,
+  user_id INT, 
+  FOREIGN KEY (user_id) REFERENCES user(user_id),
+  FOREIGN KEY (team_id) REFERENCES teams(team_id)
+);
+
+-- comments テーブル
+CREATE TABLE comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT,
+    comment_text TEXT,
+    likes INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id INT,
+    FOREIGN KEY (post_id) REFERENCES posts(id),
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+CREATE TABLE likes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  post_id INT,
+  is_favorite BOOLEAN DEFAULT FALSE,  
+  UNIQUE KEY unique_like (user_id, post_id),  
+  FOREIGN KEY (user_id) REFERENCES user(user_id),
+  FOREIGN KEY (post_id) REFERENCES posts(id)
+);
+
+-- joined_teams テーブル
+CREATE TABLE joined_teams (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  team_id INT NOT NULL,
+  user_id INT NOT NULL,
+  UNIQUE (team_id, user_id),
+  FOREIGN KEY (team_id) REFERENCES teams(team_id),
+  FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+-- global_chat テーブル
+CREATE TABLE IF NOT EXISTS global_chat (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message TEXT NOT NULL,
+    date DATETIME NOT NULL,
+    user_id INT,
+    edited BOOLEAN DEFAULT FALSE,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+-- group_chat テーブル
+CREATE TABLE IF NOT EXISTS group_chat (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message TEXT NOT NULL,
+    date DATETIME NOT NULL,
+    user_id INT,
+    team_id INT NOT NULL,
+    edited BOOLEAN DEFAULT FALSE,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (user_id) REFERENCES user(user_id),
+    FOREIGN KEY (team_id) REFERENCES teams(team_id)
+
+);
 
 
+ALTER TABLE group_chat MODIFY team_id INT NOT NULL;
+
+
+#3 profile
+
+CREATE TABLE profiles (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    profile_image VARCHAR(255), 
+    goal TEXT                     
+);
+ALTER TABLE profiles
+ADD COLUMN user_id INT NOT NULL,
+ADD FOREIGN KEY (user_id) REFERENCES user(user_id);
+
+ALTER TABLE user
+-- パスワード失敗回数を追跡
+ADD COLUMN failed_attempts INT DEFAULT 0,
+-- ペナルティが発生した時刻
+ADD COLUMN penalty_start DATETIME NULL;

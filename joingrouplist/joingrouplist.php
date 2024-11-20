@@ -30,6 +30,9 @@ $joined_teams = $team->getJoinedTeams($user_id);
         <h1>参加しているグループ</h1>
     </header>
 
+    <div class="search-button">
+        <a href="../team/team_search.php">グループ検索画面に移動</a>
+    </div>
     <div class="group-list-container">
         <?php if (empty($joined_teams)) { ?>
             <p id="no-groups-message">参加しているグループはありません</p>
