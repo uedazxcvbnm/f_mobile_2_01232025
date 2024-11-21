@@ -2,18 +2,19 @@
     <div class="nav-container">
         <div class="nav-visible">
             <a class="nav-link" href="../input_daily_record/input_alchol_count.php">登録</a>
-            <a class="nav-link" href="../input_daily_record/graph/graph_count.php">グラフ</a>
-            <a class="nav-link" href="../team/team_search.php">グループ検索</a>
-            <a class="nav-link" href="../joingrouplist/joingrouplist.php">参加グループ</a>
+            <a class="nav-link" href="../joingrouplist/joingrouplist.php">参加済みグループ</a>
+            <a class="nav-link" href="../globalchat/globalchatscreen.php">全体チャット</a>
+            <a class="nav-link" href="../notification/notification.php">通知</a>
         </div>
         <span class="menu-toggle" onclick="toggleMenu()">☰</span>
         <div class="nav-hidden">
             <ul class="nav-list">
-                <li><a class="nav-link" href="../globalchat/globalchatscreen.php">全体チャット</a></li>
-                <li><a class="nav-link" href="../post/post_list.php">投稿一覧</a></li>
-                <li><a class="nav-link" href="../notification/notification.php">通知</a></li>
-                <li><a class="nav-link" href="../profile/profile.php">プロフィール</a></li>
+                <li><a class="nav-link" href="../input_daily_record/graph/graph_count.php">グラフ</a></li>
                 <li><a class="nav-link" href="../input_daily_record/calendar/calendar.php">カレンダー</a></li>
+                <li><a class="nav-link" href="../team/team_search.php">グループ検索</a></li>
+                <li><a class="nav-link" href="../post/post_list.php">投稿一覧</a></li>
+                <li><a class="nav-link" href="../post/liked_posts.php">いいねリスト</a></li>
+                <li><a class="nav-link" href="../profile/profile.php">プロフィール</a></li>
                 <li><a onclick="openLogoutpop()">ログアウト</a></li>
             </ul>
         </div>
@@ -30,7 +31,6 @@
         </div>
     </div>
 </div>
-
 <style>
     nav {
         width: 100%;
@@ -147,10 +147,33 @@
     }
 
     .lobt {
-        margin-top: 200px;
+        margin-top: 20px;
+
+    }
+
+
+    @media screen and (max-width: 768px) {
+        .nav-visible a {
+            font-size: 12px;
+            padding: 5px;
+            margin-right: 5px;
+        }
+
+        .menu-toggle {
+            font-size: 24px;
+        }
+
+        .nav-hidden {
+            top: 50px;
+
+        }
+
+        .nav-list a {
+            font-size: 14px;
+            padding: 10px;
+        }
     }
 </style>
-
 
 <script>
     function toggleMenu() {

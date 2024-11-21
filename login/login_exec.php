@@ -1,44 +1,52 @@
 <?php
-    session_start();
-    $user_name_info = $_POST['user_name_info'];
-    $password_info = $_POST['password_info'];
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_secure', 1);
+ini_set('session.use_strict_mode', 1);
+session_start();
+require_once __DIR__ . '/user.php';
 
-    require_once __DIR__.'/user.php';
-    $user_table = new User();
-    $login_result = $user_table->auth($user_name_info, $password_info);
+$loginError = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $userName = $_POST['user_name_info'];
+    $password = $_POST['password_info'];
 
-    if(empty($login_result['user_id'])){
-        $login_error = 'ユーザーID、パスワードを確認してください';
-    } else{
-        // セッションに　を格納
-        $_SESSION['user_id'] = $login_result['user_id'];
-        $_SESSION['username'] = $login_result['username'];
-        $_SESSION['password'] = $login_result['password'];
+    $user = new User();
+    $loginResult = $user->auth($userName, $password);
+
+    if (is_string($loginResult)) { // エラーメッセージが返ってきた場合
+        $loginError = $loginResult;
+    } else {
+        // ログイン成功
+        session_regenerate_id(true);
+        $_SESSION['user_id'] = $loginResult['user_id'];
+        $_SESSION['username'] = $loginResult['username'];
+        header('Location: welcome.php');
+        exit();
     }
+}
 ?>
 
+<!DOCTYPE html>
 <html lang="ja">
 
 <head>
-	<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <title>ログイン画面</title>
+    <link rel="stylesheet" href="login.css">
 </head>
 
-<html>
 <body>
-<?php
-    // ログインしていないときはログイン画面に移動
-    if (!isset($_SESSION['user_id'])){
-        header('Location: ./login_display.php');
-        exit();
-    }
-    if (empty($login_error)){
-        echo 'こんにちは';
-        echo '<p><a href="./../team/team_search.php">移動</a></p>';
-        echo '<p><a href="logout_display.php">ログアウト</a></p>';
-    } else{
-        echo 'ユーザーID、パスワードが違います';
-        echo '<p><a href="login_display.php">ログインページへ</a></p>';
-    }
-?>
+    <div class="login_container">
+        <h2>ログイン</h2>
+        <?php if ($loginError): ?>
+            <p class="error_message"><?php echo htmlspecialchars($loginError, ENT_QUOTES, 'UTF-8'); ?></p>
+        <?php endif; ?>
+        <form method="POST" action="login.php">
+            <div>ユーザー名：<input type="text" name="user_name_info" required></div>
+            <div>パスワード：<input type="password" name="password_info" required></div>
+            <p><input type="submit" value="ログイン" class="login_button"></p>
+        </form>
+    </div>
 </body>
+
 </html>
