@@ -19,26 +19,33 @@ $all = $notification->getAll($user_id, $user_id);
     <?php
     require_once __DIR__ . '../../header/header.php';
     ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             background-color: #f9f9f9;
             margin: 0;
+            font-family: Arial, sans-serif;
         }
 
         h1 {
-            margin-top: 50px;
+            margin: 60px 0 20px 0;
+            /* 调整上下外边距 */
             text-align: center;
-            font-size: 1.5em;
+            font-size: 24px;
+            /* 调整字体大小 */
         }
 
         p {
             margin: 0 10px;
-            font-size: 0.9em;
+            font-size: 14px;
+            /* 调整字体大小 */
         }
 
         .center {
             text-align: center;
-            font-size: 1em;
+            font-size: 16px;
+            /* 调整字体大小 */
+            margin-bottom: 10px;
         }
 
         .wrap-tab {
@@ -51,29 +58,31 @@ $all = $notification->getAll($user_id, $user_id);
             justify-content: space-between;
             margin: 0 10px;
             border-bottom: 3px solid #1578c9;
+            list-style: none;
+            padding: 0;
         }
 
         .list-tab>li {
-            display: block;
-            padding: 1em 0.5em;
+            flex: 1;
+            padding: 10px 5px;
             margin: 0 2px;
-            width: 24%;
             color: #fff;
-            font-size: 2em;
+            font-size: 14px;
+            /* 调整字体大小 */
             text-align: center;
             background: #ccc;
             box-sizing: border-box;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 5px 5px 0 0;
         }
 
-        .list-tab .active {
+        .list-tab>li.active {
             background: #1578c9;
         }
 
         .tab-content {
             display: none;
-            padding: 1em;
+            padding: 10px;
             margin: 0 10px;
         }
 
@@ -87,11 +96,14 @@ $all = $notification->getAll($user_id, $user_id);
             padding: 10px;
             margin: 0 10px 10px 10px;
             border-radius: 5px;
-            font-size: 0.9em;
+            font-size: 14px;
+            /* 调整字体大小 */
         }
 
         .notification-item h2 {
-            font-size: 1em;
+            font-size: 16px;
+            /* 调整字体大小 */
+            margin: 5px 0;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -103,7 +115,8 @@ $all = $notification->getAll($user_id, $user_id);
             padding: 5px 10px;
             border-radius: 15px;
             background-color: #f5f5f5;
-            font-size: 0.8em;
+            font-size: 12px;
+            /* 调整字体大小 */
             display: inline-block;
             text-align: center;
         }
