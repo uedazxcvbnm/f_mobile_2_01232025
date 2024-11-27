@@ -88,26 +88,152 @@ try {
 <head>
     <?php require_once __DIR__ . '../../header/header.php'; ?>
     <link rel="stylesheet" href="../profile/profile_edit.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+<>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f8fc;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
 
-<body>
-    <!-- 編集画面のコンテナ -->
-    <div class="edit-container">
-        <h1>プロフィール編集</h1>
-        <form action="profile_edit.php" method="post" enctype="multipart/form-data">
-            <label for="username">ユーザー名の変更:</label>
-            <input type="text" name="username" value="<?php echo $username; ?>" required>
+            align-items: center;
 
-            <label for="profile_image">プロフィール画像の変更:</label>
-            <input type="file" name="profile_image" accept="image/*">
+            min-height: 100vh;
+        }
 
-            <label for="goal">目標の変更:</label>
-            <textarea name="goal" rows="4" cols="50"><?php echo $goal; ?></textarea>
 
-            <button type="submit" class="save_button">保存</button>
-            <a href="profile.php" class="cancel_button">キャンセル</a>
-        </form>
-    </div>
-</body>
+        .edit-container {
+            margin-top: 20px;
+
+            max-width: 500px;
+
+            width: 90%;
+
+            padding: 15px 20px;
+
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            box-sizing: border-box;
+
+        }
+
+
+        h1 {
+            text-align: center;
+            color: #1578c9;
+            font-size: 22px;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        label {
+            font-size: 14px;
+
+            color: #333;
+            display: block;
+            margin-top: 10px;
+
+            margin-bottom: 5px;
+            text-align: left;
+
+        }
+
+
+        input[type="text"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        input[type="file"]:focus,
+        textarea:focus {
+            border-color: #1578c9;
+            outline: none;
+        }
+
+
+        button.save_button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+
+            color: white;
+            background-color: #1578c9;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button.save_button:hover {
+            background-color: #125e9c;
+        }
+
+        a.cancel_button {
+            display: inline-block;
+            width: 100%;
+
+            text-align: center;
+
+            color: #1578c9;
+            background-color: #f0f8ff;
+            padding: 12px;
+            font-size: 16px;
+            text-decoration: none;
+            border: 1px solid #1578c9;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin-top: 10px;
+            box-sizing: border-box;
+
+        }
+
+        a.cancel_button:hover {
+            background-color: #d0e7ff;
+            color: #125e9c;
+        }
+    </style>
+
+    <body>
+        <!-- 編集画面のコンテナ -->
+        <div class="edit-container">
+            <h1>プロフィール編集</h1>
+            <form action="profile_edit.php" method="post" enctype="multipart/form-data">
+                <label for="username">ユーザー名の変更:</label>
+                <input type="text" name="username" value="<?php echo $username; ?>" required>
+
+                <label for="profile_image">プロフィール画像の変更:</label>
+                <input type="file" name="profile_image" accept="image/*">
+
+                <label for="goal">目標の変更:</label>
+                <textarea name="goal" rows="4" cols="50"><?php echo $goal; ?></textarea>
+
+                <button type="submit" class="save_button">保存</button>
+                <a href="profile.php" class="cancel_button">キャンセル</a>
+            </form>
+        </div>
+    </body>
 
 </html>
