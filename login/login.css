@@ -29,6 +29,9 @@
     border: 1px solid #b3d1ff;
     background-color: #ffffff;
     border-radius: 10px;
+    
+    /* 11/27追加あるいは変更 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .daily_registration_form div {
@@ -128,4 +131,18 @@
 
 .login_button_secondary:hover {
     background-color: #3b7bbf;
+}
+
+
+.error_message {
+    color: #ff0000;
+    background-color: #ffe6e6;
+    border: 1px solid #ff9999;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    margin-top: 10px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

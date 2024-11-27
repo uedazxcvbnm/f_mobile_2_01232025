@@ -1,5 +1,10 @@
 <?php
 session_start();
+// 11/27書き換えあるいは追加
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ./../login/login_display.php');
+    exit();
+}
 
 // チャット画面でユーザーIDと名前を取得する
 $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
@@ -157,10 +162,11 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
             });
 
             function displayMessage(message, type, date, id, username, messageUserId, edited, is_deleted) {
-                if (is_deleted) {
-                    displayLogMessage(message, date);
-                    return;
-                }
+                // 11/27追加あるいは変更
+                // if (is_deleted) {
+                //     displayLogMessage(message, date);
+                //     return;
+                // }
 
                 const messageContainer = document.createElement("div");
                 messageContainer.classList.add("message-container", type === "sent" ? "sent" : "received");
@@ -175,7 +181,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
                     <span class="message-time">${formatDate(date)}</span>
                 `;
 
-                if (edited) {
+                if (edited == 1) { // edited が 1 の場合のみ編集済みを表示
                     const editedElement = document.createElement('span');
                     editedElement.classList.add('message-edited');
                     editedElement.textContent = '編集済み';

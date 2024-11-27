@@ -57,6 +57,8 @@
         background-color: rgba(0, 0, 0, 0.7);
         justify-content: center;
         align-items: center;
+        /* グラフ画面とカレンダー画面でログアウトできるようにした */
+        z-index:2;
     }
 
     .logoutpop-box {
@@ -92,6 +94,7 @@
 <script>
     function openLogoutpop() {
         document.getElementById('logoutpop').style.display = 'flex';
+        document.getElementById('logoutpop').style.zindex = 20;
     }
 
     function closeLogoutpop() {

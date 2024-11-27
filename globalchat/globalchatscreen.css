@@ -211,8 +211,11 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     padding: 10px;
-    z-index: 1000;
+    /* 11/27追加あるいは変更 */
+    /* ログアウトのポップアップ画面が最前面に出るようにした */
+    z-index:1;
 }
+
 
 .preset-item {
     width: 50px;

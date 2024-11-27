@@ -35,6 +35,8 @@ body {
     height: 90vh;
     /* containerをいじれば位置が下がった */
     margin-top:5%;
+    /* グラフ画面とカレンダー画面でログアウトできるようにした */
+    z-index:1;
 }
 
 .sidebar {

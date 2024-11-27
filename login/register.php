@@ -16,13 +16,16 @@ $user_object->signUp($userMail, $userName, $userPass);
 <html lang="ja">
 
 <head>
-    <title>毎日の記録の入力画面</title>
-    <link rel="stylesheet" href="login.css">
     <meta charset="UTF-8">
+    <!-- 11/27書き換えあるいは追加 -->
+    <title>アカウント登録完了</title>
+    <link rel="stylesheet" href="register.css">
 </head>
 
 <body>
     <!-- 現在 -->
-    <h2>アカウントを登録しました</h2>
-    <p><a href="login_display.php">ログイン画面に移動</a></p>
+    <div class="container">
+        <h2>アカウントを登録しました</h2>
+        <p><a href="login_display.php">ログイン画面に移動</a></p>
+    <div>
 </body>

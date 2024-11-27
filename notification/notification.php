@@ -1,13 +1,30 @@
 <?php
 session_start();
+// ログインしていないときの処理
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ./../login/login_display.php');
+    exit();
+}
 $user_id = $_SESSION['user_id'];
 
 require_once __DIR__ . '/notification_class.php';
 $notification = new Notification();
 $globalChats = $notification->getGlobalChats($user_id);
-$chats = $notification->getChats($user_id);
+
+// 11/27書き換えあるいは追加
+// $chats = $notification->getChats($user_id);
+$teams = $notification->getTeamId($user_id);
+$array = array_fill(0, 10, 0);
+$i = 0;
+foreach($teams as $team){
+    $array[$i]  = $team['team_id'];
+    $i++;
+}
+$chats = $notification->getChats($user_id, $array[0], $array[1], $array[2], $array[3], $array[4], $array[5], $array[6], $array[7], $array[8], $array[9]);
+
+
 $comments = $notification->getComments($user_id, $user_id);
-$all = $notification->getAll($user_id, $user_id);
+$all = $notification->getAll($user_id, $user_id, $array[0], $array[1], $array[2], $array[3], $array[4], $array[5], $array[6], $array[7], $array[8], $array[9]);
 ?>
 
 <!DOCTYPE html>

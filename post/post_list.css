@@ -71,3 +71,13 @@ body {
 .create-post-button:hover {
     background-color: #45a049;
 }
+
+/* 11/27追加あるいは変更 */
+.liked_posts{
+    /* ログアウトのポップアップ画面が最前面に出るようにした */
+    z-index: 1;
+}
+.post-article{
+    /* ログアウトのポップアップ画面が最前面に出るようにした */
+    z-index: 1;
+}

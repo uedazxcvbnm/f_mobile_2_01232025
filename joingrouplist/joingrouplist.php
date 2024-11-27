@@ -44,9 +44,19 @@ $joined_teams = $team->getJoinedTeams($user_id);
                         <div class="group-members">メンバー数: <?= htmlspecialchars($group['size'], ENT_QUOTES, 'UTF-8') ?></div>
                     </div>
                     <div class="group-buttons">
-                        <button class="chat-button" onclick="goToChat(<?= htmlspecialchars($group['team_id'], ENT_QUOTES, 'UTF-8') ?>)">
+                        <!-- 11/27書き換えあるいは追加 -->
+                        <!-- <button class="chat-button" onclick="goToChat(<?= htmlspecialchars($group['team_id'], ENT_QUOTES, 'UTF-8') ?>)">
                             <img src="../chat/mesicon.png" alt="チャット" />
-                        </button>
+                        </button> -->
+                        <form method="POST" action="../chat/chatscreen.php">
+                            <?php
+                            echo '<input type="hidden" name="group_id" value="' . $group['team_id'] .'">';
+                            ?>
+                            <button class="chat-button" onclick="goToChat(<?= htmlspecialchars($group['team_id'], ENT_QUOTES, 'UTF-8') ?>)">
+                                <img src="../chat/mesicon.png" alt="チャット" />
+                            </button>
+                        </form>
+                        
                         <button class="timeline-button" onclick="goToTimeline(<?= htmlspecialchars($group['team_id'], ENT_QUOTES, 'UTF-8') ?>)">
                             <img src="../chat/timeline.png" alt="タイムライン" />
                         </button>
@@ -62,7 +72,9 @@ $joined_teams = $team->getJoinedTeams($user_id);
     <script>
         // チャット画面へ遷移する関数
         function goToChat(groupId) {
-            window.location.href = "../chat/chatscreen.php?group_id=" + encodeURIComponent(groupId);
+            // window.location.href = "../chat/chatscreen.php?group_id=" + encodeURIComponent(groupId);
+            // 11/27書き換えあるいは追加
+            window.location.href = "../chat/chatscreen.php"; //?group_id=" + encodeURIComponent(groupId);
         }
 
         // タイムライン画面へ遷移する関数

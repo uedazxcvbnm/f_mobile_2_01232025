@@ -14,7 +14,9 @@ try {
 
     // ログインしているユーザーのIDをセッションから取得
     if (!isset($_SESSION['user_id'])) {
-        echo "ログインが必要です。";
+        // 11/27書き換えあるいは追加
+        // echo "ログインが必要です。";
+        header('Location: ./../login/login_display.php');
         exit;
     }
 

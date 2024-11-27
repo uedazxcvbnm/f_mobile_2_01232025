@@ -65,6 +65,25 @@ $result = $stmt->get_result();
 $post = $result->fetch_assoc();
 $stmt->close();
 
+// URLのパラメータから取得
+if(isset($_GET['page']) && is_numeric($_GET['page'])) {
+    $comment_page = $_GET['page'];
+} else {
+    $comment_page = 1;
+}
+// $comment_limitを10より大きくするとなぜか画面がバグる
+// chatgptによると変数の遅延評価、キャッシュの影響、PHPの出力バッファリングなどが原因の可能性があるらしい。専門用語は調べてないけど
+$comment_limit=10;
+$comment_offset = ($comment_page - 1) * $comment_limit;
+$comment_count_sql = 'SELECT COUNT(*) as cnt FROM comments';
+$stmt = $conn->prepare($comment_count_sql);
+$stmt->execute();
+$result = $stmt->get_result();
+$comment_count = $result->fetch_assoc();
+$stmt->close();
+// var_dump($comment_count);
+$max_page = ceil($comment_count['cnt'] / $comment_limit);
+
 
 $check_like_sql = "SELECT * FROM likes WHERE post_id = ? AND user_id = ?";
 $stmt_check_like = $conn->prepare($check_like_sql);
@@ -75,7 +94,8 @@ $is_liked = ($result_check_like->num_rows > 0); // 判断是否已点赞
 $stmt_check_like->close();
 
 
-$sql_comments = "SELECT comments.*, user.username FROM comments JOIN user ON comments.user_id = user.user_id WHERE post_id = ?";
+// $sql_comments = "SELECT comments.*, user.username FROM comments JOIN user ON comments.user_id = user.user_id WHERE post_id = ?";
+$sql_comments = "SELECT comments.*, user.username FROM comments JOIN user ON comments.user_id = user.user_id WHERE post_id = ? LIMIT $comment_limit OFFSET $comment_offset";
 $stmt_comments = $conn->prepare($sql_comments);
 $stmt_comments->bind_param("i", $post_id);
 $stmt_comments->execute();
@@ -93,177 +113,7 @@ $result_comments = $stmt_comments->get_result();
     require_once __DIR__ . '../../header/header.php';
     ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            padding-top: 80px;
-        }
-
-        .container {
-            margin-top: 20px;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .post-content {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
-
-        .post-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .post-author {
-            font-size: 16px;
-            color: #888;
-            margin-bottom: 20px;
-        }
-
-        .post-body {
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .post-tags {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #777;
-        }
-
-        .comment-section {
-            max-width: 800px;
-            margin: 0 auto;
-            padding-bottom: 1200px;
-        }
-
-        .comment-item {
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            width: 60%;
-            background-color: #eef6fa;
-            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .comment-left {
-            text-align: left;
-            background-color: #eef6fa;
-            float: left;
-            clear: both;
-        }
-
-        .comment-right {
-            text-align: left;
-            /* 从左对齐 */
-            background-color: #e1f7d5;
-            margin-left: auto;
-            float: right;
-            clear: both;
-        }
-
-        .comment-item strong {
-            display: block;
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 5px;
-        }
-
-        .comment-item p {
-            margin: 5px 0;
-            word-break: break-word;
-            /* 添加这个属性实现自动换行 */
-            white-space: pre-wrap;
-            /* 保留文本中的换行符 */
-        }
-
-        .comment-input {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #fff;
-            padding: 15px;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .comment-input textarea {
-            width: 80%;
-            height: 50px;
-            resize: none;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-right: 10px;
-        }
-
-        .comment-input button {
-            background-color: #1578c9;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            cursor: pointer;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .comment-input button:hover {
-            background-color: #136aa7;
-        }
-
-
-        .mention-user {
-            cursor: pointer;
-            color: #1a73e8;
-        }
-
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            cursor: pointer;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .like-btn {
-            background-color: #303030;
-            border: none;
-            color: white;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        .like-btn i {
-            margin-right: 5px;
-        }
-
-        .like-btn:hover {
-            background-color: #606060;
-        }
-    </style>
+    <link rel="stylesheet" href="./post_detail.css">
 </head>
 
 <body>
@@ -305,12 +155,68 @@ $result_comments = $stmt_comments->get_result();
 
         <?php while ($comment = $result_comments->fetch_assoc()) {
             $comment_class = ($current_user_id == $comment['user_id']) ? 'comment-right' : 'comment-left';
-        ?>
-            <div class="comment-item <?php echo $comment_class; ?>">
-                <strong><span class="mention-user" onclick="mentionUser('<?php echo htmlspecialchars($comment['username']); ?>')"><?php echo htmlspecialchars($comment['username']); ?></span></strong>
-                <p><?php echo nl2br(htmlspecialchars($comment['comment_text'])); ?></p>
-            </div>
-        <?php } ?>
+            echo '<div class="comment-item '.$comment_class.'">';
+            echo '<strong><span class="mention-user" onclick="mentionUser('.htmlspecialchars($comment['username']).')">'.htmlspecialchars($comment['username']).'</span></strong>';
+            echo '<p>'.nl2br(htmlspecialchars($comment['comment_text'])).'</p>';
+            echo '</div>';
+        } 
+        
+        $display_number_first = 10*($comment_page-1)+1;
+        if ($comment_page == $max_page && $comment_count['cnt'] % 10 !== 0){
+            $display_number_last = 10*($comment_page-1)+$comment_count['cnt'] % 10;
+        } else{
+            $display_number_last = 10*$comment_page;
+        }
+        // if($page == $max_page && $count['cnt'] % 5 !== 0) {
+        //     $to_record = ($page - 1) * 5 + $count['cnt'] % 5;
+        // } else {
+        //     $to_record = $page * 5;
+        // }
+        // echo '<div class="pagination">';の上にecho $comment_page;を置かないと、if ($comment_page > 1) {以下のコードがうまく動かない
+        // echo '<div class="current_page">現在のページは'.$max_page.'ページ中'.$comment_page.'ページです</div>';
+        if($display_number_last % 5 == 1){
+            echo '<div class="current_page">現在の表示件数は'.$comment_count['cnt'].'個中'.$display_number_first.'個です</div>';
+        } else{
+            echo '<div class="current_page">現在の表示件数は'.$comment_count['cnt'].'個中'.$display_number_first.'～'.$display_number_last.'個です</div>';
+        }
+        echo '<div class="pagination">';
+            if ($comment_page > 1) {
+                echo '<a class="prevornext" href="?id='.$post_id.'&page='. ($comment_page - 1) . '">&laquo;</a>';
+            }else{
+                // ボタンが無効の場合のCSS
+                echo '<span class="first_last_page">&laquo;</span>';
+            }
+            // ページの表示範囲
+            if ($comment_page==1 || $comment_page==$max_page){
+                $page_range = 4;
+            } elseif ($comment_page==2 || $comment_page==$max_page-1){
+                $page_range = 3;
+            } else {
+                $page_range = 2;
+            }
+                
+            // <!-- 数字が書かれたボタンで移動 -->
+            for ($i=1;$i<=$max_page;$i++){
+                if($i >= ($comment_page - $page_range) && $i<=($comment_page + $page_range)){
+                    // 現在のページ番号のボタンをクリックしても
+                    if($comment_page==$i){
+                        // ボタンが無効の場合のCSS
+                        echo '<span class="now_page_number">'.$i.'</span>';
+                    } else {
+                        echo '<a class="page_number" href="?id='.$post_id.'&page='.$i.'">'.$i.'</a>';
+                    }
+                }
+            }
+            if($comment_page<$max_page){
+                echo '<a class="prevornext" href="?id='.$post_id.'&page='. ($comment_page + 1) . '">&raquo;</a>';
+            }else{
+                // ボタンが無効の場合のCSS
+                echo '<span class="first_last_page">&raquo;</span>';
+            }
+        echo "</div>";
+        ?>        
+            
+        
     </div>
 
     <div class="comment-input">

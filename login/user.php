@@ -8,6 +8,8 @@ class User extends dbdata
     public function signUp($userMail, $userName, $userPass)
     {
         // プレーンテキストで保存（セキュリティ上の考慮は必要）
+        $hashedPass = password_hash($userPass, PASSWORD_DEFAULT);
+
         $sql = 'SELECT * FROM user WHERE user_mail = ?';
         $stmt = $this->query($sql, [$userMail]);
         $result = $stmt->fetch();
@@ -18,7 +20,10 @@ class User extends dbdata
         } else {
             // 新規登録の挿入処理
             $sql = "INSERT INTO user(user_mail, username, password) VALUES(?, ?, ?)";
-            $result = $this->exec($sql, [$userMail, $userName, $userPass]);
+
+            // 11/27書き換えあるいは追加
+            // $result = $this->exec($sql, [$userMail, $userName, $userPass]);
+            $result = $this->exec($sql, [$userMail, $userName, $hashedPass]);
         }
 
         return $result ? '' : '登録に失敗しました。';
@@ -51,13 +56,15 @@ class User extends dbdata
                 $seconds = $remainingTime % 60;
                 return "アカウントがロックされています。あと {$minutes}分 {$seconds}秒後に再試行してください。";
             } else {
-                // ペナルティ時間が経過していたらペナルティ開始時間のみをリセット
+                // 11/27書き換えあるいは追加
+                // ペナルティ時間が終了していたらペナルティ開始時間のみをリセット
                 $this->resetPenaltyStart($result['user_id']);
             }
         }
 
-        // パスワードが一致するか確認（プレーンテキストでの比較）
-        if ($password === $result['password']) {
+        // 11/27書き換えあるいは追加
+        // パスワードが一致するか確認
+        if (password_verify($password, $result['password'])) {
             $this->resetFailedAttempts($result['user_id']); // 成功時に失敗回数とペナルティ時間をリセット
             return $result; // ログイン成功
         }
@@ -73,6 +80,9 @@ class User extends dbdata
 
         // 5回目未満の失敗の場合、残り試行回数を表示
         $remainingAttempts = 5 - $result['failed_attempts'];
+        if ($remainingAttempts < 1) {
+            $remainingAttempts = 1; // 残り試行回数を一律で1と表示
+        }
         return "ユーザーID、パスワードを確認してください。残り試行回数: {$remainingAttempts}";
     }
 

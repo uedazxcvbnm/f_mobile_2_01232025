@@ -1,10 +1,17 @@
 <?php
 session_start();
+// 11/27書き換えあるいは追加
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ./../login/login_display.php');
+    exit();
+}
 
 // チャット画面でユーザーIDと名前を取得する
 $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'ゲスト';
-$group_id = isset($_GET['group_id']) ? intval($_GET['group_id']) : 0;
+// 11/27書き換えあるいは追加
+// $group_id = isset($_GET['group_id']) ? intval($_GET['group_id']) : 0;
+$group_id = isset($_POST['group_id']) ? intval($_POST['group_id']) : 0;
 
 $servername = "localhost";
 $db_username = "kobe";
@@ -16,24 +23,26 @@ try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $db_username, $db_password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // 11/27書き換えあるいは追加
     // URLパラメータから `group_id` が取得できない場合のみ `joined_teams` テーブルから取得
-    if ($group_id === 0 && $user_id > 0) {
+    // if ($group_id === 0 && $user_id > 0) {
         // joined_teams テーブルから user_id が参加しているチームを取得
-        $stmt = $conn->prepare("SELECT team_id FROM joined_teams WHERE user_id = :user_id LIMIT 1");
-        $stmt->bindParam(':user_id', $user_id);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    //     $stmt = $conn->prepare("SELECT team_id FROM joined_teams WHERE user_id = :user_id LIMIT 1");
+    //     $stmt->bindParam(':user_id', $user_id);
+    //     $stmt->execute();
+    //     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($result) {
-            $group_id = $result['team_id'];
-        } else {
-            die("有効なグループIDを取得できませんでした");
-        }
-    }
+    //     if ($result) {
+    //         $group_id = $result['team_id'];
+    //     } else {
+    //         die("有効なグループIDを取得できませんでした");
+    //     }
+    // }
 
     // group_id が取得できなかった場合にエラーを出す
     if ($group_id === 0) {
-        die("有効なグループIDを指定してください");
+        // die("有効なグループIDを指定してください");
+        die("無効なアクセスです");        
     }
 
     // グループ名と参加人数を取得する

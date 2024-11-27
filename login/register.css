@@ -1,0 +1,38 @@
+body {
+    background-color: #f0f8ff;
+    /* 全体的な背景に薄い青色を使用 */
+    font-family: Arial, sans-serif;
+    color: #333333;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+h2 {
+    color: #1578c9;
+    margin-bottom: 20px;
+}
+p {
+    font-size: 16px;
+    color: #333333;
+}
+p a.button {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #ffffff;
+    background-color: #1578c9;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+p a.button:hover {
+    background-color: #105ea6;
+}

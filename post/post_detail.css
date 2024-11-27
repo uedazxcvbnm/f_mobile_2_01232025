@@ -1,0 +1,188 @@
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    padding-top: 80px;
+}
+.container {
+    margin-top: 20px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.post-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+.post-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+.post-author {
+    font-size: 16px;
+    color: #888;
+    margin-bottom: 20px;
+}
+.post-body {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+.post-tags {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #777;
+}
+.comment-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-bottom:225px;
+    max-height:10000000000000000px;
+    overflow-y: auto;
+}
+.comment-item {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    width: 60%;
+    background-color: #eef6fa;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+.comment-left {
+    text-align: left;
+    background-color: #eef6fa;
+    float: left;
+    clear: both;
+}
+.comment-right {
+    text-align: left;
+    /* 从左对齐 */
+    background-color: #e1f7d5;
+    margin-left: auto;
+    float: right;
+    clear: both;
+}
+.comment-item strong {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+.comment-item p {
+    margin: 5px 0;
+    word-break: break-word;
+    /* 添加这个属性实现自动换行 */
+    white-space: pre-wrap;
+    /* 保留文本中的换行符 */
+}
+.comment-input {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
+    padding: 15px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    /* ログアウトのポップアップ画面が最前面に出るようにした */
+    z-index:1;
+}
+.comment-input textarea {
+    width: 80%;
+    height: 50px;
+    resize: none;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+.comment-input button {
+    background-color: #1578c9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+.comment-input button:hover {
+    background-color: #136aa7;
+}
+.mention-user {
+    cursor: pointer;
+    color: #1a73e8;
+}
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+button:hover {
+    background-color: #45a049;
+}
+.like-btn {
+    background-color: #303030;
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+}
+.like-btn i {
+    margin-right: 5px;
+}
+.like-btn:hover {
+    background-color: #606060;
+}
+/* コメントの量が多い場合数ページに分けて表示 */
+.current_page{
+    display:flex;
+    justify-content: center;
+    margin-top:1000px;
+}
+.pagination{
+    display:flex;
+    justify-content: center;
+    /* margin-top:px; */
+}
+.prevornext{
+    border: 1px;
+    margin:40px;
+    background-color: #606060;
+    width:10px;
+    color: #f0f0f0;
+}
+.first_last_page{
+    border: 1px;
+    margin:40px;
+    background-color: #b8b8b8;    
+    width:10px;
+    color: #f0f0f0;
+}
+.page_number{
+    border: 1px;
+    margin:40px;
+    width:10px;
+    color: #f0f0f0;
+    background-color: #606060;
+}
+.now_page_number{
+    border: 1px;
+    margin:40px;
+    background-color: #b8b8b8;
+    width:10px;
+    color: #f0f0f0;
+}

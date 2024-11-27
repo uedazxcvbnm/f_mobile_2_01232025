@@ -54,9 +54,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 setTimeout(updatePenaltyCountdown, 1000);
             } else {
                 // ペナルティが解除されたらタイマーを消してフォームを有効化
-                document.getElementById("penalty_timer").innerText = "";
-                document.getElementById("login_form").style.display = "block";
-                document.getElementById("other_account_button").style.display = "none";
+                // document.getElementById("penalty_timer").innerText = "";
+                //document.getElementById("login_form").style.display = "block";
+                // document.getElementById("other_account_button").style.display = "none";
+
+                // <!-- 11/27書き換えあるいは追加 -->
+                // ペナルティが解除されたらメッセージをクリアし、ページの再読み込みを促す
+                document.getElementById("penalty_timer").innerText = "ペナルティ時間が終了しました。ページを再読み込みしてください。";
+                document.querySelector(".message").innerText = ""; // 「アカウントがロックされています」を消去
             }
         }
 
@@ -68,10 +73,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         };
 
+        // 11/27書き換えあるいは追加
         function showLoginForm() {
-            document.getElementById("login_form").style.display = "block";
-            document.getElementById("penalty_timer").innerText = "";
-            document.getElementById("other_account_button").style.display = "none";
+            // document.getElementById("login_form").style.display = "block";
+            // document.getElementById("penalty_timer").innerText = "";
+            // document.getElementById("other_account_button").style.display = "none";
+            location.reload();
         }
     </script>
 </head>
@@ -83,14 +90,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- メッセージ表示部分 -->
             <?php if ($loginMessage): ?>
-                <p class="message"><?php echo htmlspecialchars($loginMessage, ENT_QUOTES, 'UTF-8'); ?></p>
-            <?php endif; ?>
+                <!-- 11/27書き換えあるいは追加 -->
+                <p class="error_message"><?php echo htmlspecialchars($loginMessage, ENT_QUOTES, 'UTF-8'); ?></p>
+                <?php endif; ?>
 
             <!-- ペナルティ残り時間表示部分 -->
             <p id="penalty_timer"></p>
 
             <!-- 別のアカウントでログインボタン -->
-            <button id="other_account_button" style="display:none;" onclick="showLoginForm()">別のアカウントでログイン</button>
+            <!-- 11/27書き換えあるいは追加 -->
+            <button id="other_account_button" style="display:none;" onclick="showLoginForm()">ページを再読み込み</button>
 
             <!-- ログインフォーム -->
             <form id="login_form" method="POST" action="login_display.php" style="display: <?php echo $penaltyRemainingTime > 0 ? 'none' : 'block'; ?>;">
@@ -98,8 +107,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div>パスワード：<input type="password" name="password_info" required></div>
                 <p><input type="submit" value="ログイン" class="login_button"></p>
             </form>
-
-            <a href="new_account_display.php">アカウントがない場合新規登録</a>
+            
+            <!-- 11/27書き換えあるいは追加 -->
+            <!-- <a href="new_account_display.php">アカウントがない場合新規登録</a> -->
+            <a href="new_account_display.php" style="display: <?php echo $penaltyRemainingTime > 0 ? 'none' : 'block'; ?>;">アカウントがない場合新規登録</a>
         </div>
     </div>
 </body>

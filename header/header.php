@@ -121,6 +121,8 @@
         background-color: rgba(0, 0, 0, 0.7);
         justify-content: center;
         align-items: center;
+        /* ログアウトのポップアップ画面が最前面に出るようにした */
+        z-index:2;
     }
 
     .logoutpop-box {

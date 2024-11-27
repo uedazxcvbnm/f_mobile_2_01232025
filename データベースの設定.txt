@@ -192,3 +192,13 @@ CREATE TABLE profiles (
 ALTER TABLE profiles
 ADD COLUMN user_id INT NOT NULL,
 ADD FOREIGN KEY (user_id) REFERENCES user(user_id);
+
+-- 11/27書き換えあるいは追加
+ALTER TABLE user
+-- パスワード失敗回数を追跡
+ADD COLUMN failed_attempts INT DEFAULT 0,
+-- ペナルティが発生した時刻
+ADD COLUMN penalty_start DATETIME NULL;
+
+-- PBL3_#5
+ALTER TABLE user MODIFY password VARCHAR(255);
