@@ -2,24 +2,27 @@
     <div class="nav-container">
         <div class="nav-visible">
             <a class="nav-link" href="../input_daily_record/input_alchol_count.php">登録</a>
-            <a class="nav-link" href="../joingrouplist/joingrouplist.php">参加済みグループ</a>
-            <a class="nav-link" href="../globalchat/globalchatscreen.php">全体チャット</a>
+            <a class="nav-link" href="../joingrouplist/joingrouplist.php">参加グループ</a>
+            <a class="nav-link" href="../globalchat/globalchatscreen.php">チャット</a>
             <a class="nav-link" href="../notification/notification.php">通知</a>
         </div>
         <span class="menu-toggle" onclick="toggleMenu()">☰</span>
-        <div class="nav-hidden">
-            <ul class="nav-list">
-                <li><a class="nav-link" href="../input_daily_record/graph/graph_count.php">グラフ</a></li>
-                <li><a class="nav-link" href="../input_daily_record/calendar/calendar.php">カレンダー</a></li>
-                <li><a class="nav-link" href="../team/team_search.php">グループ検索</a></li>
-                <li><a class="nav-link" href="../post/post_list.php">投稿一覧</a></li>
-                <li><a class="nav-link" href="../post/liked_posts.php">いいねリスト</a></li>
-                <li><a class="nav-link" href="../profile/profile.php">プロフィール</a></li>
-                <li><a onclick="openLogoutpop()">ログアウト</a></li>
-            </ul>
-        </div>
     </div>
 </nav>
+
+<!-- 将 .nav-hidden 移到 <nav> 外部 -->
+<div class="nav-hidden">
+    <span class="close-menu" onclick="toggleMenu()">×</span>
+    <ul class="nav-list">
+        <li><a class="nav-link" href="../input_daily_record/graph/graph_count.php">グラフ</a></li>
+        <li><a class="nav-link" href="../input_daily_record/calendar/calendar.php">カレンダー</a></li>
+        <li><a class="nav-link" href="../team/team_search.php">グループ検索</a></li>
+        <li><a class="nav-link" href="../post/post_list.php">投稿一覧</a></li>
+        <li><a class="nav-link" href="../post/liked_posts.php">いいねリスト</a></li>
+        <li><a class="nav-link" href="../profile/profile.php">プロフィール</a></li>
+        <li><a onclick="openLogoutpop()">ログアウト</a></li>
+    </ul>
+</div>
 
 <div id="logoutpop" class="logoutpop-container">
     <div class="logoutpop-box">
@@ -31,35 +34,43 @@
         </div>
     </div>
 </div>
+
 <style>
     nav {
-        width: 100%;
-        background-color: #123C69;
-        padding: 10px 20px;
-        box-sizing: border-box;
         position: fixed;
         top: 0;
         left: 0;
+        width: 100%;
+        height: 60px;
+        /* 设置固定高度 */
+        background-color: #123C69;
+        padding: 0 15px;
+        box-sizing: border-box;
         z-index: 10;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
     }
 
     .nav-container {
+        height: 100%;
         display: flex;
         align-items: center;
-        width: 100%;
-        justify-content: space-between;
+    }
+
+    .nav-visible {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
     }
 
     .nav-visible a {
         text-decoration: none;
         color: white;
         font-size: 14px;
-        margin-right: 10px;
-        padding: 5px 10px;
+        margin-right: 5px;
+        padding: 0 8px;
         border-radius: 4px;
+        white-space: nowrap;
+        line-height: 60px;
+        /* 使文字垂直居中 */
     }
 
     .nav-visible a:hover,
@@ -72,24 +83,39 @@
         font-size: 24px;
         color: white;
         cursor: pointer;
+        margin-left: auto;
+        line-height: 60px;
+        /* 使图标垂直居中 */
     }
 
+    /* 隐藏菜单样式 */
     .nav-hidden {
         display: none;
-        position: absolute;
+        position: fixed;
+        /* 固定定位 */
         top: 60px;
+        /* 与导航栏高度匹配 */
         left: 0;
-        background-color: #123C69;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        z-index: 15;
         width: 100%;
+        background-color: #123C69;
+        z-index: 15;
+        overflow-y: auto;
+    }
+
+    .close-menu {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 24px;
+        color: white;
+        cursor: pointer;
     }
 
     .nav-list {
         list-style: none;
         margin: 0;
-        padding: 10px 0;
+        padding: 40px 0 10px 0;
+        /* 顶部留出空间给关闭按钮 */
     }
 
     .nav-list li {
@@ -113,14 +139,22 @@
 
     .logoutpop-container {
         display: none;
+        /* 初始状态隐藏 */
         position: fixed;
+        /* 固定定位，覆盖整个视口 */
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.7);
+        /* 半透明背景 */
         justify-content: center;
+        /* 水平居中 */
         align-items: center;
+        /* 垂直居中 */
+        z-index: 20;
+        /* 确保弹窗在其他元素之上 */
+        /* 移除了 display: flex; */
     }
 
     .logoutpop-box {
@@ -137,41 +171,22 @@
         position: absolute;
         top: 10px;
         right: 10px;
+        font-size: 24px;
         cursor: pointer;
     }
 
-    input {
+    .lobt input[type="button"] {
         width: 180px;
         height: 50px;
         border-radius: 30px;
+        margin: 10px;
+        font-size: 16px;
     }
 
-    .lobt {
-        margin-top: 20px;
-
-    }
-
-
-    @media screen and (max-width: 768px) {
-        .nav-visible a {
-            font-size: 12px;
-            padding: 5px;
-            margin-right: 5px;
-        }
-
-        .menu-toggle {
-            font-size: 24px;
-        }
-
-        .nav-hidden {
-            top: 50px;
-
-        }
-
-        .nav-list a {
-            font-size: 14px;
-            padding: 10px;
-        }
+    /* 重置 body 的样式 */
+    body {
+        margin: 0;
+        padding: 0;
     }
 </style>
 
