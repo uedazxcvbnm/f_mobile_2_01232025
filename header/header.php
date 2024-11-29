@@ -14,8 +14,8 @@
 <div class="nav-hidden">
     <span class="close-menu" onclick="toggleMenu()">×</span>
     <ul class="nav-list">
-        <li><a class="nav-link" href="../input_daily_record/graph/graph_count.php">グラフ</a></li>
-        <li><a class="nav-link" href="../input_daily_record/calendar/calendar.php">カレンダー</a></li>
+        <li><a class="nav-link" href="./../input_daily_record/graph/graph_count.php">グラフ</a></li>
+        <li><a class="nav-link" href="./../input_daily_record/calendar/calendar.php">カレンダー</a></li>
         <li><a class="nav-link" href="../team/team_search.php">グループ検索</a></li>
         <li><a class="nav-link" href="../post/post_list.php">投稿一覧</a></li>
         <li><a class="nav-link" href="../post/liked_posts.php">いいねリスト</a></li>
