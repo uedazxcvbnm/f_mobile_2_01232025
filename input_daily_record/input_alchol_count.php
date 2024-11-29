@@ -16,7 +16,7 @@ if (!isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <?php
-    require_once __DIR__ . '../../header/header.php';
+    require_once __DIR__ . '/./../header/header.php';
     ?>
 </head>
 <style>

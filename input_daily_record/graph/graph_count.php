@@ -21,7 +21,7 @@ if (!isset($_SESSION['user_id'])) {
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 
     <?php
-    require_once __DIR__ . '/../../header/header.php';
+    require_once __DIR__ . '/./../header_graph.php';
     ?>
 </head>
 
