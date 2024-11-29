@@ -160,28 +160,28 @@ button:hover {
 }
 .prevornext{
     border: 1px;
-    margin:40px;
+    margin:25px;
     background-color: #606060;
     width:10px;
     color: #f0f0f0;
 }
 .first_last_page{
     border: 1px;
-    margin:40px;
+    margin:25px;
     background-color: #b8b8b8;    
     width:10px;
     color: #f0f0f0;
 }
 .page_number{
     border: 1px;
-    margin:40px;
+    margin:25px;
     width:10px;
     color: #f0f0f0;
     background-color: #606060;
 }
 .now_page_number{
     border: 1px;
-    margin:40px;
+    margin:25px;
     background-color: #b8b8b8;
     width:10px;
     color: #f0f0f0;

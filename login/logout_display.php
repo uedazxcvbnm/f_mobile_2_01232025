@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="ja">
+<?php
+    session_start();
+    $_SESSION = array();
+    session_destroy();
+?>
+
 
 <head>
     <meta charset="UTF-8">
