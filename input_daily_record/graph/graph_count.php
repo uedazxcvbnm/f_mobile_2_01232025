@@ -1,10 +1,10 @@
 <?php
-    session_start();
-    // ログインしていないときの処理
-    if (!isset($_SESSION['user_id'])){
-        header('Location: ./../../login/login_display.php');
-        exit();
-    }
+session_start();
+// ログインしていないときの処理
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ./../../login/login_display.php');
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -15,88 +15,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>禁酒アプリ - グラフ</title>
     <link rel="stylesheet" href="graph.css">
-    
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/date-fns"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
     <?php
-        require_once __DIR__ . '/../header_graph.php';
+    require_once __DIR__ . '/../../header/header.php';
     ?>
 </head>
 
 <body>
-    
+
     <div class="container">
         <div class="sidebar">
             <h2>禁酒アプリ</h2>
             <ul>
-                <!-- <p><li><a href="#">ホーム</a></li></p> -->
                 <li><a href="./../calendar/calendar.php">カレンダーを見る</a></li>
             </ul>
         </div>
         <div class="main-content">
-            <button class="week_change" id="prevWeek">先週</button>
-            <button class="week_change" id="nextWeek">来週</button>
+            <div class="controls">
+                <button class="week_change" id="prevWeek">先週</button>
+                <button class="week_change" id="nextWeek">来週</button>
+            </div>
             <h2>一日に酒を飲んだ回数</h2>
-            <canvas id="amountChart" width="400" height="200"></canvas>
-
+            <canvas id="amountChart"></canvas>
             <?php
-                $today_date = date('Y-m-d');
+            $today_date = date('Y-m-d');
+            echo '<textarea id="date_output" readonly>選択された日付がここに表示されます</textarea>';
 
-                // echo '<input type="date" id="datePicker">';
-                echo '<textarea id="date_output">選択された日付がここに表示されます</textarea>';
+            echo '<div id="date_select">';
+            echo '<button value=1 id="today_button" class="alchol_timelist">今日</button>';
+            echo '<button value=2 id="yesterday_button" class="alchol_timelist">昨日</button>';
+            echo '<button value=3 id="b_yesterday_button" class="alchol_timelist">おととい</button>';
+            echo '</div>';
 
-                // 今日　昨日　一昨日　を指定できるボタンの設置場所
-                echo '<div id="date_select">';
-                echo '<button value=1 id="today_button" class="alchol_timelist">今日</button>';
-                echo '<button value=2 id="yesterday_button" class="alchol_timelist">昨日</button>';
-                echo '<button value=3 id="b_yesterday_button" class="alchol_timelist">おととい</button>';    
-                echo '</div>';
+            $selected_date = $today_date;
+            $user_id = $_SESSION['user_id'];
+            require_once __DIR__ . '/../classes/daily_record_method.php';
+            $dailyData = new dailyData();
+            $yesno_items = $dailyData->get_yesno_time($selected_date, $user_id);
 
-                // こっちのほうがよさそう
-                // echo '<button value=1 id="date_select" name="today_button" class="alchol_timelist">今日</button>';
-                // echo '<button value=2 id="date_select" name="yesterday_button" class="alchol_timelist">昨日</button>';
-                // echo '<button value=3 id="date_select" name="b_yesterday_button" class="alchol_timelist">おととい</button>';    
-                
-                
-                // カレンダーボタン設置場所
-
-
-                $selected_date = $today_date;
-                $user_id = $_SESSION['user_id'];
-                require_once __DIR__.'/../classes/daily_record_method.php';
-                $dailyData = new dailyData();
-                $yesno_items = $dailyData->get_yesno_time($selected_date, $user_id);
-                
-                echo '<table id="output_table">';
-                    echo '<tr>';
-                        echo '<th>飲酒の有無</th>';
-                        echo '<th>時刻</th>';
-                    echo '</tr>';
-                    foreach($yesno_items as $yesno_item) {
-                        echo '<tr>';
-                            if ($yesno_item['alchol_data'] == 1){
-                                echo '<td>飲酒した</td>';
-                            }elseif($yesno_item['alchol_data'] == 2){
-                                echo '<td>飲酒を我慢した</td>';
-                            }
-                            echo '<td>'.$yesno_item['date_hms'].'</td>';
-                        echo '</tr>';
-                    }
-                echo '</table>';
+            echo '<table id="output_table">';
+            echo '<tr>';
+            echo '<th>飲酒の有無</th>';
+            echo '<th>時刻</th>';
+            echo '</tr>';
+            foreach ($yesno_items as $yesno_item) {
+                echo '<tr>';
+                if ($yesno_item['alchol_data'] == 1) {
+                    echo '<td>飲酒した</td>';
+                } elseif ($yesno_item['alchol_data'] == 2) {
+                    echo '<td>飲酒を我慢した</td>';
+                }
+                echo '<td>' . htmlspecialchars($yesno_item['date_hms'], ENT_QUOTES, 'UTF-8') . '</td>'; // 安全输出
+                echo '</tr>';
+            }
+            echo '</table>';
             ?>
-
-            <!-- 現時点ではグラフは１つなので、２つ目以降はコメントアウト -->
-            <!-- <h2>酒に使った金額</h2>
-            <canvas id="costChart" width="400" height="200"></canvas> -->
-            <!-- 血圧のグラフをいったん消す -->
-            <!-- ヒアリングの結果次第で血圧のグラフをどうするか決める -->
-            <!-- <h2>血圧</h2>
-            <canvas id="pressureChart" width="400" height="200"></canvas> -->
         </div>
     </div>
+
 
     <script>
         const fetchData = async (startDate, endDate) => {
@@ -204,7 +184,7 @@
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            stepSize: 1  // グラフの縦軸の刻み幅を1に設定
+                            stepSize: 1 // グラフの縦軸の刻み幅を1に設定
                         }
                     }
                 }
@@ -218,7 +198,7 @@
         const dateInput = document.getElementById('date_select');
         const dateOutput = document.getElementById('date_output');
         const output_table = document.getElementById('output_table');
-        
+
 
         // ボタンを押すと変数に値を格納
         var today_button = document.getElementById('today_button');
@@ -240,7 +220,7 @@
                     console.log('232');
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                var selected_data = await response.json();  // PHPからのデータをJSON形式で受け取る
+                var selected_data = await response.json(); // PHPからのデータをJSON形式で受け取る
                 console.log("取得したデータ:", selected_data);
 
                 output_table.innerHTML = '';
@@ -259,26 +239,26 @@
                 headerRow.appendChild(alcholHeader);
                 headerRow.appendChild(dateHeader);
 
-                 // 取得したデータをテーブルに反映
-                 selected_data.forEach(item => {
+                // 取得したデータをテーブルに反映
+                selected_data.forEach(item => {
                     const row = output_table.insertRow();
                     const dateCell = row.insertCell(0);
                     const alcholCell = row.insertCell(0);
                     const otherDataCell = row.insertCell(1);
 
-                    
 
-                    
+
+
 
                     // dateCell.textContent = item.date; // 日付のプロパティ名に合わせる
-                    if(item.alchol_data==1){
+                    if (item.alchol_data == 1) {
                         alcholCell.textContent = '飲酒した'; // アルコール量のプロパティ名に合わせる
-                    }else if(item.alchol_data==2){
+                    } else if (item.alchol_data == 2) {
                         alcholCell.textContent = '飲酒しなかった'; // その他のデータのプロパティ名に合わせる
                     }
                     otherDataCell.textContent = item.date_hms;
                 });
-                
+
                 // 取得したデータをtextareaに反映
                 // output_table.value = JSON.stringify(selected_data, null, 2);
             } catch (error) {
@@ -288,65 +268,65 @@
         });
 
         // document.addEventListener('DOMContentLoaded', function() {
-            today_button.addEventListener("click", async function (){
-                const today_alcholList = new Date();
-                today_alcholList.setHours(0, 0, 0, 0);
-                toggleSelected_alcholList(today_button, yesterday_button, b_yesterday_button);
-                dateOutput.textContent = today_alcholList;
-                // 日付を取得
-                const selectedDate = today_alcholList;
+        today_button.addEventListener("click", async function() {
+            const today_alcholList = new Date();
+            today_alcholList.setHours(0, 0, 0, 0);
+            toggleSelected_alcholList(today_button, yesterday_button, b_yesterday_button);
+            dateOutput.textContent = today_alcholList;
+            // 日付を取得
+            const selectedDate = today_alcholList;
 
-                dateOutput.dispatchEvent(new Event('input'));
+            dateOutput.dispatchEvent(new Event('input'));
 
-                // console.log('a');
-                // 関数呼び出し　PHPにリクエストを送る
-                // dateOutput.addEventListener('DOMContentLoaded', async function() {
-                //     // php_send_selectedDate();
-                // })
-            });
+            // console.log('a');
+            // 関数呼び出し　PHPにリクエストを送る
+            // dateOutput.addEventListener('DOMContentLoaded', async function() {
+            //     // php_send_selectedDate();
+            // })
+        });
 
-            yesterday_button.addEventListener("click",async function (){
-                const today_alcholList = new Date();
-                today_alcholList.setHours(0, 0, 0, 0);
-                toggleSelected_alcholList(yesterday_button, today_button, b_yesterday_button);
-                date_output.textContent = new Date(today_alcholList.setDate(today_alcholList.getDate()-1));
-                // console.log(output.textContent);
+        yesterday_button.addEventListener("click", async function() {
+            const today_alcholList = new Date();
+            today_alcholList.setHours(0, 0, 0, 0);
+            toggleSelected_alcholList(yesterday_button, today_button, b_yesterday_button);
+            date_output.textContent = new Date(today_alcholList.setDate(today_alcholList.getDate() - 1));
+            // console.log(output.textContent);
 
-                console.log(dateOutput);
+            console.log(dateOutput);
 
-                dateOutput.dispatchEvent(new Event('input'));
+            dateOutput.dispatchEvent(new Event('input'));
 
-                // 日付を取得
-                // dateOutput.addEventListener('DOMContentLoaded', async function() {
-                //     // php_send_selectedDate();
-                // })
-                
-                // console.log(selectedDate);
-                // 関数呼び出し　PHPにリクエストを送る
-                // dateOutput.addEventListener('change', async function() {
-                //     php_send_selectedDate(selectedDate);
-                // })
-            });
+            // 日付を取得
+            // dateOutput.addEventListener('DOMContentLoaded', async function() {
+            //     // php_send_selectedDate();
+            // })
 
-            b_yesterday_button.addEventListener("click", function (){
-                const today_alcholList = new Date();
-                today_alcholList.setHours(0, 0, 0, 0);
-                toggleSelected_alcholList(b_yesterday_button, today_button, yesterday_button);
-                date_output.textContent = new Date(today_alcholList.setDate(today_alcholList.getDate()-2));
+            // console.log(selectedDate);
+            // 関数呼び出し　PHPにリクエストを送る
+            // dateOutput.addEventListener('change', async function() {
+            //     php_send_selectedDate(selectedDate);
+            // })
+        });
 
-                // console.log(dateOutput);
+        b_yesterday_button.addEventListener("click", function() {
+            const today_alcholList = new Date();
+            today_alcholList.setHours(0, 0, 0, 0);
+            toggleSelected_alcholList(b_yesterday_button, today_button, yesterday_button);
+            date_output.textContent = new Date(today_alcholList.setDate(today_alcholList.getDate() - 2));
 
-                console.log(dateOutput);
+            // console.log(dateOutput);
 
-                dateOutput.dispatchEvent(new Event('input'));
-                // const selectedDate = new Date(this.value);
-                // console.log(date_output.textContent);
-                // 日付を取得
-                // dateOutput.addEventListener('change', async function() {
-                
-            });
+            console.log(dateOutput);
+
+            dateOutput.dispatchEvent(new Event('input'));
+            // const selectedDate = new Date(this.value);
+            // console.log(date_output.textContent);
+            // 日付を取得
+            // dateOutput.addEventListener('change', async function() {
+
+        });
         // })
-        
+
 
         // PHPにリクエストを送る
         // async function php_send_selectedDate(){
@@ -368,9 +348,9 @@
         //         // output.innerHTML = "データの取得に失敗しました";
         //     }
         // }
-        
 
-        function toggleSelected_alcholList(selectedButton, otherButton1, otherButton2){
+
+        function toggleSelected_alcholList(selectedButton, otherButton1, otherButton2) {
             selectedButton.classList.add('selected');
             otherButton1.classList.remove('selected');
             otherButton2.classList.remove('selected');
@@ -409,7 +389,7 @@
         //         }
         //     }
         // });
-        
+
         // // ３つ目のグラフ
         // const pressureCtx = document.getElementById('pressureChart').getContext('2d');
         // const pressureChart = new Chart(pressureCtx, {
@@ -450,7 +430,6 @@
         //         }
         //     }
         // });
-
     </script>
 </body>
 

@@ -1,7 +1,7 @@
 <?php
 session_start();
 // ログインしていないときの処理
-if (!isset($_SESSION['user_id'])){
+if (!isset($_SESSION['user_id'])) {
     header('Location: ./../../login/login_display.php');
     exit();
 }
@@ -12,29 +12,29 @@ if (!isset($_SESSION['user_id'])){
 
 <head>
     <?php
-        require_once __DIR__ . '/../header_graph.php';
+    require_once __DIR__ . '/../../header/header.php';
     ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>禁酒アプリ - カレンダー</title>
-    <link rel="stylesheet" href="calendar.css">
+    <link rel="stylesheet" href="/mobile_teamF_alcohol/input_daily_record/calendar/calendar.css">
 </head>
 
 <body>
     <?php
-        $user_id = $_SESSION['user_id'];
+    $user_id = $_SESSION['user_id'];
 
-        // カレンダーの日付を取得（記録をしたor）
-        require_once __DIR__.'/../classes/daily_record_method.php';
-        $dailydata = new dailyData();
-        $datearray = $dailydata->get_date($user_id);
-        $datearray_json = json_encode($datearray);
+    // カレンダーの日付を取得（記録をしたor）
+    require_once __DIR__ . '/../classes/daily_record_method.php';
+    $dailydata = new dailyData();
+    $datearray = $dailydata->get_date($user_id);
+    $datearray_json = json_encode($datearray);
 
-        require_once __DIR__.'/../classes/daily_record_method.php';
-        $dailydata = new dailyData();
-        $alccountarray = $dailydata->get_alccount_calendar($user_id);
-        $alccountarray_json = json_encode($alccountarray);
-        
+    require_once __DIR__ . '/../classes/daily_record_method.php';
+    $dailydata = new dailyData();
+    $alccountarray = $dailydata->get_alccount_calendar($user_id);
+    $alccountarray_json = json_encode($alccountarray);
+
     ?>
     <div class="container">
         <div class="sidebar">
@@ -89,8 +89,8 @@ if (!isset($_SESSION['user_id'])){
 
             // アルコールの摂取量が０の日付を取得
             alccount_zero_date_list = [];
-            for (let i=0;i<alccountarray.length;i++){
-                if (alccountarray[i]==0){
+            for (let i = 0; i < alccountarray.length; i++) {
+                if (alccountarray[i] == 0) {
                     alccount_zero_date_list.push(datearray[i]);
                 }
             }
@@ -110,25 +110,24 @@ if (!isset($_SESSION['user_id'])){
                     } else {
                         const today = new Date();
                         const isToday = dayCount === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-                        
+
                         // console.log(currentMonth);
                         // datearray.includesでスタンプを表示
                         let currentMonth_comparsion = currentMonth + 1;
 
-                        if(currentMonth_comparsion<10){
-                            currentMonth_comparsion = '0'+currentMonth_comparsion;
+                        if (currentMonth_comparsion < 10) {
+                            currentMonth_comparsion = '0' + currentMonth_comparsion;
                         }
 
-                        if (dayCount>=1 && dayCount<10){
-                            daycount_comparsion = '0'+dayCount;
-                        }
-                        else{
+                        if (dayCount >= 1 && dayCount < 10) {
+                            daycount_comparsion = '0' + dayCount;
+                        } else {
                             daycount_comparsion = dayCount;
                         }
 
-                        today_comparsion = currentYear+'-'+currentMonth_comparsion+'-'+daycount_comparsion;
+                        today_comparsion = currentYear + '-' + currentMonth_comparsion + '-' + daycount_comparsion;
                         // console.log(today_comparsion);
-                        
+
                         // console.log(datearray);
                         // console.log(today_comparsion);
                         // console.log(alccountarray);
@@ -137,12 +136,12 @@ if (!isset($_SESSION['user_id'])){
                         // i=0;
                         // i = i+1;
                         // while(i<2){
-                            
+
                         // }
 
                         // 一時的にコメントアウト
                         // calendarHTML += `<td class="${isToday ? 'today' : ''}" onclick="handleDayClick(${dayCount})">${dayCount}</td>`;
-                        
+
 
                         // 今日の日付を取得
                         const today_date_calendar = new Date();
@@ -152,8 +151,8 @@ if (!isset($_SESSION['user_id'])){
 
                         // console.log(alccountarray.includes[0]);
                         // console.log();
-                        
-                        
+
+
 
                         calendarHTML += `<td class="${isToday ? 'today' : ''}">${dayCount}<br>
                         
@@ -180,11 +179,11 @@ if (!isset($_SESSION['user_id'])){
 
         // console.log(typeof datearray);
 
-        
+
         // console.log(Object.values(datearray));
-        
-        
-        
+
+
+
 
         function handleDayClick(day) {
             alert('日付: ' + day);
@@ -221,7 +220,7 @@ if (!isset($_SESSION['user_id'])){
 
         renderCalendar();
     </script>
-    
+
 </body>
 
 </html>
