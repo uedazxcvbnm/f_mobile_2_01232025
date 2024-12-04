@@ -1,69 +1,64 @@
-body{
+body {
     margin-top: 50px;
 }
-.team_search_side{
-    background-color: #f5f5f5;
-}
-.team_search_content{
-    margin:0 20%;
-    border: 0px solid #ccc;
-    /* background-color: #e1e9f3; */
-    background-color: #e1e9f3;
-}
-h1{
-    /* display: flex; */
+
+h1 {
     padding: 20px;
     margin-top: 60px;
     margin-bottom: 20px;
     border-radius: 10px;
     text-align: center;
+    font-size: 24px;
 }
-/* h1{
+
+
+button {
+    margin: 0;
+}
+
+.button-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    width: 80%;
-    height: 80px;
-    margin: 0 auto;
-    background-color: #1578c9;
-    color: white;
-    padding: 10px;
-    margin-top: 100px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-} */
-button{
-    width:400px;
-    height:300px;
-    background:white;
-    border-radius:30px;
-    margin: 10px;
-    font-size: 40px;
+}
+
+
+button.new_group_create,
+button.group_button {
+    width: 100%;
+    max-width: 300px;
+    height: 60px;
+    background: white;
+    border-radius: 30px;
+    margin: 10px 0;
+    font-size: 18px;
     cursor: pointer;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
-.bt{
-    text-align: center;
-}
-input{
-    width: 200px;
-    height: 50px;
-    border-radius: 30px;
-}
-.br{
-    text-align: right;
-    margin-right: 100px;
-}
-.mt{
-    margin-top: 50%;
+
+
+button.new_group_create {
+    background-color: #056be7;
+    color: white;
+    align-self: flex-start;
     margin-left: 50px;
 }
-.fsize{
-    font-size: 20px;
+
+
+button.group_button {
+    color: #1578c9;
+    background-color: #fef9ed;
 }
+
+
+.fsize {
+    font-size: 16px;
+}
+
 
 .popup-container {
     display: none;
+
     position: fixed;
     top: 0;
     left: 0;
@@ -72,38 +67,60 @@ input{
     background-color: rgba(0, 0, 0, 0.7);
     justify-content: center;
     align-items: center;
+    z-index: 1000;
+
 }
+
 
 .popup-box {
     background-color: #fff;
-    width: 400px;
-    height: 400px;
+    width: 90%;
+    max-width: 400px;
     padding: 20px;
-    border-radius: 5px;
-    text-align: center;
+    border-radius: 10px;
     position: relative;
+    text-align: center;
 }
+
 
 .close-button {
     position: absolute;
     top: 10px;
     right: 10px;
+    font-size: 24px;
     cursor: pointer;
-}
-.new_group_create{
-    background-color: #FFC107;
-    color:white;
+    background: none;
+    border: none;
+    color: #333;
 }
 
-.group_button{
-    /* color:white; */
-    color:#1578c9;
-    /* background-color: #FFF9E6; */
-    background-color: #fef9ed;
+
+
+
+.popup-box h2 {
+    margin-top: 0;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
-/* テスト：参加済みのグループの色 */
-/* .group_button_blue{
-    color:white;
-    background-color: #69a2d4;
-    /* background-color: #3381c1; 
-} */
+
+
+.popup-box p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+
+.popup-box input[type="submit"] {
+    background-color: #1578c9;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.popup-box input[type="submit"]:hover {
+    background-color: #125e9c;
+}
