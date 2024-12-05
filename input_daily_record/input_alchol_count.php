@@ -24,29 +24,20 @@ if (!isset($_SESSION['user_id'])) {
         background-color: #f5f5f5;
         margin: 0;
         padding: 0;
-        height: 100vh;
-
+        min-height: 100vh;
         display: flex;
         justify-content: center;
-
         align-items: center;
-
     }
-
 
     .input_daily_screen {
         background-color: #e1e9f3;
-
         padding: 20px;
         border-radius: 10px;
         box-sizing: border-box;
-
         width: 90%;
-
         max-width: 500px;
-
         margin: 0 auto;
-
     }
 
     .daily_registration_form {
@@ -54,7 +45,6 @@ if (!isset($_SESSION['user_id'])) {
         padding: 20px;
         border: 0;
         background-color: #ffffff;
-
         border-radius: 10px;
         box-sizing: border-box;
         width: 100%;
@@ -63,9 +53,7 @@ if (!isset($_SESSION['user_id'])) {
     h1 {
         text-align: center;
         font-size: 24px;
-
         margin-bottom: 20px;
-
     }
 
     .button,
@@ -77,17 +65,13 @@ if (!isset($_SESSION['user_id'])) {
         text-align: center;
         text-decoration: none;
         display: block;
-
         font-size: 16px;
         margin: 10px 0;
-
         cursor: pointer;
         border-radius: 8px;
         width: 100%;
-
         box-sizing: border-box;
     }
-
 
     .alchol_data_button.selected {
         border: 2.5px solid #FFD700;
@@ -95,10 +79,17 @@ if (!isset($_SESSION['user_id'])) {
         color: #fff;
     }
 
-
     .record_button {
         background-color: #5797cb;
         color: white;
+        width: 100%;
+        padding: 15px 0;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        box-sizing: border-box;
+        margin-top: 20px;
     }
 
     .record_button:hover {
