@@ -36,25 +36,42 @@ if (isset($_GET['group'])) {
 </head>
 
 <body>
-    <h1>グループ検索一覧</h1>
 
-    <div class="button-container">
+    <header>
+        <button id="back-button" onclick="history.back()">戻る</button>
+        <h1>グループ検索一覧</h1>
+    </header>
+
+
+    <div class="search-button">
         <button class="new_group_create" onclick="location.href='./team_create.php'">グループ作成</button>
+    </div>
 
+
+    <div class="group-list-container">
         <form method="GET" action="">
             <?php
             foreach ($teams as $team_item) {
-                echo '<button type="submit" name="group" value="' . htmlspecialchars($team_item['team_id'], ENT_QUOTES, 'UTF-8') . '" class="group_button">' . htmlspecialchars($team_item['name'], ENT_QUOTES, 'UTF-8') . '<br><div class="fsize">参加人数' . htmlspecialchars($team_item['size'], ENT_QUOTES, 'UTF-8') . '人</div></button>';
+                echo '<div class="group-item">';
+                echo '<div class="group-info">';
+                echo '<div class="group-name">' . htmlspecialchars($team_item['name'], ENT_QUOTES, 'UTF-8') . '</div>';
+                echo '<div class="group-members">参加人数: ' . htmlspecialchars($team_item['size'], ENT_QUOTES, 'UTF-8') . '人</div>';
+                echo '</div>';
+                echo '<div class="group-buttons">';
+                echo '<button type="submit" name="group" value="' . htmlspecialchars($team_item['team_id'], ENT_QUOTES, 'UTF-8') . '">グループの説明を見る</button>';
+                echo '</div>';
+                echo '</div>';
             }
             ?>
         </form>
     </div>
 
+
     <?php if (isset($_GET['group']) && $ident > 0 && !empty($group)) { ?>
         <div id="popup" class="popup-container">
             <div class="popup-box">
                 <button class="close-button" onclick="closePopup()">×</button>
-                <h2>グループ詳細</h2>
+                <h2><?php echo htmlspecialchars($group['name'], ENT_QUOTES, 'UTF-8'); ?></h2>
                 <p><?php echo htmlspecialchars($group['detail'], ENT_QUOTES, 'UTF-8'); ?></p>
                 <form method="POST" action="../team/team_user.php">
                     <input type="hidden" name="team_id" value="<?php echo htmlspecialchars($group['team_id'], ENT_QUOTES, 'UTF-8'); ?>">
