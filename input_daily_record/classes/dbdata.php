@@ -6,10 +6,10 @@ class dbdata
     // コンストラクタ
     public  function  __construct()
     {
-        // PDOオブジェクトを生成する 															
-        $dsn = 'mysql:host=localhost;dbname=pbl2;charset=utf8';
-        $user = 'kobe';
-        $password = 'denshi';
+        // PDOオブジェクトを生成する                                                             
+        $dsn = 'mysql:host=mysql311.phy.lolipop.lan;dbname=LAA1632250-pbl2;charset=utf8';
+        $user = 'LAA1632250';
+        $password = '9vWqKeipemkaEzZ';
         try {
             $this->pdo = new PDO($dsn, $user, $password);
         } catch (Exception  $e) {
@@ -23,10 +23,10 @@ class dbdata
     {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($array_params);
-        return $stmt;  // PDOステートメントオブジェクトを返すのでfetch( )、fetchAll( )で結果セットを取得									
+        return $stmt;  // PDOステートメントオブジェクトを返すのでfetch( )、fetchAll( )で結果セットを取得                                   
     }
 
-    // INSERT、UPDATE、DELETE文実行用のメソッド	
+    // INSERT、UPDATE、DELETE文実行用のメソッド    
     protected function exec($sql, $array_params)
     {
         $stmt = $this->pdo->prepare($sql);

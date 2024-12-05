@@ -3,10 +3,11 @@ session_start();
 
 
 // データベース接続情報
-$host = 'localhost';
-$dbname = 'pbl2';
-$username = 'kobe';
-$password = 'denshi';
+$servername = "mysql311.phy.lolipop.lan";
+$username = "LAA1632250";
+$password = "9vWqKeipemkaEzZ";
+$dbname = "LAA1632250-pbl2";
+
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
