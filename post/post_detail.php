@@ -75,8 +75,9 @@ if(isset($_GET['page']) && is_numeric($_GET['page'])) {
 // chatgptによると変数の遅延評価、キャッシュの影響、PHPの出力バッファリングなどが原因の可能性があるらしい。専門用語は調べてないけど
 $comment_limit=10;
 $comment_offset = ($comment_page - 1) * $comment_limit;
-$comment_count_sql = 'SELECT COUNT(*) as cnt FROM comments';
+$comment_count_sql = 'SELECT COUNT(*) as cnt FROM comments WHERE post_id = ?';
 $stmt = $conn->prepare($comment_count_sql);
+$stmt->bind_param("i", $post_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $comment_count = $result->fetch_assoc();
