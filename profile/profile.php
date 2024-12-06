@@ -2,29 +2,37 @@
 session_start();
 
 // データベース接続情報
-$host = 'localhost';
-$dbname = 'pbl2';
-$username = 'kobe';
-$password = 'denshi';
+$servername = "mysql311.phy.lolipop.lan";
+$username = "LAA1632250";
+$password = "9vWqKeipemkaEzZ";
+$dbname = "LAA1632250-pbl2";
 
 try {
-    // データベースに接続
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // MySQLに接続する
+    $pdo = new PDO("mysql:host=$servername;port=3306;dbname=$dbname;charset=utf8", $username, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ]);
+} catch (PDOException $e) {
+    // エラーメッセージを表示する代わりにログに記録し、ユーザーには一般的なメッセージを表示
+    error_log("データベース接続エラー: " . $e->getMessage());
+    die("データベースへの接続に失敗しました。後ほどもう一度お試しください。");
+}
 
-    // ログインしているユーザーのIDをセッションから取得
-    if (!isset($_SESSION['user_id'])) {
-        // 11/27書き換えあるいは追加
-        // echo "ログインが必要です。";
-        header('Location: ./../login/login_display.php');
-        exit;
-    }
+// ログインしているユーザーのIDをセッションから取得
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ./../login/login_display.php');
+    exit;
+}
 
-    $user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id'];
 
+try {
     // ユーザー情報とプロフィールを取得するクエリ
     $sql = "
-        SELECT u.username, COALESCE(p.profile_image, '../images/default.png') AS profile_image, 
+        SELECT u.username, 
+               p.profile_image, 
                COALESCE(p.goal, '目標が設定されていません') AS goal 
         FROM user u
         LEFT JOIN profiles p ON u.user_id = p.user_id 
@@ -39,8 +47,16 @@ try {
 
     if ($user) {
         $username = htmlspecialchars($user['username']);
-        $profile_image = htmlspecialchars($user['profile_image']);
+        $profile_image = $user['profile_image'];
         $goal = htmlspecialchars($user['goal']);
+
+        // フルURLを作成
+        $base_url = "https://alc-community.catfood.jp/mobile_teamF_alcohol/"; // 正しい公開URLに変更
+        if (!empty($profile_image) && strpos($profile_image, 'uploads/images/') === 0) {
+            $profile_image_url = $base_url . $profile_image; // パス全体を使用してURLを生成
+        } else {
+            $profile_image_url = $base_url . "uploads/images/default.jpg";
+        }
     } else {
         echo "ユーザー情報が見つかりません。";
         exit;
@@ -52,13 +68,6 @@ try {
 ?>
 
 <!DOCTYPE html>
-<html>
-
-<head>
-    <?php require_once __DIR__ . '../../header/header.php'; ?>
-    <link rel="stylesheet" href="../profile/profile.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -221,11 +230,19 @@ try {
         box-sizing: border-box;
     }
 </style>
+<html>
+
+<head>
+    <?php require_once __DIR__ . '../../header/header.php'; ?>
+    <link rel="stylesheet" href="../profile/profile.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
 
 <body>
     <div class="profile-content">
         <h1>プロフィール</h1>
-        <img src="<?php echo $profile_image; ?>" alt="プロフィール画像">
+        <img src="<?php echo htmlspecialchars($profile_image_url . '?t=' . time()); ?>" width="120" height="120"><br>
+
         <h2><?php echo $username; ?></h2>
         <p>目標</p>
         <textarea readonly><?php echo $goal; ?></textarea>
@@ -239,6 +256,7 @@ try {
                 <input type="button" name="password" value="パスワード変更" class="pass_change">
             </a>
         </div>
+    </div>
 </body>
 
 </html>
