@@ -63,17 +63,33 @@ if (!isset($_SESSION['user_id'])) {
             echo '<th>時刻</th>';
             echo '</tr>';
             foreach ($yesno_items as $yesno_item) {
-                echo '<tr>';
+                $alcholClass = '';
                 if ($yesno_item['alchol_data'] == 1) {
-                    echo '<td>飲酒した</td>';
+                    $alcholClass = 'drank'; // 飲酒した
                 } elseif ($yesno_item['alchol_data'] == 2) {
-                    echo '<td>飲酒を我慢した</td>';
+                    $alcholClass = 'resisted'; // 飲酒を我慢した
                 }
-                echo '<td>' . htmlspecialchars($yesno_item['date_hms'], ENT_QUOTES, 'UTF-8') . '</td>'; // 安全输出
+
+
+                $timeClass = '';
+                $hour = (int)date('H', strtotime($yesno_item['date_hms']));
+                if ($hour >= 5 && $hour < 12) {
+                    $timeClass = 'morning';
+                } elseif ($hour >= 12 && $hour < 19) {
+                    $timeClass = 'afternoon';
+                } else {
+                    $timeClass = 'evening';
+                }
+
+
+                echo '<tr>';
+                echo '<td class="' . $alcholClass . '">' . ($yesno_item['alchol_data'] == 1 ? '飲酒した' : '飲酒を我慢した') . '</td>';
+                echo '<td class="' . $timeClass . '">' . $yesno_item['date_hms'] . '</td>';
                 echo '</tr>';
             }
             echo '</table>';
             ?>
+
         </div>
     </div>
 

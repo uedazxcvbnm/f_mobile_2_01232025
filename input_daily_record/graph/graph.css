@@ -24,7 +24,7 @@ body {
     margin: 20px;
     box-sizing: border-box;
     /* containerをいじれば位置が下がった */
-    margin-top:5%;
+    margin-top: 5%;
 }
 
 .sidebar {
@@ -138,6 +138,32 @@ canvas {
 
 #output_table th {
     background-color: #f2f2f2;
+}
+
+.drank {
+    background-color: #da3833;
+
+}
+
+.resisted {
+    background-color: #a8d7e8;
+
+}
+
+
+.morning {
+    background-color: #51e1f4;
+
+}
+
+.afternoon {
+    background-color: #f6cb47;
+
+}
+
+.evening {
+    background-color: #434fb6;
+
 }
 
 /* 响应式调整 */
