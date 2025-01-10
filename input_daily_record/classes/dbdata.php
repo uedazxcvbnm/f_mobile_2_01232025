@@ -1,11 +1,13 @@
 <?php
-session_start();
+// if (session_status() == PHP_SESSION_NONE) {
+//     session_start();
+// }
 
 // データベース接続情報
-$dsn = 'mysql:host=mysql311.phy.lolipop.lan;dbname=LAA1632250-pbl2;charset=utf8';
-$user = 'LAA1632250';
-$password = '9vWqKeipemkaEzZ';
-$dbname = "LAA1632250-pbl2";
+// PDOオブジェクトを生成する 															
+$dsn = 'mysql:host=localhost;dbname=pbl2;charset=utf8';
+$user = 'kobe';
+$password = 'denshi';
 
 try {
     // MySQLに接続する

@@ -2,22 +2,15 @@
 session_start();
 
 // データベース接続情報
-$servername = "mysql311.phy.lolipop.lan";
-$username = "LAA1632250";
-$password = "9vWqKeipemkaEzZ";
-$dbname = "LAA1632250-pbl2";
+$dsn = 'mysql:host=localhost;dbname=pbl2;charset=utf8';
+$user = 'kobe';
+$password = 'denshi';
 
 try {
-    // MySQLに接続する
-    $pdo = new PDO("mysql:host=$servername;port=3306;dbname=$dbname;charset=utf8", $username, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-    ]);
-} catch (PDOException $e) {
-    // エラーメッセージを表示する代わりにログに記録し、ユーザーには一般的なメッセージを表示
-    error_log("データベース接続エラー: " . $e->getMessage());
-    die("データベースへの接続に失敗しました。後ほどもう一度お試しください。");
+    $pdo = new PDO($dsn, $user, $password);
+} catch (Exception  $e) {
+    echo 'Error:' . $e->getMessage();
+    die();
 }
 
 // ログインしているユーザーのIDをセッションから取得

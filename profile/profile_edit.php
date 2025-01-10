@@ -2,16 +2,20 @@
 session_start();
 
 
-// データベース接続情報
-$servername = "mysql311.phy.lolipop.lan";
-$username = "LAA1632250";
-$password = "9vWqKeipemkaEzZ";
-$dbname = "LAA1632250-pbl2";
 
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // データベース接続情報
+    $dsn = 'mysql:host=localhost;dbname=pbl2;charset=utf8';
+    $user = 'kobe';
+    $password = 'denshi';
+
+    try {
+        $pdo = new PDO($dsn, $user, $password);
+    } catch (Exception  $e) {
+        echo 'Error:' . $e->getMessage();
+        die();
+    }
 
     if (!isset($_SESSION['user_id'])) {
         echo "ログインが必要です。";
