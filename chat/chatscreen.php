@@ -89,6 +89,9 @@ $member_count = $group_info['member_count'];
         </div>
         <div class="chat-area"></div>
         <div class="message-area">
+            <!-- 画像をアップロード -->
+            <input type="file" id="chatimage_upload" name="chatimage_upload">
+            <!--  -->
             <div class="message-area-text">
                 <textarea id="text"></textarea>
             </div>
@@ -118,6 +121,9 @@ $member_count = $group_info['member_count'];
             const textInput = document.getElementById("text");
             const chatArea = document.querySelector(".chat-area");
 
+            // 画像
+            const imageArea = document.getElementById('chatimage_upload');
+
             let lastMessageId = 0;
 
             function sendMessage() {
@@ -136,8 +142,87 @@ $member_count = $group_info['member_count'];
                 scrollToBottom();
             }
 
+            // 1/9追加
+            // ファイルをサーバーにアップロード
+            function uploadImageToDB(file, callback) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const base64Image = event.target.result.split(',')[1]; // "data:image/png;base64," を取り除く
+                    fetch('/upload_image_to_db', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ image: base64Image }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Image saved to DB:', data);
+                        // callback(data.imageUrl); // サーバーから返された画像URLを利用
+                        console.log('Uploaded image URL:', data.imageUrl);
+                        // 画像を表示
+                        const imgElement = document.createElement('img');
+                        imgElement.src = data.imageUrl;
+                        document.body.appendChild(imgElement);
+                    })
+                    .catch(error => {
+                        console.error('Error saving image to DB:', error);
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+
+
+            // 1/9追加
+            // 画像と文章を同時に送信する場合
+            function sendMessage_image() {
+                const message = textInput.value.trim();
+                console.log('1');
+                
+                // if (message === "" || chat_image_file === "") {
+                //     displayEmptyMessage();
+                //     return;
+                // }
+                // imageArea.addEventListener('change', function(event){
+                    console.log('2');
+                    // console.log(typeof imageArea.value);
+                    // console.log(typeof imageArea.value.files[0]);
+                    // console.log(chat_image);
+                    if(imageArea.value){
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            const chat_image = event.target.result;
+                            console.log(chat_image);
+                            socket.emit('sendMessage_image', {
+                                message: message,
+                                image: chat_image,
+                                user_id: user_id,
+                                team_id: group_id
+                            });
+                        };
+                        reader.readAsDataURL(imageArea.files[0]); 
+                    } else {
+                        console.error('No file selected');
+                    }
+
+                    textInput.value = "";
+                    imageArea.value = "";
+                    scrollToBottom();
+                // });
+                
+            }
+
+            // 関数呼び出し
             sendButton.addEventListener("click", function() {
-                sendMessage(); // メッセージを送信する関数を呼び出す
+                // 1/9追加
+                console.log(imageArea.value);
+                if(imageArea.value){
+                    console.log('imageArea.value');
+                    sendMessage_image();
+                }else{
+                    sendMessage(); // メッセージを送信する関数を呼び出す
+                    console.log('sendMessage');
+                }
             });
 
             textInput.addEventListener("keydown", function(event) {
@@ -148,9 +233,20 @@ $member_count = $group_info['member_count'];
             });
 
             socket.on('receiveMessage', function(data) {
+                console.log('receiveM');
                 if (data.team_id == group_id) {
                     const messageType = data.user_id == user_id ? 'sent' : 'received';
                     displayMessage(data.message, messageType, new Date(data.date), data.id, data.username, data.user_id, data.edited, data.is_deleted);
+                }
+            });
+
+            // 1/9追加
+            // 画像を受けとる
+            socket.on('receiveMessage_image', function(data) {
+                console.log('data');
+                if (data.team_id == group_id) {
+                    const messageType = data.user_id == user_id ? 'sent' : 'received';
+                    displayMessage_Image(data.message, messageType, data.image, new Date(data.date), data.id, data.username, data.user_id, data.edited, data.is_deleted);
                 }
             });
 
@@ -230,6 +326,63 @@ $member_count = $group_info['member_count'];
                 }
 
                 chatArea.appendChild(messageContainer);
+                scrollToBottom();
+            }
+
+            // 画像をチャット画面に表示
+            // 1/9追加
+            function displayMessage_Image(message, type, image, date, id, username, messageUserId, edited, is_deleted) {
+                console.log(image);
+
+                console.log('0');
+                const messageContainer = document.createElement("div");
+                messageContainer.classList.add("message-container", type === "sent" ? "sent" : "received");
+                messageContainer.dataset.messageId = id;
+                messageContainer.dataset.userId = messageUserId;
+
+                const imageContainer = document.createElement("div");
+                imageContainer.classList.add("message-container", type === "sent" ? "sent" : "received");
+                imageContainer.dataset.messageId = id;
+                imageContainer.dataset.userId = messageUserId;
+
+                console.log('1');
+
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message");
+                messageElement.innerHTML = `
+                <div class="message-name">${username}</div>
+                <div class="message-content">${message.replace(/\n/g, "<br>")}</div>
+                <span class="message-time">${formatDate(date)}</span>`;
+                
+                const imageElement = document.createElement("div");
+                imageElement.classList.add("display_image");
+                imageElement.innerHTML = `
+                <img width="100px" height="100px" src=${image}>
+                <span class="message-time">${formatDate(date)}</span>
+                `;
+
+                console.log('2');
+
+                const iconElement = document.createElement("div");
+                iconElement.classList.add("icon");
+
+                if (type !== "sent") {
+                    messageContainer.appendChild(iconElement);
+                }
+
+                messageContainer.appendChild(messageElement);
+                imageContainer.appendChild(imageElement);
+
+                if (messageUserId == user_id) {
+                    messageContainer.addEventListener("contextmenu", function(event) {
+                        event.preventDefault();
+                        showContextMenu_image(event, imageContainer);
+                    });
+                }
+
+                // チャットに文章と画像を表示
+                chatArea.appendChild(messageContainer);
+                chatArea.appendChild(imageContainer);
                 scrollToBottom();
             }
 
@@ -314,7 +467,11 @@ $member_count = $group_info['member_count'];
 
                     messages.forEach(message => {
                         const messageType = message.user_id == user_id ? 'sent' : 'received';
-                        displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id, message.edited, message.is_deleted);
+                        if (message.image != null){
+                            displayMessage_Image(message.content, messageType, message.image, new Date(message.date), message.id, message.username, message.user_id, message.edited, message.is_deleted);
+                        } else {
+                            displayMessage(message.content, messageType, new Date(message.date), message.id, message.username, message.user_id, message.edited, message.is_deleted);
+                        }
                     });
 
                     // 削除ログメッセージも表示

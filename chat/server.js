@@ -3,10 +3,15 @@ const http = require('http');
 const socketIo = require('socket.io');
 const cors = require('cors');
 const mysql = require('mysql');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const mime = require("mime-types");
 
 const app = express();
 app.use(cors());
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '100mb' }));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -33,6 +38,71 @@ db.connect((err) => {
 
 io.on('connection', (socket) => {
     console.log('New client connected');
+
+    // 1/9追加
+    socket.on('sendMessage_image', (data) => {
+        const { message, image, user_id, team_id } = data;
+        const date = new Date();
+    
+        // 画像データがない場合はエラーを送信
+        if (!image) {
+            return socket.emit("upload_error", "画像データが不足しています。");
+        }
+    
+        try {
+            // Base64データからプレフィックスを除去
+            const base64Image = image.replace(/^data:image\/[a-z]+;base64,/, '');
+            const imageBuffer = Buffer.from(base64Image, 'base64'); // バイナリデータに変換
+            const imageName = `image_${Date.now()}.png`; // ファイル名の生成（拡張子は適宜変更）
+            const imagePath = path.join(__dirname, "../images", imageName); // 保存先パス
+    
+            // 画像をファイルとして保存
+            fs.writeFile(imagePath, imageBuffer, (err) => {
+                if (err) {
+                    console.error('Error writing image to file:', err);
+                    return socket.emit("upload_error", "画像の保存に失敗しました。");
+                }
+    
+                console.log(`Image saved at ${imagePath}`);
+    
+                // DBでは相対パスを保存
+                const relativeImagePath = `./../images/${imageName}`;
+    
+                // データベースにメッセージと画像パスを保存
+                const query = "INSERT INTO group_chat (message, image, date, user_id, team_id) VALUES (?, ?, ?, ?, ?)";
+                db.query(query, [message, relativeImagePath, date, user_id, team_id], (err, result) => {
+                    if (err) {
+                        console.error("Error inserting message:", err);
+                        return;
+                    }
+    
+                    const selectQuery = "SELECT username FROM user WHERE user_id = ?";
+                    db.query(selectQuery, [user_id], (err, rows) => {
+                        if (err) {
+                            console.error("Error fetching username:", err);
+                            return;
+                        }
+                        const username = rows[0].username;
+    
+                        // クライアントに新しいメッセージを送信
+                        io.emit("receiveMessage_image", {
+                            id: result.insertId,
+                            message,
+                            image: relativeImagePath, // クライアント用に相対パスを送信
+                            date,
+                            user_id,
+                            team_id,
+                            username,
+                            edited: false,
+                        });
+                    });
+                });
+            });
+        } catch (error) {
+            console.error("Error processing image data:", error);
+            socket.emit("upload_error", "画像データの処理中にエラーが発生しました。");
+        }
+    });
 
     socket.on('sendMessage', (data) => {
         const { message, user_id, team_id } = data;

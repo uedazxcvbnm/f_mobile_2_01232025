@@ -12,7 +12,7 @@ try {
 
     if ($group_id > 0) {
         $stmt = $conn->prepare("
-            SELECT group_chat.id, group_chat.message AS content, group_chat.date, group_chat.user_id, group_chat.edited, group_chat.is_deleted, user.username 
+            SELECT group_chat.id, group_chat.message AS content, group_chat.image, group_chat.date, group_chat.user_id, group_chat.edited, group_chat.is_deleted, user.username 
             FROM group_chat 
             JOIN user ON group_chat.user_id = user.user_id 
             WHERE group_chat.team_id = :group_id 
